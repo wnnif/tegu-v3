@@ -12,6 +12,11 @@
 .modal{min-width:0}
 .modal.wide{width:min(1130px,calc(100vw - 44px))}
 .modal form{min-width:0}
+.modal.order-dialog{width:min(95vw,1840px);max-width:calc(100vw - 20px);height:96vh;max-height:96vh;overflow:auto;border-radius:8px}
+.modal.order-dialog .modal-head{padding:10px 16px}
+.modal.order-dialog form{padding:8px 12px 12px}
+.modal.order-dialog>.error{margin:8px 12px}
+.modal.order-dialog .toolbar{padding:4px 0}
 .shell:not(.is-dashboard) main button{background:#5b8def;border-color:#5b8def;color:#fff;box-shadow:0 1px 2px #315fa322}
 .shell:not(.is-dashboard) main button:hover{background:#4679df;border-color:#4679df;color:#fff;box-shadow:0 2px 5px #315fa33d}
 .overlay button{background:#5b8def !important;border-color:#5b8def !important;color:#fff !important;box-shadow:0 1px 2px #315fa322}
