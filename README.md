@@ -26,6 +26,8 @@
 
 发布人可以运行 `release-tools/build_v3_source_bundles.ps1`，通过显式文件白名单生成同一源码快照的两个 ZIP。V1 seed 只能以 `catalog/` 下明确列出的文件追加，两个报价审计 Markdown 仅进入 V1，V2 自动排除；脚本拒绝覆盖同名 ZIP，检查输出 ACL，并生成逐文件 SHA-256 清单、构建信息和 ZIP 校验文件。运行前应先使用 `-PlanOnly` 检查完整源码、seed 和审计文件清单。V1 输出目录应限制访问；交付前复核包清单与数据范围。
 
+校验范围要区分：GitHub 源码检出使用仓库根目录的 `SOURCE-MANIFEST.sha256`，ZIP 解压目录使用 ZIP 内的 `PACKAGE-MANIFEST.sha256`；两份清单属于不同文件集合，不能互换。生成源码清单前先暂存所有拟提交源码文件，再运行 `python3 release-tools/source_manifest.py --write`；`--check` 会核对 Git 追踪文件集合及实际检出字节。ZIP 构建先写定 `BUILD-INFO.json`，再以 LF 写 PACKAGE 清单，并在暂存目录和 ZIP 解压目录逐项核对路径及原始字节摘要。
+
 ```powershell
 pwsh -NoProfile -File .\release-tools\build_v3_source_bundles.ps1 `
   -SourceRoot . `

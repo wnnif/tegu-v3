@@ -33,6 +33,55 @@ function Get-Sha256([string]$Path) {
     (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 
+function Assert-PackageManifest([string]$Directory) {
+    $root = [IO.Path]::GetFullPath($Directory).TrimEnd('\')
+    $manifestPath = Join-Path $root 'PACKAGE-MANIFEST.sha256'
+    if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+        throw "ZIP 内缺少 PACKAGE-MANIFEST.sha256：$Directory"
+    }
+
+    $encoding = [Text.UTF8Encoding]::new($false, $true)
+    $manifest = $encoding.GetString([IO.File]::ReadAllBytes($manifestPath))
+    if ($manifest.Contains("`r") -or -not $manifest.EndsWith("`n")) {
+        throw "PACKAGE-MANIFEST.sha256 必须使用 LF 并以换行结束：$Directory"
+    }
+
+    $listed = [Collections.Generic.Dictionary[string, string]]::new([StringComparer]::Ordinal)
+    $lines = $manifest.Substring(0, $manifest.Length - 1).Split("`n")
+    foreach ($line in $lines) {
+        if ($line -cnotmatch '^([0-9a-f]{64})  (.+)$') {
+            throw "PACKAGE-MANIFEST.sha256 包含格式错误的行：$line"
+        }
+        $hash = $Matches[1]
+        $relative = $Matches[2]
+        $parts = $relative.Split('/')
+        if ([IO.Path]::IsPathRooted($relative) -or $relative.Contains('\') -or
+            @($parts | Where-Object { $_ -in @('', '.', '..') }).Count -gt 0) {
+            throw "PACKAGE-MANIFEST.sha256 包含不安全路径：$relative"
+        }
+        if ($listed.ContainsKey($relative)) { throw "PACKAGE-MANIFEST.sha256 存在重复路径：$relative" }
+
+        $fullPath = [IO.Path]::GetFullPath((Join-Path $root ($relative.Replace('/', [IO.Path]::DirectorySeparatorChar))))
+        if (-not (Test-IsUnderPath $fullPath $root) -or -not (Test-Path -LiteralPath $fullPath -PathType Leaf)) {
+            throw "PACKAGE-MANIFEST.sha256 引用的文件缺失或越界：$relative"
+        }
+        if ((Get-Sha256 $fullPath) -ne $hash) { throw "PACKAGE-MANIFEST.sha256 摘要不匹配：$relative" }
+        $listed.Add($relative, $hash)
+    }
+
+    $actual = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($file in Get-ChildItem -LiteralPath $root -File -Recurse -Force) {
+        $relative = Get-RelativePath $root $file.FullName
+        if ($relative -ne 'PACKAGE-MANIFEST.sha256') { [void]$actual.Add($relative) }
+    }
+    foreach ($relative in $actual) {
+        if (-not $listed.ContainsKey($relative)) { throw "ZIP 包含未列入清单的文件：$relative" }
+    }
+    foreach ($relative in $listed.Keys) {
+        if (-not $actual.Contains($relative)) { throw "清单列出了 ZIP 中不存在的文件：$relative" }
+    }
+}
+
 function Test-SuspiciousContent([string]$Path) {
     $bytes = [IO.File]::ReadAllBytes($Path)
     $content = ([Text.Encoding]::UTF8.GetString($bytes) -replace "`0", '')
@@ -388,10 +437,13 @@ try {
         }
         [IO.File]::WriteAllText($readmePath, $readme, [Text.UTF8Encoding]::new($false))
     }
-    foreach ($entry in $seedEntries) {
+    $stagedSeedEntries = foreach ($entry in $seedEntries) {
         $destination = Join-Path $stageOne ($entry.RelativePath.Replace('/', [IO.Path]::DirectorySeparatorChar))
         New-Item -ItemType Directory -Path (Split-Path -Parent $destination) -Force | Out-Null
         Copy-Item -LiteralPath $entry.FullPath -Destination $destination
+        $stagedHash = Get-Sha256 $destination
+        if ($stagedHash -ne $entry.Hash) { throw "初始化资料在暂存时发生变化：$($entry.RelativePath)" }
+        [pscustomobject]@{ RelativePath = $entry.RelativePath; FullPath = $destination; Hash = $stagedHash }
     }
     foreach ($relative in $auditFiles.Keys) {
         $target = Join-Path $stageOne ('docs' + [IO.Path]::DirectorySeparatorChar + [IO.Path]::GetFileName($relative))
@@ -404,7 +456,7 @@ try {
     $seedManifest = $null
     $seedSummary = $null
     if (@($seedEntries).Count -eq 1) {
-        $seedManifest = Get-Content -LiteralPath $seedEntries[0].FullPath -Raw | ConvertFrom-Json -Depth 100
+        $seedManifest = Get-Content -LiteralPath $stagedSeedEntries[0].FullPath -Raw | ConvertFrom-Json -Depth 100
         $crafts = @($seedManifest.crafts)
         $companyCrafts = @($seedManifest.company_crafts)
         $companies = @($seedManifest.companies)
@@ -443,7 +495,7 @@ try {
         if ($null -ne $seedManifest.products) { $productCount = @($seedManifest.products).Count }
         $seedSummary = [ordered]@{
             seed_id = $seedManifest.seed_id
-            seed_sha256 = $seedEntries[0].Hash
+            seed_sha256 = $stagedSeedEntries[0].Hash
             company_count = $companies.Count
             public_craft_count = $crafts.Count
             subitem_count = $subitemCount
@@ -460,7 +512,7 @@ try {
         @{ Stage = $stageOne; Mode = 'with_initial_data'; SeedEntries = @($seedEntries); Summary = $seedSummary },
         @{ Stage = $stageTwo; Mode = 'clean_no_business_data'; SeedEntries = @(); Summary = $null }
     )) {
-        foreach ($file in Get-ChildItem -LiteralPath $spec.Stage -File -Recurse) {
+        foreach ($file in Get-ChildItem -LiteralPath $spec.Stage -File -Recurse -Force) {
             $relative = Get-RelativePath $spec.Stage $file.FullName
             if (Test-ExcludedRelativePath $relative) { throw "暂存包包含禁止文件：$relative" }
             if (Test-SuspiciousContent $file.FullName) { throw "暂存包包含疑似密钥内容：$relative" }
@@ -481,17 +533,26 @@ try {
         [IO.File]::WriteAllText($infoPath, $json + "`n", [Text.UTF8Encoding]::new($false))
 
         $manifestPath = Join-Path $spec.Stage 'PACKAGE-MANIFEST.sha256'
-        $manifestLines = foreach ($file in (Get-ChildItem -LiteralPath $spec.Stage -File -Recurse | Sort-Object FullName)) {
+        $manifestLines = foreach ($file in (Get-ChildItem -LiteralPath $spec.Stage -File -Recurse -Force | Sort-Object FullName)) {
             $relative = Get-RelativePath $spec.Stage $file.FullName
-            '{0}  {1}' -f (Get-Sha256 $file.FullName), $relative
+            if ($relative -ne 'PACKAGE-MANIFEST.sha256') {
+                '{0}  {1}' -f (Get-Sha256 $file.FullName), $relative
+            }
         }
-        [IO.File]::WriteAllLines($manifestPath, [string[]]$manifestLines, [Text.UTF8Encoding]::new($false))
+        [IO.File]::WriteAllText($manifestPath, (($manifestLines -join "`n") + "`n"), [Text.UTF8Encoding]::new($false))
+        Assert-PackageManifest $spec.Stage
     }
 
     $zipOneTemp = Join-Path $stageRoot 'version1.zip'
     $zipTwoTemp = Join-Path $stageRoot 'version2.zip'
     [IO.Compression.ZipFile]::CreateFromDirectory($stageOne, $zipOneTemp, [IO.Compression.CompressionLevel]::Optimal, $false)
     [IO.Compression.ZipFile]::CreateFromDirectory($stageTwo, $zipTwoTemp, [IO.Compression.CompressionLevel]::Optimal, $false)
+    $extractOne = Join-Path $stageRoot 'verify-version1'
+    $extractTwo = Join-Path $stageRoot 'verify-version2'
+    [IO.Compression.ZipFile]::ExtractToDirectory($zipOneTemp, $extractOne)
+    [IO.Compression.ZipFile]::ExtractToDirectory($zipTwoTemp, $extractTwo)
+    Assert-PackageManifest $extractOne
+    Assert-PackageManifest $extractTwo
     $hashOne = Get-Sha256 $zipOneTemp
     $hashTwo = Get-Sha256 $zipTwoTemp
     $zipOneSidecar = Join-Path $stageRoot 'version1.zip.sha256'

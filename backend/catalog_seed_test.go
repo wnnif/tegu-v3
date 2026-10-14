@@ -1,12 +1,42 @@
 package main
 
 import (
+	"bytes"
+	"crypto/sha256"
 	"encoding/json"
 	"os"
 	"strconv"
 	"strings"
 	"testing"
 )
+
+func TestParseCatalogSeedDigestIgnoresLineEndings(t *testing.T) {
+	data, err := os.ReadFile("../catalog/catalog-seed-v1.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	lf := bytes.ReplaceAll(bytes.ReplaceAll(data, []byte("\r\n"), []byte("\n")), []byte("\r"), []byte("\n"))
+	crlf := bytes.ReplaceAll(lf, []byte("\n"), []byte("\r\n"))
+	if bytes.Equal(lf, crlf) {
+		t.Fatal("LF and CRLF fixtures must contain different raw bytes")
+	}
+	if sha256.Sum256(lf) == sha256.Sum256(crlf) {
+		t.Fatal("raw seed SHA-256 should reflect the line-ending bytes")
+	}
+
+	_, lfDigest, err := parseCatalogSeed(lf)
+	if err != nil {
+		t.Fatalf("parse LF seed: %v", err)
+	}
+	_, crlfDigest, err := parseCatalogSeed(crlf)
+	if err != nil {
+		t.Fatalf("parse CRLF seed: %v", err)
+	}
+	if lfDigest != crlfDigest {
+		t.Fatalf("canonical seed digest changed with line endings: LF=%s CRLF=%s", lfDigest, crlfDigest)
+	}
+}
 
 func validCatalogSeedFixture() catalogSeedManifest {
 	wall, poly, waterproof := true, true, true
