@@ -1,0 +1,14 @@
+*.exe
+backups
+*.test
+.env
+.env.*
+data
+secrets
+*.key
+*.pem
+*.p12
+*.pfx
+*.ppk
+*.dpapi
+*.log

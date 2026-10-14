@@ -1,0 +1,60 @@
+name: "${COMPOSE_PROJECT_NAME:?请在.env中设置本机唯一的COMPOSE_PROJECT_NAME}"
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: tegu_v3
+      MYSQL_USER: tegu
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?请先在.env设置数据库密码}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?请先在.env设置root密码}
+      TZ: Asia/Shanghai
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_bin", "--innodb-flush-log-at-trx-commit=1", "--sync-binlog=1", "--binlog-expire-logs-seconds=604800"]
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_PASSWORD\" mysql -h 127.0.0.1 -u tegu -D tegu_v3 -e 'SELECT 1' >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    stop_grace_period: 120s
+  api:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: "3306"
+      MYSQL_DATABASE: tegu_v3
+      MYSQL_USER: tegu
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:3081}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      BACKUP_DIR: /backups
+      DATA_DIR: /var/lib/tegu
+      TZ: Asia/Shanghai
+    volumes:
+      - backups:/backups
+      - app-data:/var/lib/tegu
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    stop_grace_period: 120s
+  web:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${HTTP_BIND:-127.0.0.1}:${HTTP_PORT:-3081}:80"
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  mysql-data:
+  backups:
+  app-data:

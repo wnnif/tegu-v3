@@ -1,0 +1,3606 @@
+{
+  "format": "tegu-catalog-seed-v1",
+  "seed_id": "tegu-v3-catalog-2026-10-14",
+  "sources": [
+    {
+      "id": "excel-wages",
+      "kind": "excel",
+      "file": "最新工价标准.xlsx",
+      "sha256": "3d01688df6bd8fc46e75d4fa5ce0e581c6034c6d5c2173d5c360599a7a2a85ab"
+    },
+    {
+      "id": "excel-prices",
+      "kind": "excel",
+      "file": "开工、包管、回填、防水最新汇总价格.xlsx",
+      "sha256": "c909c0c22562b7966367ee580bb6ac768b321894e31661c37f998034a13b6cc5"
+    },
+    {
+      "id": "user-wage-rules",
+      "kind": "user"
+    },
+    {
+      "id": "project-catalog",
+      "kind": "user"
+    }
+  ],
+  "companies": [
+    {
+      "id": "company-zhai-xin",
+      "name": "宅心装饰",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "宅心",
+        "row": 1,
+        "note": "工作表A1公司名与工作表标题一致"
+      }
+    },
+    {
+      "id": "company-tangka",
+      "name": "唐卡装饰",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "唐卡",
+        "row": 1,
+        "note": "工作表A1公司名与工作表标题一致"
+      }
+    },
+    {
+      "id": "company-yuli",
+      "name": "予里设计",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "予里设计",
+        "row": 1,
+        "note": "工作表A1公司名与工作表标题一致"
+      }
+    },
+    {
+      "id": "company-guyi",
+      "name": "顾意设计",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 1,
+        "note": "工作表A1公司名与工作表标题一致"
+      }
+    },
+    {
+      "id": "company-yousuo",
+      "name": "友所设计",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 1,
+        "note": "工作表A1公司名与工作表标题一致"
+      }
+    },
+    {
+      "id": "company-xuqiao",
+      "name": "旭桥装饰",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 1,
+        "note": "工作表A1公司名与工作表标题一致"
+      }
+    },
+    {
+      "id": "company-dingge",
+      "name": "鼎格装饰",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "鼎格装饰",
+        "row": 1,
+        "note": "工作表A1公司名与工作表标题一致"
+      }
+    },
+    {
+      "id": "company-baixingjia",
+      "name": "百姓家装饰",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 1,
+        "note": "工作表A1公司名与工作表标题一致"
+      }
+    },
+    {
+      "id": "company-yiban",
+      "name": "一半设计",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 1,
+        "note": "工作表A1公司名与工作表标题一致"
+      }
+    },
+    {
+      "id": "company-yuanchuang",
+      "name": "元创设计",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 1,
+        "note": "工作表A1公司名与工作表标题一致"
+      }
+    },
+    {
+      "id": "company-opai",
+      "name": "欧派装饰",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 1,
+        "note": "工作表A1公司名与工作表标题一致"
+      }
+    },
+    {
+      "id": "company-dongjian",
+      "name": "东箭",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "user-wage-rules",
+        "sheet": "已确认工资规则",
+        "row": 0,
+        "note": "仅工资覆盖主体；本轮价格Excel无该公司表"
+      }
+    },
+    {
+      "id": "company-yiren",
+      "name": "宜仁",
+      "customer_type": "装修公司",
+      "ticket_mode": "single",
+      "source": {
+        "source_id": "user-wage-rules",
+        "sheet": "已确认工资规则",
+        "row": 0,
+        "note": "仅工资覆盖主体；本轮价格Excel无该公司表"
+      }
+    }
+  ],
+  "crafts": [
+    {
+      "id": "1ff20429655bace0933b240d1f5f9d59",
+      "category": "丙纶",
+      "name": "丙纶",
+      "mode": "平方",
+      "spec": "原报价按平方米；外反、外围、包墙的范围待补。；；工资已按来源行确认。",
+      "active": true,
+      "subitems": [
+        {
+          "id": "catalog-20261002-g01-s01",
+          "name": "厨房"
+        },
+        {
+          "id": "catalog-20261002-g01-s02",
+          "name": "主卫"
+        },
+        {
+          "id": "catalog-20261002-g01-s03",
+          "name": "次卫"
+        },
+        {
+          "id": "catalog-20261002-g01-s04",
+          "name": "阳台"
+        },
+        {
+          "id": "catalog-20261002-g01-s05",
+          "name": "飘窗"
+        },
+        {
+          "id": "catalog-20261002-g01-s06",
+          "name": "洗衣位"
+        },
+        {
+          "id": "catalog-20261002-g01-s07",
+          "name": "洗手台"
+        },
+        {
+          "id": "catalog-20261002-g01-s08",
+          "name": "外反"
+        },
+        {
+          "id": "catalog-20261002-g01-s09",
+          "name": "外围"
+        },
+        {
+          "id": "catalog-20261002-g01-s10",
+          "name": "烟道"
+        },
+        {
+          "id": "catalog-20261002-g01-s11",
+          "name": "空调位"
+        },
+        {
+          "id": "catalog-20261002-g01-s12",
+          "name": "包墙"
+        },
+        {
+          "id": "catalog-20261002-g01-s13",
+          "name": "基坑"
+        }
+      ],
+      "wage": {
+        "cents": 500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "防水工资",
+          "row": 10,
+          "note": "用户明确普通丙纶5元/㎡；百分比奖金不按本表自动计提"
+        }
+      },
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=1ff20429655bace0933b240d1f5f9d59"
+      }
+    },
+    {
+      "id": "4d367ddeabc92a2798a9e714dbe10acc",
+      "category": "包管",
+      "name": "包管·L单管",
+      "mode": "处",
+      "spec": "是否含材料、开孔与包管的包含关系待补。原单位根，数量模式个代表根数。；；工资已按来源行确认。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 3500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "包管",
+          "row": 3
+        }
+      },
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=4d367ddeabc92a2798a9e714dbe10acc"
+      }
+    },
+    {
+      "id": "a91aced62c7068e53b6f09220bba8037",
+      "category": "包管",
+      "name": "包管·L双管",
+      "mode": "处",
+      "spec": "是否含材料、开孔与包管的包含关系待补。原单位根，数量模式个代表根数。；；工资已按来源行确认。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 3500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "包管",
+          "row": 4
+        }
+      },
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=a91aced62c7068e53b6f09220bba8037"
+      }
+    },
+    {
+      "id": "3ed18470bf91e0ff78c8d4b0201dbc23",
+      "category": "包管",
+      "name": "包管·U单管",
+      "mode": "处",
+      "spec": "是否含材料、开孔与包管的包含关系待补。对应原表U型单管；原单位根，数量模式个代表根数。；；工资已按来源行确认。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 4500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "包管",
+          "row": 5
+        }
+      },
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=3ed18470bf91e0ff78c8d4b0201dbc23"
+      }
+    },
+    {
+      "id": "958f05f029b8c9e47460817dfcee6477",
+      "category": "包管",
+      "name": "包管·厨房阳台单管",
+      "mode": "金额",
+      "spec": "是否含材料、开孔与包管的包含关系待补。计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=958f05f029b8c9e47460817dfcee6477"
+      }
+    },
+    {
+      "id": "00dd691c05feb9e505cb59df0fad1673",
+      "category": "包管",
+      "name": "包管·壁龛",
+      "mode": "平方",
+      "spec": "是否含材料、开孔与包管的包含关系待补。；；工资已按来源行确认。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 3000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "包管",
+          "row": 8
+        }
+      },
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=00dd691c05feb9e505cb59df0fad1673"
+      }
+    },
+    {
+      "id": "c19f706e33177961d0b70efe7c1613fe",
+      "category": "包管",
+      "name": "包管·横管隔音棉",
+      "mode": "米",
+      "spec": "是否含材料、开孔与包管的包含关系待补。仅施工工项；原单位米，是否含材料待补。；；工资已按来源行确认。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 1000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "包管",
+          "row": 14
+        }
+      },
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=c19f706e33177961d0b70efe7c1613fe"
+      }
+    },
+    {
+      "id": "5114d509147a73350c5e0ef04a8c2870",
+      "category": "包管",
+      "name": "包管·管口开孔",
+      "mode": "孔位",
+      "spec": "是否含材料、开孔与包管的包含关系待补。；；全部可施工小项工资已按来源行确认。；全部可施工小项工资已按来源行确认。；线盒与管子工资分别记在小项，不使用整项工资。",
+      "active": true,
+      "subitems": [
+        {
+          "id": "hole-wire-box",
+          "name": "线盒",
+          "wage": {
+            "cents": 500,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "包管",
+              "row": 9
+            }
+          }
+        },
+        {
+          "id": "hole-pipe",
+          "name": "管子",
+          "wage": {
+            "cents": 1000,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "包管",
+              "row": 10
+            }
+          }
+        }
+      ],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=5114d509147a73350c5e0ef04a8c2870"
+      }
+    },
+    {
+      "id": "f24c507df78ebf772d1e98b744d24564",
+      "category": "包管",
+      "name": "包管·隔音棉",
+      "mode": "根",
+      "spec": "是否含材料、开孔与包管的包含关系待补。仅施工工项；原单位根，数量模式个代表根数，是否含材料待补。；；工资已按来源行确认。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 1000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "包管",
+          "row": 13
+        }
+      },
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=f24c507df78ebf772d1e98b744d24564"
+      }
+    },
+    {
+      "id": "b7efaff2a5f7039b26a0ab1dbc69c654",
+      "category": "回填",
+      "name": "回填",
+      "mode": "平方",
+      "spec": "原报价按平方米；厚度及是否另按体积计量待补。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [
+        {
+          "id": "catalog-20261002-g04-s01",
+          "name": "主卫"
+        },
+        {
+          "id": "catalog-20261002-g04-s02",
+          "name": "次卫"
+        },
+        {
+          "id": "catalog-20261002-g04-s03",
+          "name": "客厅"
+        }
+      ],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=b7efaff2a5f7039b26a0ab1dbc69c654"
+      }
+    },
+    {
+      "id": "b1be658cdab89de3b5fc5837e830fe97",
+      "category": "安全防护架",
+      "name": "架子防护·客厅阳台架子",
+      "mode": "金额",
+      "spec": "尺寸及安装、拆运包含关系待补。与安装、拆运的区分及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=b1be658cdab89de3b5fc5837e830fe97"
+      }
+    },
+    {
+      "id": "7c44e81cf33fb8cd8352632ccc91e49f",
+      "category": "安全防护架",
+      "name": "架子防护·架子安装",
+      "mode": "个",
+      "spec": "尺寸及安装、拆运包含关系待补。；；全部可施工小项工资已按来源行确认。；全部可施工小项工资已按来源行确认。；A架、B架工资分别记在小项。",
+      "active": true,
+      "subitems": [
+        {
+          "id": "safety-frame-a",
+          "name": "安装防护架A",
+          "wage": {
+            "cents": 1000,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "安全防护架",
+              "row": 3
+            }
+          }
+        },
+        {
+          "id": "safety-frame-b",
+          "name": "安装防护架B",
+          "wage": {
+            "cents": 1000,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "安全防护架",
+              "row": 4
+            }
+          }
+        }
+      ],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=7c44e81cf33fb8cd8352632ccc91e49f"
+      }
+    },
+    {
+      "id": "f40dd3236093b05f2f76b8ff0d88b11e",
+      "category": "安全防护架",
+      "name": "架子防护·架子拆除及运输",
+      "mode": "套",
+      "spec": "尺寸及安装、拆运包含关系待补。暂按金额，计量待补。；；工资已按来源行确认。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 2000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "开工工资",
+          "row": 10,
+          "note": "拆除回收按每家计，不与每个架子的安装工资合并"
+        }
+      },
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=f40dd3236093b05f2f76b8ff0d88b11e"
+      }
+    },
+    {
+      "id": "a384157d98f7d342b9b2a88eb211f126",
+      "category": "安全防护架",
+      "name": "架子防护·阳台挂网",
+      "mode": "张",
+      "spec": "尺寸及安装、拆运包含关系待补。原单位张，数量模式个代表张数；网尺寸待补。；；全部可施工小项工资已按来源行确认。；全部可施工小项工资已按来源行确认。；工价来源明确网尺寸，小网/大网工资分别记在小项。",
+      "active": true,
+      "subitems": [
+        {
+          "id": "safety-net-large",
+          "name": "大网（6米*2.5米）",
+          "wage": {
+            "cents": 700,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "安全防护架",
+              "row": 6
+            }
+          }
+        },
+        {
+          "id": "safety-net-small",
+          "name": "小网（3米*2.5米）",
+          "wage": {
+            "cents": 400,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "安全防护架",
+              "row": 7
+            }
+          }
+        }
+      ],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=a384157d98f7d342b9b2a88eb211f126"
+      }
+    },
+    {
+      "id": "e24cad1fda5fb11087e7c270e4d474ae",
+      "category": "室外防水",
+      "name": "楼顶防水",
+      "mode": "金额",
+      "spec": "原资料未细分，按现场方案报价；暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=e24cad1fda5fb11087e7c270e4d474ae"
+      }
+    },
+    {
+      "id": "eddce9ecbaa356571cd443e2702dace4",
+      "category": "开工",
+      "name": "墙固地固·单独卧室地固",
+      "mode": "金额",
+      "spec": "按独立套餐或加项保存；墙地顶范围、计量及特殊户型标准待补。暂按金额，计量待补。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=eddce9ecbaa356571cd443e2702dace4"
+      }
+    },
+    {
+      "id": "0a4159cc2324e3c82b3ab4f5df4def85",
+      "category": "开工",
+      "name": "墙固地固·增室加项",
+      "mode": "个",
+      "spec": "按独立套餐或加项保存；墙地顶范围、计量及特殊户型标准待补。原单位室，数量模式个代表增加室数。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=0a4159cc2324e3c82b3ab4f5df4def85"
+      }
+    },
+    {
+      "id": "415e33b2f18926fabe41824b23bbdf18",
+      "category": "开工",
+      "name": "墙固地固·套三",
+      "mode": "金额",
+      "spec": "按独立套餐或加项保存；墙地顶范围、计量及特殊户型标准待补。暂按金额，计量待补。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=415e33b2f18926fabe41824b23bbdf18"
+      }
+    },
+    {
+      "id": "02f11d9479ffdeb2e66dadfe1e31c575",
+      "category": "开工",
+      "name": "墙固地固·套二",
+      "mode": "金额",
+      "spec": "按独立套餐或加项保存；墙地顶范围、计量及特殊户型标准待补。暂按金额，计量待补。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=02f11d9479ffdeb2e66dadfe1e31c575"
+      }
+    },
+    {
+      "id": "9094cd417bb2b8b19586ad4f619e9f15",
+      "category": "开工",
+      "name": "墙固地固·套四",
+      "mode": "金额",
+      "spec": "按独立套餐或加项保存；墙地顶范围、计量及特殊户型标准待补。暂按金额，计量待补。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=9094cd417bb2b8b19586ad4f619e9f15"
+      }
+    },
+    {
+      "id": "e869df1f9e55d620a357d9c0f77e3ea4",
+      "category": "开工",
+      "name": "墙固地固·跃层加项",
+      "mode": "个",
+      "spec": "按独立套餐或加项保存；墙地顶范围、计量及特殊户型标准待补。原单位层，数量模式个代表增加层数。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=e869df1f9e55d620a357d9c0f77e3ea4"
+      }
+    },
+    {
+      "id": "4666252a279eadd68b268280f9300661",
+      "category": "开工",
+      "name": "开工保护（广告）·入户大门保护",
+      "mode": "个",
+      "spec": "原套餐不能拆成各项单价；单项/套餐、材料提供方和施工次数待补。原单位副，数量模式个代表副数。；；工资已按来源行确认。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 2500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "开工工资",
+          "row": 5,
+          "note": "按每道门计价"
+        }
+      },
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=4666252a279eadd68b268280f9300661"
+      }
+    },
+    {
+      "id": "c8e29907887b47448aa42972f2427a1a",
+      "category": "开工",
+      "name": "开工保护（广告）·室内地砖保护",
+      "mode": "平方",
+      "spec": "原套餐不能拆成各项单价；单项/套餐、材料提供方和施工次数待补。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=c8e29907887b47448aa42972f2427a1a"
+      }
+    },
+    {
+      "id": "a317b42faeb2ee6f317ffac535b43799",
+      "category": "开工",
+      "name": "开工保护（广告）·电梯口地贴",
+      "mode": "平方",
+      "spec": "原套餐不能拆成各项单价；单项/套餐、材料提供方和施工次数待补。；；工资已按来源行确认。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 135,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "开工工资",
+          "row": 4,
+          "note": "工人表“地垫”标准；按平方米"
+        }
+      },
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=a317b42faeb2ee6f317ffac535b43799"
+      }
+    },
+    {
+      "id": "12c57d091d3c9006acafe59a7b0b3f8a",
+      "category": "开工",
+      "name": "开工保护（广告）·电梯口墙贴",
+      "mode": "平方",
+      "spec": "原套餐不能拆成各项单价；单项/套餐、材料提供方和施工次数待补。；；工资已按来源行确认。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 235,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "开工工资",
+          "row": 3,
+          "note": "老黄墙绿地广告标准；包含胶带成本说明"
+        }
+      },
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=12c57d091d3c9006acafe59a7b0b3f8a"
+      }
+    },
+    {
+      "id": "8f246547978721a8101182a7350e6454",
+      "category": "开工",
+      "name": "开工保护（广告）·窗保",
+      "mode": "金额",
+      "spec": "原套餐不能拆成各项单价；单项/套餐、材料提供方和施工次数待补。计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=8f246547978721a8101182a7350e6454"
+      }
+    },
+    {
+      "id": "37e191c51a793318578db73d228a5752",
+      "category": "开工",
+      "name": "开工保护（广告）·阳台广告",
+      "mode": "副",
+      "spec": "原套餐不能拆成各项单价；单项/套餐、材料提供方和施工次数待补。原表按张或字有多个型号；具体型号/计量待补，暂按金额。；；全部可施工小项工资已按来源行确认。；全部可施工小项工资已按来源行确认。；客厅阳台与卧室按不同小项工资计。",
+      "active": true,
+      "subitems": [
+        {
+          "id": "ad-copy-balcony",
+          "name": "客厅阳台网格大字",
+          "wage": {
+            "cents": 1000,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 7
+            }
+          }
+        },
+        {
+          "id": "ad-copy-bedroom",
+          "name": "卧室大字",
+          "wage": {
+            "cents": 500,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 7
+            }
+          }
+        }
+      ],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=37e191c51a793318578db73d228a5752"
+      }
+    },
+    {
+      "id": "4321e2f1cfbf01b7f8c8c51e0ae256c4",
+      "category": "开工",
+      "name": "沟槽",
+      "mode": "金额",
+      "spec": "原分组沟槽，暂归开工；范围、尺寸及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=4321e2f1cfbf01b7f8c8c51e0ae256c4"
+      }
+    },
+    {
+      "id": "385cbd3aa171d7ea84eb35d54f3c0bf1",
+      "category": "开工",
+      "name": "精开工·三线",
+      "mode": "平方",
+      "spec": "建筑面积或实际施工面积待补；紫色地面按用户补充名称保存。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=385cbd3aa171d7ea84eb35d54f3c0bf1"
+      }
+    },
+    {
+      "id": "af61ed02a46b5845cb33701ce4b14cde",
+      "category": "开工",
+      "name": "精开工·白色墙面",
+      "mode": "平方",
+      "spec": "建筑面积或实际施工面积待补；紫色地面按用户补充名称保存。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=af61ed02a46b5845cb33701ce4b14cde"
+      }
+    },
+    {
+      "id": "34a80df03aba18a3fe56a0fc8f54b8c8",
+      "category": "开工",
+      "name": "精开工·白色顶面",
+      "mode": "平方",
+      "spec": "建筑面积或实际施工面积待补；紫色地面按用户补充名称保存。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=34a80df03aba18a3fe56a0fc8f54b8c8"
+      }
+    },
+    {
+      "id": "1915348c15a229b7be22bd9a65bf3ce2",
+      "category": "开工",
+      "name": "精开工·空调洞",
+      "mode": "平方",
+      "spec": "建筑面积或实际施工面积待补；紫色地面按用户补充名称保存。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=1915348c15a229b7be22bd9a65bf3ce2"
+      }
+    },
+    {
+      "id": "1d19ceb9cb38f86c1ad0d0d0abd000dd",
+      "category": "开工",
+      "name": "精开工·窗框",
+      "mode": "平方",
+      "spec": "建筑面积或实际施工面积待补；紫色地面按用户补充名称保存。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=1d19ceb9cb38f86c1ad0d0d0abd000dd"
+      }
+    },
+    {
+      "id": "624306de8bb1b260603ce99397d07d3f",
+      "category": "开工",
+      "name": "精开工·紫色地面",
+      "mode": "平方",
+      "spec": "建筑面积或实际施工面积待补；紫色地面按用户补充名称保存。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=624306de8bb1b260603ce99397d07d3f"
+      }
+    },
+    {
+      "id": "735c7a28f66da2a948cab1c926ea9ba1",
+      "category": "开工",
+      "name": "精开工·线槽",
+      "mode": "平方",
+      "spec": "建筑面积或实际施工面积待补；紫色地面按用户补充名称保存。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=735c7a28f66da2a948cab1c926ea9ba1"
+      }
+    },
+    {
+      "id": "99d4b40eb44a98e5f763641f4d848957",
+      "category": "开工",
+      "name": "精开工·门框边",
+      "mode": "平方",
+      "spec": "建筑面积或实际施工面积待补；紫色地面按用户补充名称保存。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=99d4b40eb44a98e5f763641f4d848957"
+      }
+    },
+    {
+      "id": "2afab1f19778e80afe83b6621dd7f946",
+      "category": "开工",
+      "name": "精开工·阴阳角",
+      "mode": "金额",
+      "spec": "建筑面积或实际施工面积待补；紫色地面按用户补充名称保存。计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=2afab1f19778e80afe83b6621dd7f946"
+      }
+    },
+    {
+      "id": "a4cbba4cb767dee401c6372562a9de6f",
+      "category": "维修",
+      "name": "维修·外墙防水维修",
+      "mode": "金额",
+      "spec": "范围及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=a4cbba4cb767dee401c6372562a9de6f"
+      }
+    },
+    {
+      "id": "945fd8d8cf2d1bdda0d36cd41d8f37b5",
+      "category": "维修",
+      "name": "维修·室内丙纶防水修补",
+      "mode": "金额",
+      "spec": "范围及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=945fd8d8cf2d1bdda0d36cd41d8f37b5"
+      }
+    },
+    {
+      "id": "b32f076fa4f142b48cd22c3958668ab2",
+      "category": "维修",
+      "name": "维修·楼顶门槛石打针",
+      "mode": "金额",
+      "spec": "范围及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=b32f076fa4f142b48cd22c3958668ab2"
+      }
+    },
+    {
+      "id": "98e84cac8535649545922199ffe54628",
+      "category": "维修",
+      "name": "维修·窗边维修",
+      "mode": "金额",
+      "spec": "范围及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=98e84cac8535649545922199ffe54628"
+      }
+    },
+    {
+      "id": "770f529412218f9148f4a85aa67b64c4",
+      "category": "维修",
+      "name": "补助·基坑补助",
+      "mode": "金额",
+      "spec": "原分组补助，暂归维修；对象、触发条件、范围及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=770f529412218f9148f4a85aa67b64c4"
+      }
+    },
+    {
+      "id": "c1d12dbc7c82d36136c06a71fc6b0b14",
+      "category": "维修",
+      "name": "补助·处理基层防水",
+      "mode": "金额",
+      "spec": "原分组补助，暂归维修；对象、触发条件、范围及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=c1d12dbc7c82d36136c06a71fc6b0b14"
+      }
+    },
+    {
+      "id": "817e9e0c3e46312da20711ae529c51b1",
+      "category": "维修",
+      "name": "补助·异形处理",
+      "mode": "金额",
+      "spec": "原分组补助，暂归维修；对象、触发条件、范围及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=817e9e0c3e46312da20711ae529c51b1"
+      }
+    },
+    {
+      "id": "8f09adcb607051e62f434bc8091a6ce6",
+      "category": "维修",
+      "name": "补助·搬东西",
+      "mode": "金额",
+      "spec": "原分组补助，暂归维修；对象、触发条件、范围及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=8f09adcb607051e62f434bc8091a6ce6"
+      }
+    },
+    {
+      "id": "9b831fceba21015b05f7bd61279b4a46",
+      "category": "维修",
+      "name": "补助·远程补助",
+      "mode": "金额",
+      "spec": "原分组补助，暂归维修；对象、触发条件、范围及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=9b831fceba21015b05f7bd61279b4a46"
+      }
+    },
+    {
+      "id": "35ca52b523dca9ee23cdbd359928784d",
+      "category": "维修",
+      "name": "补助·铲保温层",
+      "mode": "金额",
+      "spec": "原分组补助，暂归维修；对象、触发条件、范围及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=35ca52b523dca9ee23cdbd359928784d"
+      }
+    },
+    {
+      "id": "eab1334989d04f555cd1c9d9142db2a3",
+      "category": "维修",
+      "name": "补助·铲原防水",
+      "mode": "金额",
+      "spec": "原分组补助，暂归维修；对象、触发条件、范围及计量待补，暂按金额。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=eab1334989d04f555cd1c9d9142db2a3"
+      }
+    },
+    {
+      "id": "8afbecd9de7f826e470735fb4a0f1023",
+      "category": "防水涂料",
+      "name": "拉毛",
+      "mode": "金额",
+      "spec": "计量待补，暂按金额；是否与原表拉毛防水套餐一致待确认。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [
+        {
+          "id": "catalog-20261002-g02-s01",
+          "name": "厨房"
+        },
+        {
+          "id": "catalog-20261002-g02-s02",
+          "name": "主卫"
+        },
+        {
+          "id": "catalog-20261002-g02-s03",
+          "name": "次卫"
+        },
+        {
+          "id": "catalog-20261002-g02-s04",
+          "name": "阳台"
+        },
+        {
+          "id": "catalog-20261002-g02-s05",
+          "name": "洗手盆"
+        }
+      ],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=8afbecd9de7f826e470735fb4a0f1023"
+      }
+    },
+    {
+      "id": "546c7ddeb087312e16e4ad5002a7c905",
+      "category": "防水涂料",
+      "name": "蓝防水",
+      "mode": "平方",
+      "spec": "原报价按平方米；品牌及施工标准待补。；工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [
+        {
+          "id": "catalog-20261002-g03-s01",
+          "name": "厨房"
+        },
+        {
+          "id": "catalog-20261002-g03-s02",
+          "name": "主卫"
+        },
+        {
+          "id": "catalog-20261002-g03-s03",
+          "name": "次卫"
+        },
+        {
+          "id": "catalog-20261002-g03-s04",
+          "name": "阳台"
+        },
+        {
+          "id": "catalog-20261002-g03-s05",
+          "name": "洗手盆"
+        }
+      ],
+      "wage": null,
+      "source": {
+        "source_id": "project-catalog",
+        "sheet": "rates",
+        "row": 0,
+        "note": "当前项目既有目录；原工艺ID=546c7ddeb087312e16e4ad5002a7c905"
+      }
+    },
+    {
+      "id": "craft-v3-fine-wall-ground",
+      "category": "开工",
+      "name": "精开工·墙地固",
+      "mode": "平方",
+      "spec": "工资使用Excel“调整”列；不采用“核算价格”；奖金独立累计。",
+      "active": true,
+      "subitems": [
+        {
+          "id": "fine-wall",
+          "name": "墙",
+          "wage": {
+            "cents": 50,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 15
+            }
+          }
+        },
+        {
+          "id": "fine-ceiling",
+          "name": "顶",
+          "wage": {
+            "cents": 35,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 16
+            }
+          }
+        },
+        {
+          "id": "fine-floor",
+          "name": "地",
+          "wage": {
+            "cents": 115,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 17
+            }
+          }
+        }
+      ],
+      "wage": null,
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "开工工资",
+        "row": 13,
+        "note": "精开工工艺价格起始标题；逐项工资见子项来源行"
+      }
+    },
+    {
+      "id": "craft-v3-fine-slot-moisture",
+      "category": "开工",
+      "name": "精开工·线槽防潮加固",
+      "mode": "平方",
+      "spec": "工资使用Excel“调整”列；不采用“核算价格”；奖金独立累计。",
+      "active": true,
+      "subitems": [
+        {
+          "id": "fine-living-slots",
+          "name": "卧室客厅槽子＋门边框＋地角",
+          "wage": {
+            "cents": 110,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 18
+            }
+          }
+        },
+        {
+          "id": "fine-wet-room-slots",
+          "name": "厨卫槽子",
+          "wage": {
+            "cents": 75,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 19
+            }
+          }
+        },
+        {
+          "id": "fine-window-edge",
+          "name": "窗边",
+          "wage": {
+            "cents": 10,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 20
+            }
+          }
+        },
+        {
+          "id": "fine-beam-lower-edge",
+          "name": "下梁口",
+          "wage": {
+            "cents": 10,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 21
+            }
+          }
+        },
+        {
+          "id": "fine-ac-hole",
+          "name": "空调孔洞",
+          "wage": {
+            "cents": 25,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 22
+            }
+          }
+        }
+      ],
+      "wage": null,
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "开工工资",
+        "row": 13,
+        "note": "精开工工艺价格起始标题；逐项工资见子项来源行"
+      }
+    },
+    {
+      "id": "craft-v3-fine-marking",
+      "category": "开工",
+      "name": "精开工·弹线喷字",
+      "mode": "平方",
+      "spec": "工资使用Excel“调整”列；不采用“核算价格”；奖金独立累计。",
+      "active": true,
+      "subitems": [
+        {
+          "id": "fine-marking-three-lines",
+          "name": "卧室客厅标准3线弹线喷字",
+          "wage": {
+            "cents": 50,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 23
+            }
+          }
+        },
+        {
+          "id": "fine-marking-five-lines",
+          "name": "标准五线弹线喷字",
+          "wage": {
+            "cents": 85,
+            "classification": "confirmed",
+            "source": {
+              "source_id": "excel-wages",
+              "sheet": "开工工资",
+              "row": 24
+            }
+          }
+        }
+      ],
+      "wage": null,
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "开工工资",
+        "row": 13,
+        "note": "精开工工艺价格起始标题；逐项工资见子项来源行"
+      }
+    },
+    {
+      "id": "craft-v3-waterproof-consecutive-two-coats",
+      "category": "防水涂料",
+      "name": "连二遍防水工艺",
+      "mode": "平方",
+      "spec": "工价来源：工资表对应工作表及行。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 350,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "防水工资",
+          "row": 3
+        }
+      },
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "防水工资",
+        "row": 3
+      }
+    },
+    {
+      "id": "craft-v3-waterproof-split-two-coats",
+      "category": "防水涂料",
+      "name": "分开两遍防水工艺",
+      "mode": "平方",
+      "spec": "工价来源：工资表对应工作表及行。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 450,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "防水工资",
+          "row": 4
+        }
+      },
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "防水工资",
+        "row": 4
+      }
+    },
+    {
+      "id": "craft-v3-waterproof-scraped-tooth",
+      "category": "防水涂料",
+      "name": "刮齿防水工艺",
+      "mode": "平方",
+      "spec": "按用户确认用词“刮齿”；Excel行5写作“挂齿”",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 450,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "防水工资",
+          "row": 5,
+          "note": "按用户确认用词“刮齿”；Excel行5写作“挂齿”"
+        }
+      },
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "防水工资",
+        "row": 5,
+        "note": "按用户确认用词“刮齿”；Excel行5写作“挂齿”"
+      }
+    },
+    {
+      "id": "craft-v3-waterproof-outdoor-three-coat-one-cloth",
+      "category": "室外防水",
+      "name": "室外三涂一布",
+      "mode": "平方",
+      "spec": "工价来源：工资表对应工作表及行。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 1000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "防水工资",
+          "row": 6
+        }
+      },
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "防水工资",
+        "row": 6
+      }
+    },
+    {
+      "id": "craft-v3-waterproof-rigid-soft",
+      "category": "防水涂料",
+      "name": "墙刚地柔工艺",
+      "mode": "平方",
+      "spec": "工价来源：工资表对应工作表及行。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 350,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "防水工资",
+          "row": 7
+        }
+      },
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "防水工资",
+        "row": 7
+      }
+    },
+    {
+      "id": "craft-v3-waterproof-polypropylene-roughcoat",
+      "category": "防水涂料",
+      "name": "丙纶上拉毛",
+      "mode": "平方",
+      "spec": "用户确认2.50元覆盖Excel旧值2.00元",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 250,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "防水工资",
+          "row": 8,
+          "note": "用户确认2.50元覆盖Excel旧值2.00元"
+        }
+      },
+      "source": {
+        "source_id": "user-wage-rules",
+        "sheet": "已确认工资规则",
+        "row": 0,
+        "note": "覆盖excel-wages/防水工资/第8行的2.00元工资"
+      }
+    },
+    {
+      "id": "craft-v3-waterproof-texture",
+      "category": "防水涂料",
+      "name": "拉毛防水",
+      "mode": "平方",
+      "spec": "工价来源：工资表对应工作表及行。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 250,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "防水工资",
+          "row": 9
+        }
+      },
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "防水工资",
+        "row": 9
+      }
+    },
+    {
+      "id": "craft-v3-membrane-self-adhesive",
+      "category": "室外防水",
+      "name": "自粘卷材",
+      "mode": "平方",
+      "spec": "用户确认仅针对家装露台防水",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 800,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "防水工资",
+          "row": 13,
+          "note": "用户确认仅针对家装露台防水"
+        }
+      },
+      "source": {
+        "source_id": "user-wage-rules",
+        "sheet": "已确认工资规则",
+        "row": 0,
+        "note": "家装露台自粘卷材工资8.00元/㎡"
+      }
+    },
+    {
+      "id": "craft-v3-membrane-sbs-torch",
+      "category": "室外防水",
+      "name": "SBS火烤卷材",
+      "mode": "平方",
+      "spec": "工价来源：工资表对应工作表及行。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 1000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "防水工资",
+          "row": 14
+        }
+      },
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "防水工资",
+        "row": 14
+      }
+    },
+    {
+      "id": "craft-v3-waterproof-outdoor-polypropylene",
+      "category": "丙纶",
+      "name": "室外丙纶",
+      "mode": "平方",
+      "spec": "室外丙纶工资待确认，暂不用于新施工。",
+      "active": false,
+      "subitems": [],
+      "wage": null,
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "防水工资",
+        "row": 11,
+        "note": "室外丙纶工资空白，工资待确认，暂不用于新施工。"
+      }
+    },
+    {
+      "id": "craft-v3-pipe-u-double",
+      "category": "包管",
+      "name": "包管·U双管",
+      "mode": "处",
+      "spec": "玻镁板U型双管；工资按处。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 4500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "包管",
+          "row": 6
+        }
+      },
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "包管",
+        "row": 2
+      }
+    },
+    {
+      "id": "craft-v3-pipe-chimney",
+      "category": "包管",
+      "name": "包管·烟道封板",
+      "mode": "处",
+      "spec": "玻镁板烟道封板；工资按处。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 5500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "包管",
+          "row": 7
+        }
+      },
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "包管",
+        "row": 2
+      }
+    },
+    {
+      "id": "craft-v3-damping-vertical",
+      "category": "包管",
+      "name": "阻尼片·立管",
+      "mode": "根",
+      "spec": "工资按根。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 1000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "包管",
+          "row": 11
+        }
+      },
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "包管",
+        "row": 11
+      }
+    },
+    {
+      "id": "craft-v3-damping-horizontal",
+      "category": "包管",
+      "name": "阻尼片·横管",
+      "mode": "米",
+      "spec": "工资按米。",
+      "active": true,
+      "subitems": [],
+      "wage": {
+        "cents": 1000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-wages",
+          "sheet": "包管",
+          "row": 12
+        }
+      },
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "包管",
+        "row": 11
+      }
+    }
+  ],
+  "company_crafts": [
+    {
+      "id": "cc-company-zhai-xin-polypropylene",
+      "company_id": "company-zhai-xin",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "price": {
+        "cents": 1200,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "宅心",
+          "row": 16,
+          "note": "独立普通丙纶/单独施工价；不适用于已含丙纶保护的防水组合"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "宅心",
+        "row": 16,
+        "note": "来源工作表所列普通/单独丙纶，单位㎡"
+      }
+    },
+    {
+      "id": "cc-company-tangka-polypropylene",
+      "company_id": "company-tangka",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "price": {
+        "cents": 1200,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "唐卡",
+          "row": 16,
+          "note": "独立普通丙纶/单独施工价；不适用于已含丙纶保护的防水组合"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "唐卡",
+        "row": 16,
+        "note": "来源工作表所列普通/单独丙纶，单位㎡"
+      }
+    },
+    {
+      "id": "cc-company-yuli-polypropylene",
+      "company_id": "company-yuli",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "price": {
+        "cents": 1200,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "予里设计",
+          "row": 17,
+          "note": "独立普通丙纶/单独施工价；不适用于已含丙纶保护的防水组合"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "予里设计",
+        "row": 17,
+        "note": "来源工作表所列普通/单独丙纶，单位㎡"
+      }
+    },
+    {
+      "id": "cc-company-guyi-polypropylene",
+      "company_id": "company-guyi",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "price": {
+        "cents": 1200,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 19,
+          "note": "独立普通丙纶/单独施工价；不适用于已含丙纶保护的防水组合"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 19,
+        "note": "来源工作表所列普通/单独丙纶，单位㎡"
+      }
+    },
+    {
+      "id": "cc-company-yousuo-polypropylene",
+      "company_id": "company-yousuo",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "price": {
+        "cents": 1200,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 18,
+          "note": "独立普通丙纶/单独施工价；不适用于已含丙纶保护的防水组合"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 18,
+        "note": "来源工作表所列普通/单独丙纶，单位㎡"
+      }
+    },
+    {
+      "id": "cc-company-xuqiao-polypropylene",
+      "company_id": "company-xuqiao",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "price": {
+        "cents": 1200,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 18,
+          "note": "独立普通丙纶/单独施工价；不适用于已含丙纶保护的防水组合"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 18,
+        "note": "来源工作表所列普通/单独丙纶，单位㎡"
+      }
+    },
+    {
+      "id": "cc-company-dingge-polypropylene",
+      "company_id": "company-dingge",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "price": {
+        "cents": 1200,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "鼎格装饰",
+          "row": 13,
+          "note": "独立普通丙纶/单独施工价；不适用于已含丙纶保护的防水组合"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "鼎格装饰",
+        "row": 13,
+        "note": "来源工作表所列普通/单独丙纶，单位㎡"
+      }
+    },
+    {
+      "id": "cc-company-baixingjia-polypropylene",
+      "company_id": "company-baixingjia",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "price": {
+        "cents": 1200,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 18,
+          "note": "独立普通丙纶/单独施工价；不适用于已含丙纶保护的防水组合"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 18,
+        "note": "来源工作表所列普通/单独丙纶，单位㎡"
+      }
+    },
+    {
+      "id": "cc-company-yiban-polypropylene",
+      "company_id": "company-yiban",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "price": {
+        "cents": 1200,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 24,
+          "note": "独立普通丙纶/单独施工价；不适用于已含丙纶保护的防水组合"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 24,
+        "note": "来源工作表所列普通/单独丙纶，单位㎡"
+      }
+    },
+    {
+      "id": "cc-company-yuanchuang-polypropylene",
+      "company_id": "company-yuanchuang",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "price": {
+        "cents": 1200,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "元创设计",
+          "row": 16,
+          "note": "独立普通丙纶/单独施工价；不适用于已含丙纶保护的防水组合"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 16,
+        "note": "来源工作表所列普通/单独丙纶，单位㎡"
+      }
+    },
+    {
+      "id": "cc-company-opai-polypropylene",
+      "company_id": "company-opai",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "price": {
+        "cents": 1200,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 24,
+          "note": "独立普通丙纶/单独施工价；不适用于已含丙纶保护的防水组合"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 24,
+        "note": "来源工作表所列普通/单独丙纶，单位㎡"
+      }
+    },
+    {
+      "id": "cc-company-tangka-self-adhesive",
+      "company_id": "company-tangka",
+      "craft_id": "craft-v3-membrane-self-adhesive",
+      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "唐卡", "row": 18, "note": "自粘卷材客户收费55元/㎡"}},
+      "source": {"source_id": "excel-prices", "sheet": "唐卡", "row": 18, "note": "原工作簿单位㎡；与工人工资分开保存"}
+    },
+    {
+      "id": "cc-company-yuli-self-adhesive",
+      "company_id": "company-yuli",
+      "craft_id": "craft-v3-membrane-self-adhesive",
+      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 19, "note": "自粘卷材客户收费55元/㎡"}},
+      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 19, "note": "原工作簿单位㎡；与工人工资分开保存"}
+    },
+    {
+      "id": "cc-company-guyi-self-adhesive",
+      "company_id": "company-guyi",
+      "craft_id": "craft-v3-membrane-self-adhesive",
+      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 21, "note": "自粘卷材客户收费55元/㎡"}},
+      "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 21, "note": "原工作簿单位㎡；与工人工资分开保存"}
+    },
+    {
+      "id": "cc-company-yousuo-self-adhesive",
+      "company_id": "company-yousuo",
+      "craft_id": "craft-v3-membrane-self-adhesive",
+      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 20, "note": "自粘卷材客户收费55元/㎡"}},
+      "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 20, "note": "原工作簿单位㎡；与工人工资分开保存"}
+    },
+    {
+      "id": "cc-company-xuqiao-self-adhesive",
+      "company_id": "company-xuqiao",
+      "craft_id": "craft-v3-membrane-self-adhesive",
+      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 20, "note": "自粘卷材客户收费55元/㎡"}},
+      "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 20, "note": "原工作簿单位㎡；与工人工资分开保存"}
+    },
+    {
+      "id": "cc-company-dingge-self-adhesive",
+      "company_id": "company-dingge",
+      "craft_id": "craft-v3-membrane-self-adhesive",
+      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 15, "note": "自粘卷材客户收费55元/㎡"}},
+      "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 15, "note": "原工作簿单位㎡；与工人工资分开保存"}
+    },
+    {
+      "id": "cc-company-baixingjia-self-adhesive",
+      "company_id": "company-baixingjia",
+      "craft_id": "craft-v3-membrane-self-adhesive",
+      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 20, "note": "自粘卷材客户收费55元/㎡"}},
+      "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 20, "note": "原工作簿单位㎡；与工人工资分开保存"}
+    },
+    {
+      "id": "cc-company-yiban-self-adhesive",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-membrane-self-adhesive",
+      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "一半设计", "row": 26, "note": "自粘卷材客户收费55元/㎡"}},
+      "source": {"source_id": "excel-prices", "sheet": "一半设计", "row": 26, "note": "原工作簿单位㎡；与工人工资分开保存"}
+    },
+    {
+      "id": "cc-company-yuanchuang-self-adhesive",
+      "company_id": "company-yuanchuang",
+      "craft_id": "craft-v3-membrane-self-adhesive",
+      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 18, "note": "自粘卷材客户收费55元/㎡"}},
+      "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 18, "note": "原工作簿单位㎡；与工人工资分开保存"}
+    },
+    {
+      "id": "cc-company-opai-self-adhesive",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-membrane-self-adhesive",
+      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "欧派装饰", "row": 26, "note": "自粘卷材客户收费55元/㎡"}},
+      "source": {"source_id": "excel-prices", "sheet": "欧派装饰", "row": 26, "note": "原工作簿单位㎡；与工人工资分开保存"}
+    },
+    {
+      "id": "cc-test-zhai-xin-elevator-floor-sticker",
+      "company_id": "company-zhai-xin",
+      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 7, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 7, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套"}
+    },
+    {
+      "id": "cc-test-zhai-xin-elevator-wall-sticker",
+      "company_id": "company-zhai-xin",
+      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 8, "note": "原项目电梯口入户墙贴；原单位㎡；备注为门左右各一张、高度3米"}
+    },
+    {
+      "id": "cc-test-tangka-elevator-floor-sticker",
+      "company_id": "company-tangka",
+      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "唐卡", "row": 7, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "唐卡", "row": 7, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套，备注为全套"}
+    },
+    {
+      "id": "cc-test-yuli-elevator-floor-sticker",
+      "company_id": "company-yuli",
+      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 7, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 7, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套"}
+    },
+    {
+      "id": "cc-test-yuli-elevator-wall-sticker",
+      "company_id": "company-yuli",
+      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 8, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为整套"}
+    },
+    {
+      "id": "cc-test-guyi-elevator-floor-sticker",
+      "company_id": "company-guyi",
+      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 8, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套"}
+    },
+    {
+      "id": "cc-test-guyi-elevator-wall-sticker",
+      "company_id": "company-guyi",
+      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 9, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 9, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为整套"}
+    },
+    {
+      "id": "cc-test-yousuo-elevator-wall-sticker",
+      "company_id": "company-yousuo",
+      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 8, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为整套"}
+    },
+    {
+      "id": "cc-test-yousuo-tile-protection",
+      "company_id": "company-yousuo",
+      "craft_id": "c8e29907887b47448aa42972f2427a1a",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 9, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 9, "note": "原项目瓷砖保护；原单位㎡，数量栏为1"}
+    },
+    {
+      "id": "cc-test-xuqiao-elevator-floor-sticker",
+      "company_id": "company-xuqiao",
+      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 9, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 9, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套；套餐未列该贴"}
+    },
+    {
+      "id": "cc-test-xuqiao-elevator-wall-sticker",
+      "company_id": "company-xuqiao",
+      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 10, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 10, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为整套；套餐未列该贴"}
+    },
+    {
+      "id": "cc-test-dingge-elevator-floor-sticker",
+      "company_id": "company-dingge",
+      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 7, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 7, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为入户"}
+    },
+    {
+      "id": "cc-test-dingge-elevator-wall-sticker",
+      "company_id": "company-dingge",
+      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 8, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为门左右，备注为左右各一张、高度2米"}
+    },
+    {
+      "id": "cc-test-baixingjia-elevator-floor-sticker",
+      "company_id": "company-baixingjia",
+      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 7, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 7, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为入户"}
+    },
+    {
+      "id": "cc-test-baixingjia-elevator-wall-sticker",
+      "company_id": "company-baixingjia",
+      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 8, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为门左右"}
+    },
+    {
+      "id": "cc-test-baixingjia-tile-protection",
+      "company_id": "company-baixingjia",
+      "craft_id": "c8e29907887b47448aa42972f2427a1a",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 9, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 9, "note": "原项目瓷砖保护；原单位㎡，数量栏为全屋"}
+    },
+    {
+      "id": "cc-test-yuanchuang-elevator-floor-sticker",
+      "company_id": "company-yuanchuang",
+      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 8, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套；套餐未列该贴"}
+    },
+    {
+      "id": "cc-test-yuanchuang-elevator-wall-sticker",
+      "company_id": "company-yuanchuang",
+      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
+      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 9, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
+      "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 9, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为整套；套餐未列该贴"}
+    }
+  ],
+  "company_wage_overrides": [
+    {
+      "company_id": "company-dongjian",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "wage": {
+        "cents": 550,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "user-wage-rules",
+          "sheet": "已确认工资规则",
+          "row": 0,
+          "note": "普通丙纶特殊公司覆盖，适用于全部普通丙纶施工"
+        }
+      },
+      "source": {
+        "source_id": "user-wage-rules",
+        "sheet": "已确认工资规则",
+        "row": 0,
+        "note": "适用于全部普通丙纶施工"
+      }
+    },
+    {
+      "company_id": "company-yiren",
+      "craft_id": "1ff20429655bace0933b240d1f5f9d59",
+      "wage": {
+        "cents": 550,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "user-wage-rules",
+          "sheet": "已确认工资规则",
+          "row": 0,
+          "note": "普通丙纶特殊公司覆盖，适用于全部普通丙纶施工"
+        }
+      },
+      "source": {
+        "source_id": "user-wage-rules",
+        "sheet": "已确认工资规则",
+        "row": 0,
+        "note": "适用于全部普通丙纶施工"
+      }
+    }
+  ],
+  "bonus_rules": [
+    {
+      "key": "fine_start_wall_ground_wall",
+      "category": "开工",
+      "craft_name": "精开工·墙地固",
+      "subitem_name": "墙",
+      "mode": "平方",
+      "rate_cents": 15,
+      "unit": "㎡",
+      "override_reason": "用户明确精开工Excel奖金列单独累计；不并入日常工资",
+      "source": {
+        "source_id": "excel-wages",
+        "sheet": "开工工资",
+        "row": 15,
+        "note": "bonus=0.15元/㎡；daily wage使用调整列"
+      },
+      "target_craft_id": "craft-v3-fine-wall-ground",
+      "target_subitem_id": "fine-wall"
+    },
+    {
+      "key": "waterproof_split_two_coats",
+      "category": "防水涂料",
+      "craft_name": "分开两遍防水工艺",
+      "mode": "平方",
+      "rate_cents": 50,
+      "unit": "㎡",
+      "override_reason": "用户明确覆盖Excel旧0.10元/㎡为0.50元/㎡",
+      "source": {
+        "source_id": "user-wage-rules",
+        "sheet": "已确认工资规则",
+        "row": 0,
+        "note": "Excel旧值见防水工资第4行0.10元/㎡"
+      },
+      "supersedes": [
+        {
+          "source_id": "excel-wages",
+          "sheet": "防水工资",
+          "row": 4,
+          "note": "旧值0.10元/㎡被本轮用户规则覆盖"
+        }
+      ],
+      "target_craft_id": "craft-v3-waterproof-split-two-coats"
+    }
+  ],
+  "products": [],
+  "packages": [
+    {
+      "id": "package-xuqiao-2-room",
+      "company_id": "company-xuqiao",
+      "name": "墙固、地固普通工艺",
+      "room_count": 2,
+      "price": {
+        "cents": 35000,
+        "classification": "package",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 3,
+          "note": "房型套餐档价，作为该套餐唯一客户收费"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 3,
+        "note": "房型套餐档价，作为该套餐唯一客户收费"
+      },
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+    },
+    {
+      "id": "package-xuqiao-3-room",
+      "company_id": "company-xuqiao",
+      "name": "墙固、地固普通工艺",
+      "room_count": 3,
+      "price": {
+        "cents": 50000,
+        "classification": "package",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 4,
+          "note": "房型套餐档价，作为该套餐唯一客户收费"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 4,
+        "note": "房型套餐档价，作为该套餐唯一客户收费"
+      },
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+    },
+    {
+      "id": "package-xuqiao-4-room",
+      "company_id": "company-xuqiao",
+      "name": "墙固、地固普通工艺",
+      "room_count": 4,
+      "price": {
+        "cents": 65000,
+        "classification": "package",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 5,
+          "note": "房型套餐档价，作为该套餐唯一客户收费"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 5,
+        "note": "房型套餐档价，作为该套餐唯一客户收费"
+      },
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+    },
+    {
+      "id": "package-xuqiao-5-room",
+      "company_id": "company-xuqiao",
+      "name": "墙固、地固普通工艺",
+      "room_count": 5,
+      "price": {
+        "cents": 75000,
+        "classification": "package",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 6,
+          "note": "房型套餐档价，作为该套餐唯一客户收费"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 6,
+        "note": "房型套餐档价，作为该套餐唯一客户收费"
+      },
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+    },
+    {
+      "id": "package-opai-2-room",
+      "company_id": "company-opai",
+      "name": "墙固、地固普通工艺",
+      "room_count": 2,
+      "price": {
+        "cents": 35000,
+        "classification": "package",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 3,
+          "note": "房型套餐档价，作为该套餐唯一客户收费"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 3,
+        "note": "房型套餐档价，作为该套餐唯一客户收费"
+      },
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+    },
+    {
+      "id": "package-opai-3-room",
+      "company_id": "company-opai",
+      "name": "墙固、地固普通工艺",
+      "room_count": 3,
+      "price": {
+        "cents": 50000,
+        "classification": "package",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 4,
+          "note": "房型套餐档价，作为该套餐唯一客户收费"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 4,
+        "note": "房型套餐档价，作为该套餐唯一客户收费"
+      },
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+    },
+    {
+      "id": "package-opai-4-room",
+      "company_id": "company-opai",
+      "name": "墙固、地固普通工艺",
+      "room_count": 4,
+      "price": {
+        "cents": 65000,
+        "classification": "package",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 5,
+          "note": "房型套餐档价，作为该套餐唯一客户收费"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 5,
+        "note": "房型套餐档价，作为该套餐唯一客户收费"
+      },
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+    },
+    {
+      "id": "package-opai-5-room",
+      "company_id": "company-opai",
+      "name": "墙固、地固普通工艺",
+      "room_count": 5,
+      "price": {
+        "cents": 75000,
+        "classification": "package",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 6,
+          "note": "房型套餐档价，作为该套餐唯一客户收费"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 6,
+        "note": "房型套餐档价，作为该套餐唯一客户收费"
+      },
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+    },
+    {
+      "id": "package-yuanchuang-3-room",
+      "company_id": "company-yuanchuang",
+      "name": "墙固、地固普通工艺",
+      "room_count": 3,
+      "price": {
+        "cents": 35000,
+        "classification": "package",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "元创设计",
+          "row": 3,
+          "note": "房型套餐档价，作为该套餐唯一客户收费"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 3,
+        "note": "房型套餐档价，作为该套餐唯一客户收费"
+      },
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+    },
+    {
+      "id": "package-yuanchuang-4-room",
+      "company_id": "company-yuanchuang",
+      "name": "墙固、地固普通工艺",
+      "room_count": 4,
+      "price": {
+        "cents": 45000,
+        "classification": "package",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "元创设计",
+          "row": 4,
+          "note": "房型套餐档价，作为该套餐唯一客户收费"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 4,
+        "note": "房型套餐档价，作为该套餐唯一客户收费"
+      },
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+    },
+    {
+      "id": "package-yuanchuang-5-room",
+      "company_id": "company-yuanchuang",
+      "name": "墙固、地固普通工艺",
+      "room_count": 5,
+      "price": {
+        "cents": 55000,
+        "classification": "package",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "元创设计",
+          "row": 5,
+          "note": "房型套餐档价，作为该套餐唯一客户收费"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 5,
+        "note": "房型套餐档价，作为该套餐唯一客户收费"
+      },
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+    }
+  ],
+  "package_coverage": [
+    {
+      "package_id": "package-xuqiao-2-room",
+      "item_name": "墙",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-wall",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固墙小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-2-room",
+      "item_name": "顶",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-ceiling",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固顶小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-2-room",
+      "item_name": "地",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-floor",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固地小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-2-room",
+      "item_name": "弹线",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-2-room",
+      "item_name": "喷字",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-2-room",
+      "item_name": "门框改色",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-xuqiao-2-room",
+      "item_name": "地脚线",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-xuqiao-3-room",
+      "item_name": "墙",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-wall",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固墙小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-3-room",
+      "item_name": "顶",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-ceiling",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固顶小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-3-room",
+      "item_name": "地",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-floor",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固地小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-3-room",
+      "item_name": "弹线",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-3-room",
+      "item_name": "喷字",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-3-room",
+      "item_name": "门框改色",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-xuqiao-3-room",
+      "item_name": "地脚线",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-xuqiao-4-room",
+      "item_name": "墙",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-wall",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固墙小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-4-room",
+      "item_name": "顶",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-ceiling",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固顶小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-4-room",
+      "item_name": "地",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-floor",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固地小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-4-room",
+      "item_name": "弹线",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-4-room",
+      "item_name": "喷字",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-4-room",
+      "item_name": "门框改色",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-xuqiao-4-room",
+      "item_name": "地脚线",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-xuqiao-5-room",
+      "item_name": "墙",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-wall",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固墙小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-5-room",
+      "item_name": "顶",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-ceiling",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固顶小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-5-room",
+      "item_name": "地",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-floor",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固地小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-5-room",
+      "item_name": "弹线",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-5-room",
+      "item_name": "喷字",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-xuqiao-5-room",
+      "item_name": "门框改色",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-xuqiao-5-room",
+      "item_name": "地脚线",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-opai-2-room",
+      "item_name": "墙",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-wall",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固墙小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-2-room",
+      "item_name": "顶",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-ceiling",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固顶小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-2-room",
+      "item_name": "地",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-floor",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固地小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-2-room",
+      "item_name": "弹线",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-2-room",
+      "item_name": "喷字",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-2-room",
+      "item_name": "门框改色",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-opai-2-room",
+      "item_name": "地脚线",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-opai-3-room",
+      "item_name": "墙",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-wall",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固墙小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-3-room",
+      "item_name": "顶",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-ceiling",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固顶小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-3-room",
+      "item_name": "地",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-floor",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固地小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-3-room",
+      "item_name": "弹线",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-3-room",
+      "item_name": "喷字",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-3-room",
+      "item_name": "门框改色",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-opai-3-room",
+      "item_name": "地脚线",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-opai-4-room",
+      "item_name": "墙",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-wall",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固墙小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-4-room",
+      "item_name": "顶",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-ceiling",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固顶小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-4-room",
+      "item_name": "地",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-floor",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固地小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-4-room",
+      "item_name": "弹线",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-4-room",
+      "item_name": "喷字",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-4-room",
+      "item_name": "门框改色",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-opai-4-room",
+      "item_name": "地脚线",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-opai-5-room",
+      "item_name": "墙",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-wall",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固墙小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-5-room",
+      "item_name": "顶",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-ceiling",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固顶小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-5-room",
+      "item_name": "地",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-floor",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固地小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-5-room",
+      "item_name": "弹线",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-5-room",
+      "item_name": "喷字",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-opai-5-room",
+      "item_name": "门框改色",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-opai-5-room",
+      "item_name": "地脚线",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 6,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-yuanchuang-3-room",
+      "item_name": "墙",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-wall",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固墙小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-3-room",
+      "item_name": "顶",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-ceiling",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固顶小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-3-room",
+      "item_name": "弹线",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-3-room",
+      "item_name": "喷字",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-3-room",
+      "item_name": "门框改色",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-yuanchuang-3-room",
+      "item_name": "地脚线",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 3,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-yuanchuang-4-room",
+      "item_name": "墙",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-wall",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固墙小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-4-room",
+      "item_name": "顶",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-ceiling",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固顶小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-4-room",
+      "item_name": "弹线",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-4-room",
+      "item_name": "喷字",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-4-room",
+      "item_name": "门框改色",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-yuanchuang-4-room",
+      "item_name": "地脚线",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 4,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-yuanchuang-5-room",
+      "item_name": "墙",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-wall",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固墙小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-5-room",
+      "item_name": "顶",
+      "craft_id": "craft-v3-fine-wall-ground",
+      "subitem_id": "fine-ceiling",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至墙地固顶小项；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-5-room",
+      "item_name": "弹线",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-5-room",
+      "item_name": "喷字",
+      "craft_id": "craft-v3-fine-marking",
+      "subitem_id": "",
+      "mapping": "mapped",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "映射至精开工弹线喷字工艺；套餐客户费包含，工资仍按工资规则计算"
+    },
+    {
+      "package_id": "package-yuanchuang-5-room",
+      "item_name": "门框改色",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    },
+    {
+      "package_id": "package-yuanchuang-5-room",
+      "item_name": "地脚线",
+      "craft_id": "",
+      "subitem_id": "",
+      "mapping": "pending_mapping",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 5,
+        "note": "按房型套餐来源行保留包含项身份"
+      },
+      "note": "套餐原文含项，现有工艺目录无可唯一确认的对应项；保留原文含项，不另收客户线价"
+    }
+  ]
+}

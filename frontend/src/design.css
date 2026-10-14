@@ -1,0 +1,72 @@
+/* Wot-inspired web design layer; existing Vue forms remain native HTML. */
+:root{--ui-primary:#3e78db;--ui-primary-hover:#2b62c3;--ui-text:#263545;--ui-muted:#627286;--ui-border:#dce3ea;--ui-bg:#f5f7f9;--ui-focus:#92b8f4}
+@media screen{
+ body{color:var(--ui-text);background:var(--ui-bg);letter-spacing:0}
+ button,input:not([type=checkbox]):not([type=radio]),select,textarea{min-height:36px}
+ button{padding:7px 12px;border-color:var(--ui-border);color:var(--ui-text);border-radius:6px;transition:background-color .15s,border-color .15s,color .15s}
+ button:hover{background:#f4f7fc;border-color:var(--ui-primary);color:var(--ui-primary)}
+ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--ui-focus);outline-offset:2px}
+ button.primary{background:var(--ui-primary);border-color:var(--ui-primary)}
+ button.primary:hover{background:var(--ui-primary-hover);border-color:var(--ui-primary-hover);color:#fff}
+ input,select,textarea{border-color:var(--ui-border);border-radius:6px;color:var(--ui-text);background:#fff}
+ input:focus,select:focus,textarea:focus{outline:2px solid #c6d9f8;border-color:var(--ui-primary)}
+ label{color:var(--ui-muted)}
+ aside{width:218px;padding:19px 12px;background:#fff;border-color:var(--ui-border)}
+ .brand{margin:3px 11px 22px;color:#2d5dac;letter-spacing:0;font-size:21px}
+ .brand small{letter-spacing:0;color:#8794a2}
+ nav button{margin:2px 0;padding:9px 12px;border-radius:6px}
+ nav button.active,.tabs button.active{background:#eaf1fd;color:#245cb6}
+ nav details{margin:2px 0}
+ nav summary{padding:11px 12px 7px;color:#56677d;border-radius:6px}
+ nav summary:hover{background:#f4f7fc}
+ .account{padding:16px 9px 0;border-top:1px solid #e9edf1}
+ .account button{width:100%;text-align:left;border:0;padding:8px 4px}
+ main{padding:0 24px 30px}
+ main>header{height:56px;color:#748294;border-color:#e6ebf0}
+ .heading{margin:19px 0}
+ .heading h1{font-size:22px;line-height:1.3}
+ .heading p{color:#8190a0;font-size:12px}
+ .panel{border-color:#e1e7ed;border-radius:7px;box-shadow:none}
+ .toolbar{gap:9px;padding:13px 15px}
+ .tabs{border-color:#e9edf2}
+ .tabs button{min-height:32px;padding:5px 10px}
+ th{background:#f7f9fb;color:#607084;font-weight:600}
+ td,th{padding:11px 14px;border-color:#edf0f3}
+ tbody tr:hover{background:#f9fbfe}
+ .notice{background:#edf5ff;color:#2d5a92}
+ .error{background:#fff1ef;color:#b94338}
+ .tag{background:#eaf4ef;color:#21785a}
+ .login{background:#f3f6f9}
+ .login-card{border:1px solid #e3e9ef;border-radius:8px;box-shadow:0 10px 32px #1d365014}
+ .modal{border-radius:8px}
+}
+@media screen and (max-width:700px){
+ .shell{display:block}
+ aside{position:relative;top:auto;width:100%;height:auto;max-height:none;padding:12px 12px 9px;border-right:0;border-bottom:1px solid var(--ui-border)}
+ aside .brand{font-size:18px;margin:0 4px 8px}
+ aside .brand small{display:inline;margin-left:8px}
+ aside nav{display:flex;align-items:flex-start;gap:5px;overflow-x:auto;scrollbar-width:thin;padding-bottom:5px}
+ aside nav>button,aside nav>details{flex:0 0 auto;margin:0}
+ aside nav>button{width:auto;white-space:nowrap}
+ aside nav>details{min-width:95px}
+ aside nav summary{white-space:nowrap}
+ aside nav details button{white-space:nowrap;padding:8px}
+ .account{display:flex;align-items:center;gap:10px;margin:4px 0 0;padding:6px 4px 0}
+ .account button{width:auto;white-space:nowrap}
+ .account small{margin-right:auto}
+ main{padding:0 12px 22px}
+ main>header{height:42px;font-size:12px}
+ .heading{margin:14px 0;gap:10px}
+ .heading h1{font-size:20px}
+ .form-grid,.form-grid.compact{grid-template-columns:1fr}
+ .modal{max-height:96vh}
+ .modal form{padding:14px}
+ .modal-head{padding:12px 14px}
+ .checks{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .toolbar label{min-width:0}
+ .toolbar>input{min-width:0;flex:1 1 150px}
+ td,th{padding:9px 11px}
+}
+
+.workspace-title{display:flex;align-items:center;gap:10px;min-width:0}
+.app-version{display:inline-block;flex-shrink:0;padding:2px 7px;border:1px solid #dce5f0;border-radius:5px;background:#f3f7fc;color:#536b8b;font-size:11px;line-height:1.4;letter-spacing:0;font-weight:500;white-space:nowrap}

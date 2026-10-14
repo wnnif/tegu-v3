@@ -1,0 +1,20 @@
+{
+  "name": "tegu-vue",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5182",
+    "build": "vue-tsc --noEmit && vite build",
+    "test": "node --test src/*.test.mjs"
+  },
+  "dependencies": {
+    "vue": "3.5.43"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "latest",
+    "typescript": "5.9.3",
+    "vite": "8.3.0",
+    "vue-tsc": "latest"
+  }
+}

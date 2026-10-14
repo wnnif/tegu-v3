@@ -1,0 +1,43 @@
+.order-nine-columns,.order-total-scroll{--order-grid-columns:minmax(124px,1.05fr) minmax(128px,1.1fr) minmax(110px,.95fr) minmax(82px,.7fr) minmax(240px,2.1fr) minmax(80px,.7fr) minmax(90px,.8fr) minmax(104px,.9fr) minmax(104px,.85fr);--order-grid-min-width:1062px;box-sizing:border-box;width:100%;max-width:100%;min-width:0;overflow-x:auto;border:1px solid #d9e2ef;border-radius:7px;background:#fff}
+.order-nine-columns .order-grid{display:grid;grid-template-columns:var(--order-grid-columns);min-width:var(--order-grid-min-width)}
+.order-nine-columns .order-grid-head,.order-nine-columns .order-line-row{display:grid;grid-template-columns:var(--order-grid-columns);min-width:var(--order-grid-min-width)}
+.order-nine-columns .order-grid-head{grid-column:1/-1;background:#eaf0f8;color:#33445c;border-bottom:1px solid #d7e0eb}
+.order-nine-columns .order-grid-head>strong{padding:6px 7px;font-size:11px;line-height:1.35;border-right:1px solid #d7e0eb}
+.order-nine-columns .order-grid-head>strong:last-child{text-align:right;border-right:0}
+.order-nine-columns .category-group{grid-column:1/-1;display:grid;grid-template-columns:var(--order-grid-columns);border-bottom:1px solid #d9e2ef}
+.order-nine-columns .category-header{grid-column:1/-1;display:flex;min-width:0;height:auto;align-items:center;gap:8px;padding:5px 8px;background:#f3f7fc;border-bottom:1px solid #e1e8f1}
+.order-nine-columns .category-title,.order-nine-columns .category-hint{min-width:0}
+.order-nine-columns .category-title{display:flex;align-items:baseline;gap:6px}
+.order-nine-columns .category-title small{color:#65768c;font-size:10px}
+.order-nine-columns .category-title strong{font-size:13px;overflow-wrap:anywhere}
+.order-nine-columns .category-hint{color:#61758f;font-size:11px}
+.order-nine-columns .craft-group{grid-column:1/-1;display:grid;grid-template-columns:var(--order-grid-columns);min-width:var(--order-grid-min-width);border-bottom:1px solid #e6ebf1}
+.order-nine-columns .craft-heading{grid-column:1/-1;padding:5px 8px;background:#fafbfd;border-bottom:1px solid #edf0f5}
+.order-nine-columns .craft-lines{grid-column:1/-1;display:grid;min-width:0}
+.order-nine-columns .order-line-row{align-items:stretch;border-bottom:1px solid #edf0f5}
+.order-nine-columns .order-line-row:last-child{border-bottom:0}
+.order-nine-columns .order-cell{min-width:0;padding:5px 6px;border-right:1px solid #edf0f5;overflow-wrap:anywhere}
+.order-nine-columns .order-cell:last-child{border-right:0}
+.order-nine-columns .order-line-row.readonly{background:#f6f7f9}
+.order-nine-columns .order-line-row.needs-worker{background:#fffdf5}
+.order-total-scroll{background:#f3f7fc}
+.order-total-row{display:grid;grid-template-columns:var(--order-grid-columns);min-width:var(--order-grid-min-width);align-items:center;min-height:40px}
+.order-total-label{grid-column:1/9;text-align:right;padding:8px 10px;color:#33445c;font-weight:700}
+.order-total-value{grid-column:9/10;text-align:right;padding:8px 10px;border-left:1px solid #d9e2ef;color:#173b68;font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media(max-width:800px){
+.order-nine-columns{overflow:visible;border:0;background:transparent}
+.order-nine-columns .order-grid{display:block;min-width:0}
+.order-nine-columns .order-grid-head{display:none}
+.order-nine-columns .category-group,.order-nine-columns .craft-group{display:block;min-width:0;max-width:100%;border:1px solid #d9e2ef;border-radius:7px;margin-bottom:6px;overflow:hidden}
+.order-nine-columns .category-header{min-width:0;height:auto;padding:6px 7px;flex-wrap:wrap}
+.order-nine-columns .craft-heading{padding:6px 7px}
+.order-nine-columns .craft-lines{display:block}
+.order-nine-columns .order-line-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:0;padding:3px;border-bottom:1px solid #e2e8f0}
+.order-nine-columns .order-cell{padding:5px;border:0;min-width:0}
+.order-nine-columns .order-cell::before{content:attr(data-label);display:block;margin-bottom:4px;color:#65768c;font-size:10px;font-weight:600}
+.order-nine-columns .measure-cell,.order-nine-columns .note-cell{grid-column:1/-1}
+.order-total-scroll{overflow:visible}
+.order-total-row{grid-template-columns:minmax(0,1fr);min-width:0;padding:7px 9px;gap:4px}
+.order-total-label,.order-total-value{grid-column:1;text-align:left;padding:0;border:0;white-space:normal;overflow-wrap:anywhere}
+.order-total-value{font-size:16px}
+}

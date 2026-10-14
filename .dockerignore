@@ -1,0 +1,10 @@
+# Web build context: only frontend sources and the shared release version.
+**
+!VERSION
+!frontend/
+!frontend/**
+frontend/node_modules/
+frontend/dist*/
+frontend/coverage/
+frontend/.env*
+frontend/*.log

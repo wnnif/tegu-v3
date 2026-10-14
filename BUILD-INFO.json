@@ -1,0 +1,41 @@
+{
+  "package_version": "3.0",
+  "package_mode": "with_initial_data",
+  "built_utc": "2026-10-14T04:18:14Z",
+  "source_snapshot_sha256": "124d43c03374e55dddcae5b9ba6c425322bd6df8834cca0cf6b5b64408c432e0",
+  "common_source_file_count": 340,
+  "included_initial_data": [
+    "catalog/catalog-seed-v1.json"
+  ],
+  "included_audit_documents": [
+    "docs/客户报价逐行清单.md",
+    "docs/数据导入审计.md"
+  ],
+  "initial_data_file_count": 1,
+  "initial_data_summary": {
+    "seed_id": "tegu-v3-catalog-2026-10-14",
+    "seed_sha256": "8d7ebd6be97ee0c8055c41bce5ea73fab81851f88434922776182c7d778675a9",
+    "company_count": 13,
+    "public_craft_count": 67,
+    "subitem_count": 44,
+    "company_craft_count": 39,
+    "customer_price_classifications": {
+      "confirmed": 21,
+      "test_only": 18,
+      "package": 0,
+      "included": 0,
+      "free": 0,
+      "conditional": 0,
+      "pending": 0
+    },
+    "wage_value_classifications": {
+      "confirmed": 44,
+      "test_only": 0,
+      "pending": 0
+    },
+    "automatic_bonus_rule_count": 2,
+    "package_definition_count": 11,
+    "package_coverage_count": 74,
+    "product_count": 0
+  }
+}
