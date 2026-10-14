@@ -37,6 +37,7 @@ type catalogSeedManifest struct {
 	CompanyCrafts        []catalogSeedCompanyCraft        `json:"company_crafts"`
 	CompanyWageOverrides []catalogSeedCompanyWageOverride `json:"company_wage_overrides,omitempty"`
 	Products             []catalogSeedProduct             `json:"products,omitempty"`
+	CompanyProductPrices []catalogSeedCompanyProductPrice `json:"company_product_prices,omitempty"`
 	Packages             []catalogSeedPackage             `json:"packages,omitempty"`
 	PackageCoverage      []catalogSeedPackageCoverage     `json:"package_coverage,omitempty"`
 	BonusRules           []catalogSeedBonusRule           `json:"bonus_rules"`
@@ -107,6 +108,16 @@ type catalogSeedCompanyWageOverride struct {
 	Source    catalogSeedReference `json:"source"`
 }
 
+type catalogSeedCompanyProductPrice struct {
+	ID        string               `json:"id"`
+	CompanyID string               `json:"company_id"`
+	ProductID string               `json:"product_id"`
+	InputUnit string               `json:"input_unit"`
+	Price     catalogSeedValue     `json:"price"`
+	Source    catalogSeedReference `json:"source"`
+	Note      string               `json:"note,omitempty"`
+}
+
 type catalogSeedProduct struct {
 	ID       string               `json:"id"`
 	Name     string               `json:"name"`
@@ -126,11 +137,14 @@ type catalogSeedPackage struct {
 	ID        string               `json:"id"`
 	CompanyID string               `json:"company_id"`
 	Name      string               `json:"name"`
+	PackageType string             `json:"package_type"`
 	RoomCount int                  `json:"room_count"`
 	Price     catalogSeedValue     `json:"price"`
 	Source    catalogSeedReference `json:"source"`
 	Note      string               `json:"note,omitempty"`
 }
+
+const catalogSeedPackageTypeMigrationVersion = 458
 
 type catalogSeedPackageCoverage struct {
 	PackageID string               `json:"package_id"`
@@ -207,6 +221,7 @@ func migrateCatalogSeed(db *sql.DB) error {
 		package_id VARCHAR(64) NOT NULL,
 		company_id VARCHAR(64) NOT NULL,
 		name VARCHAR(200) NOT NULL,
+		package_type VARCHAR(20) NOT NULL DEFAULT 'room_count',
 		room_count INT NOT NULL,
 		price_cents BIGINT NOT NULL,
 		classification VARCHAR(24) NOT NULL,
@@ -219,6 +234,18 @@ func migrateCatalogSeed(db *sql.DB) error {
 		CONSTRAINT fk_catalog_seed_packages_seed FOREIGN KEY(seed_id) REFERENCES catalog_seed_imports(seed_id),
 		CONSTRAINT fk_catalog_seed_packages_company FOREIGN KEY(company_id) REFERENCES companies(id)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin`); err != nil {
+		return err
+	}
+	var packageTypeColumnCount int
+	if err := db.QueryRow(`SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='catalog_seed_packages' AND COLUMN_NAME='package_type'`).Scan(&packageTypeColumnCount); err != nil {
+		return err
+	}
+	if packageTypeColumnCount == 0 {
+		if _, err := db.Exec(`ALTER TABLE catalog_seed_packages ADD COLUMN package_type VARCHAR(20) NOT NULL DEFAULT 'room_count' AFTER name`); err != nil {
+			return err
+		}
+	}
+	if _, err := db.Exec("INSERT IGNORE INTO schema_migrations(version) VALUES(?)", catalogSeedPackageTypeMigrationVersion); err != nil {
 		return err
 	}
 	if _, err := db.Exec(`CREATE TABLE IF NOT EXISTS catalog_seed_package_coverage(
@@ -360,15 +387,6 @@ func validateCatalogSeed(manifest catalogSeedManifest) error {
 					return fail(400, "整项工资与小项工资不能同时配置")
 				}
 			}
-		} else if *craft.Active {
-			if len(craft.Subitems) == 0 {
-				return fail(400, "启用工艺缺少整项或小项工资")
-			}
-			for _, item := range craft.Subitems {
-				if item.Wage == nil {
-					return fail(400, "启用工艺的每个小项都必须有明确工资")
-				}
-			}
 		}
 		crafts[craft.ID] = craft
 	}
@@ -426,7 +444,11 @@ func validateCatalogSeed(manifest catalogSeedManifest) error {
 	if err := validateCatalogSeedCompanyWageOverrides(manifest, crafts, validateRef); err != nil {
 		return err
 	}
-	if _, err := validateCatalogSeedProducts(manifest.Products, validateRef); err != nil {
+	products, err := validateCatalogSeedProducts(manifest.Products, validateRef)
+	if err != nil {
+		return err
+	}
+	if err := validateCatalogSeedCompanyProductPrices(manifest.CompanyProductPrices, companyIDs, products, validateRef); err != nil {
 		return err
 	}
 	if err := validateCatalogSeedPackages(manifest, companyNamesByID(manifest.Companies), crafts, validateRef); err != nil {
@@ -600,6 +622,51 @@ func validateCatalogSeedProducts(products []catalogSeedProduct, validateRef func
 	return parseProductCatalog(data)
 }
 
+func validateCatalogSeedCompanyProductPrices(prices []catalogSeedCompanyProductPrice, companyIDs map[string]bool, products []validatedProductCatalogEntry, validateRef func(catalogSeedReference) error) error {
+	if len(prices) == 0 {
+		return nil
+	}
+	productByID := make(map[string]productEntityInput, len(products))
+	for _, product := range products {
+		productByID[product.input.ID] = product.input
+	}
+	seenIDs := make(map[string]bool, len(prices))
+	seenKeys := make(map[string]bool, len(prices))
+	for _, item := range prices {
+		if !validCatalogSeedID(item.ID) || seenIDs[item.ID] || !companyIDs[item.CompanyID] {
+			return fail(400, "公司商品固定价编号或公司关联无效、重复")
+		}
+		product, ok := productByID[item.ProductID]
+		if !ok || item.InputUnit != "base" && item.InputUnit != "aux" || item.InputUnit == "aux" && product.AuxUnit == "" {
+			return fail(400, "公司商品固定价商品或计价单位无效")
+		}
+		if len([]rune(item.Note)) > 1000 {
+			return fail(400, "公司商品固定价备注过长")
+		}
+		if err := validateRef(item.Source); err != nil {
+			return err
+		}
+		if item.Source.SourceID != item.Price.Source.SourceID || item.Source.Sheet != item.Price.Source.Sheet || item.Source.Row != item.Price.Source.Row {
+			return fail(400, "公司商品固定价与来源行不一致")
+		}
+		if item.Price.Source.Row <= 0 {
+			return fail(400, "公司商品固定价须保留原始Excel行号")
+		}
+		if item.Price.Cents > 100000000 {
+			return fail(400, "公司商品固定价超过数据库金额上限")
+		}
+		if err := validateCatalogSeedValue(item.Price, "customer_price", validateRef); err != nil {
+			return err
+		}
+		key := item.CompanyID + "\x00" + item.ProductID + "\x00" + item.InputUnit
+		if seenKeys[key] {
+			return fail(400, "同一公司商品计价单位的固定价重复")
+		}
+		seenIDs[item.ID], seenKeys[key] = true, true
+	}
+	return nil
+}
+
 func validateCatalogSeedPackages(manifest catalogSeedManifest, companyNames map[string]string, crafts map[string]catalogSeedCraft, validateRef func(catalogSeedReference) error) error {
 	if len(manifest.Packages) == 0 && len(manifest.PackageCoverage) == 0 {
 		return nil
@@ -634,7 +701,7 @@ func validateCatalogSeedPackages(manifest catalogSeedManifest, companyNames map[
 	packages := make(map[string]catalogSeedPackage, len(manifest.Packages))
 	for _, item := range manifest.Packages {
 		want, ok := approved[item.ID]
-		if !ok || !validCatalogSeedID(item.ID) || packages[item.ID].ID != "" || item.CompanyID != want.company || item.RoomCount != want.room || item.Name != "墙固、地固普通工艺" || item.Price.Cents != want.cents || item.Price.Classification != "package" || item.Source.SourceID != "excel-prices" || item.Source.Sheet != want.sheet || item.Source.Row != want.row || item.Price.Source.SourceID != item.Source.SourceID || item.Price.Source.Sheet != item.Source.Sheet || item.Price.Source.Row != item.Source.Row || len([]rune(item.Note)) > 1000 {
+		if !ok || !validCatalogSeedID(item.ID) || packages[item.ID].ID != "" || item.CompanyID != want.company || item.PackageType != "room_count" || item.RoomCount != want.room || item.Name != "墙固、地固普通工艺" || item.Price.Cents != want.cents || item.Price.Classification != "package" || item.Source.SourceID != "excel-prices" || item.Source.Sheet != want.sheet || item.Source.Row != want.row || item.Price.Source.SourceID != item.Source.SourceID || item.Price.Source.Sheet != item.Source.Sheet || item.Price.Source.Row != item.Source.Row || len([]rune(item.Note)) > 1000 {
 			return fail(400, "套餐身份、来源或房型金额不符合原表")
 		}
 		if _, ok := companyNames[item.CompanyID]; !ok {
@@ -810,6 +877,7 @@ func importCatalogSeedData(parent context.Context, db *sql.DB, manifest catalogS
 	countsJSON, _ := json.Marshal(map[string]int{
 		"companies": len(manifest.Companies), "crafts": len(manifest.Crafts), "company_crafts": len(manifest.CompanyCrafts),
 		"company_wage_overrides": len(manifest.CompanyWageOverrides), "products": len(manifest.Products),
+		"company_product_prices": len(manifest.CompanyProductPrices),
 		"packages": len(manifest.Packages), "package_coverage": len(manifest.PackageCoverage), "bonus_rules": len(manifest.BonusRules),
 	})
 	if _, err = tx.ExecContext(ctx, "INSERT INTO catalog_seed_imports(seed_id,manifest_digest,sources,entry_counts) VALUES(?,?,?,?)", manifest.SeedID, digest, string(sourceJSON), string(countsJSON)); err != nil {
@@ -840,8 +908,9 @@ func importCatalogSeedData(parent context.Context, db *sql.DB, manifest catalogS
 		if craft.Wage != nil {
 			wageCents = craft.Wage.Cents
 		}
-		if _, err = tx.ExecContext(ctx, `INSERT INTO crafts(id,company_id,category,name,mode,price_cents,wage_cents,active,spec,version,source_id,subitems,ticket_slot,included_by_craft_id,display_order,wage_override_cents)
-			VALUES(?,'',?,?,?,0,?,?,?,1,'',?,1,'',?,NULL)`, craft.ID, craft.Category, craft.Name, craft.Mode, wageCents, active, craft.Spec, string(subitems), index); err != nil {
+		wageConfigured := craft.Wage != nil
+		if _, err = tx.ExecContext(ctx, `INSERT INTO crafts(id,company_id,category,name,mode,price_cents,wage_cents,wage_configured,active,spec,version,source_id,subitems,ticket_slot,included_by_craft_id,display_order,wage_override_cents)
+			VALUES(?,'',?,?,?,0,?,?,?,?,1,'',?,1,'',?,NULL)`, craft.ID, craft.Category, craft.Name, craft.Mode, wageCents, wageConfigured, active, craft.Spec, string(subitems), index); err != nil {
 			return err
 		}
 		if err = insertCatalogSeedProvenance(ctx, tx, manifest.SeedID, manifest.Sources, "craft", craft.ID, "identity", "confirmed", craft.Source, false, map[string]any{"category": craft.Category, "name": craft.Name, "mode": craft.Mode, "spec": craft.Spec, "subitems": runtimeSubitems}); err != nil {
@@ -878,8 +947,14 @@ func importCatalogSeedData(parent context.Context, db *sql.DB, manifest catalogS
 			spec = appendCatalogSeedNote(spec, item.Note)
 		}
 		subitems, _ := json.Marshal(catalogSeedRuntimeSubitems(craft.Subitems))
-		if _, err = tx.ExecContext(ctx, `INSERT INTO crafts(id,company_id,category,name,mode,price_cents,wage_cents,active,spec,version,source_id,subitems,ticket_slot,included_by_craft_id,display_order,wage_override_cents)
-			VALUES(?,?,?,?,?,?,0,1,?,1,?,?,?, ?,?,NULL)`, item.ID, item.CompanyID, craft.Category, craft.Name, craft.Mode, item.Price.Cents, spec, craft.ID, string(subitems), ticketSlot, item.IncludedByCraftID, index); err != nil {
+		wageCents := int64(0)
+		wageConfigured := false
+		if craft.Wage != nil {
+			wageCents = craft.Wage.Cents
+			wageConfigured = true
+		}
+		if _, err = tx.ExecContext(ctx, `INSERT INTO crafts(id,company_id,category,name,mode,price_cents,wage_cents,wage_configured,active,spec,version,source_id,subitems,ticket_slot,included_by_craft_id,display_order,wage_override_cents)
+			VALUES(?,?,?,?,?,?,?,?,1,?,1,?,?,?, ?,?,NULL)`, item.ID, item.CompanyID, craft.Category, craft.Name, craft.Mode, item.Price.Cents, wageCents, wageConfigured, spec, craft.ID, string(subitems), ticketSlot, item.IncludedByCraftID, index); err != nil {
 			return err
 		}
 		if err = insertCatalogSeedProvenance(ctx, tx, manifest.SeedID, manifest.Sources, "company_craft", item.ID, "identity", "confirmed", item.Source, false, map[string]any{"company_id": item.CompanyID, "craft_id": item.CraftID, "category": craft.Category, "name": craft.Name, "mode": craft.Mode, "note": item.Note}); err != nil {
@@ -916,9 +991,22 @@ func importCatalogSeedData(parent context.Context, db *sql.DB, manifest catalogS
 			return err
 		}
 	}
+	for _, item := range manifest.CompanyProductPrices {
+		if _, err = tx.ExecContext(ctx, `INSERT INTO company_product_prices(id,seed_id,company_id,product_id,input_unit,price_cents,source_id,source_sheet,source_row,note,version)
+			VALUES(?,?,?,?,?,?,?,?,?,?,1)`, item.ID, manifest.SeedID, item.CompanyID, item.ProductID, item.InputUnit, item.Price.Cents, item.Price.Source.SourceID, item.Price.Source.Sheet, item.Price.Source.Row, item.Note); err != nil {
+			return err
+		}
+		detail := map[string]any{"company_id": item.CompanyID, "product_id": item.ProductID, "input_unit": item.InputUnit, "price_cents": item.Price.Cents, "note": item.Note}
+		if err = insertCatalogSeedProvenance(ctx, tx, manifest.SeedID, manifest.Sources, "company_product_price", item.ID, "identity", "confirmed", item.Source, false, detail); err != nil {
+			return err
+		}
+		if err = insertCatalogSeedProvenance(ctx, tx, manifest.SeedID, manifest.Sources, "company_product_price", item.ID, "customer_price", item.Price.Classification, item.Price.Source, item.Price.Classification == "test_only", catalogSeedValueDetail{Cents: item.Price.Cents, Classification: item.Price.Classification, Note: item.Price.Source.Note}); err != nil {
+			return err
+		}
+	}
 	for _, item := range manifest.Packages {
-		if _, err = tx.ExecContext(ctx, `INSERT INTO catalog_seed_packages(seed_id,package_id,company_id,name,room_count,price_cents,classification,source_id,source_sheet,source_row,note)
-			VALUES(?,?,?,?,?,?,?,?,?,?,?)`, manifest.SeedID, item.ID, item.CompanyID, item.Name, item.RoomCount, item.Price.Cents, item.Price.Classification, item.Source.SourceID, item.Source.Sheet, item.Source.Row, item.Note); err != nil {
+		if _, err = tx.ExecContext(ctx, `INSERT INTO catalog_seed_packages(seed_id,package_id,company_id,name,package_type,room_count,price_cents,classification,source_id,source_sheet,source_row,note)
+			VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`, manifest.SeedID, item.ID, item.CompanyID, item.Name, item.PackageType, item.RoomCount, item.Price.Cents, item.Price.Classification, item.Source.SourceID, item.Source.Sheet, item.Source.Row, item.Note); err != nil {
 			return err
 		}
 		if err = insertCatalogSeedProvenance(ctx, tx, manifest.SeedID, manifest.Sources, "package", item.ID, "customer_price", item.Price.Classification, item.Price.Source, false, map[string]any{"company_id": item.CompanyID, "name": item.Name, "room_count": item.RoomCount, "price_cents": item.Price.Cents, "note": item.Note}); err != nil {
@@ -949,7 +1037,7 @@ func importCatalogSeedData(parent context.Context, db *sql.DB, manifest catalogS
 }
 
 func requireCatalogSeedSchema(ctx context.Context, db *sql.DB) error {
-	var migrationCount, overrideMigrationCount, columnCount, tableCount int
+	var migrationCount, overrideMigrationCount, productPricesMigrationCount, wageStatusMigrationCount, packageTypeMigrationCount, columnCount, tableCount int
 	if err := db.QueryRowContext(ctx, "SELECT COUNT(*) FROM schema_migrations WHERE version=?", catalogSeedMigrationVersion).Scan(&migrationCount); err != nil {
 		return fail(409, "基础资料迁移未完成；请先执行 init-db")
 	}
@@ -959,6 +1047,15 @@ func requireCatalogSeedSchema(ctx context.Context, db *sql.DB) error {
 	if err := db.QueryRowContext(ctx, "SELECT COUNT(*) FROM schema_migrations WHERE version=?", companyWageOverrideMigrationVersion).Scan(&overrideMigrationCount); err != nil {
 		return fail(409, "公司工资覆盖迁移未完成；请先执行 init-db")
 	}
+	if err := db.QueryRowContext(ctx, "SELECT COUNT(*) FROM schema_migrations WHERE version=?", companyProductPricesMigrationVersion).Scan(&productPricesMigrationCount); err != nil {
+		return fail(409, "公司商品固定价迁移未完成；请先执行 init-db")
+	}
+	if err := db.QueryRowContext(ctx, "SELECT COUNT(*) FROM schema_migrations WHERE version=?", craftWageStatusMigrationVersion).Scan(&wageStatusMigrationCount); err != nil {
+		return fail(409, "工价配置状态迁移未完成；请先执行 init-db")
+	}
+	if err := db.QueryRowContext(ctx, "SELECT COUNT(*) FROM schema_migrations WHERE version=?", catalogSeedPackageTypeMigrationVersion).Scan(&packageTypeMigrationCount); err != nil {
+		return fail(409, "套餐类型迁移未完成；请先执行 init-db")
+	}
 	if err := db.QueryRowContext(ctx, "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='crafts' AND COLUMN_NAME='wage_override_cents'").Scan(&columnCount); err != nil {
 		return err
 	}
@@ -966,10 +1063,10 @@ func requireCatalogSeedSchema(ctx context.Context, db *sql.DB) error {
 		return err
 	}
 	var auxiliaryTableCount int
-	if err := db.QueryRowContext(ctx, "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME IN ('company_wage_overrides','catalog_seed_packages','catalog_seed_package_coverage')").Scan(&auxiliaryTableCount); err != nil {
+	if err := db.QueryRowContext(ctx, "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME IN ('company_wage_overrides','catalog_seed_packages','catalog_seed_package_coverage','company_product_prices')").Scan(&auxiliaryTableCount); err != nil {
 		return err
 	}
-	if overrideMigrationCount != 1 || columnCount != 1 || tableCount != 2 || auxiliaryTableCount != 3 {
+	if overrideMigrationCount != 1 || productPricesMigrationCount != 1 || wageStatusMigrationCount != 1 || packageTypeMigrationCount != 1 || columnCount != 1 || tableCount != 2 || auxiliaryTableCount != 4 {
 		return fail(409, "基础资料迁移结构不完整；请先执行 init-db")
 	}
 	return nil
@@ -978,7 +1075,7 @@ func requireCatalogSeedSchema(ctx context.Context, db *sql.DB) error {
 func requireEmptyCatalogSeedTarget(ctx context.Context, tx *sql.Tx) error {
 	for _, table := range []string{
 		"users", "companies", "projects", "workers", "warehouses", "products", "product_unit_definitions", "crafts", "company_wage_overrides",
-		"catalog_seed_packages", "catalog_seed_package_coverage",
+		"catalog_seed_packages", "catalog_seed_package_coverage", "company_product_prices",
 		"orders", "order_lines", "order_line_wage_adjustments", "order_worker_wages", "wage_settlements", "order_materials", "order_sales",
 		"project_craft_slots", "project_combinations", "project_tickets", "project_packages", "project_ticket_items", "project_ticket_versions", "project_ticket_receipts",
 		"company_receipts", "company_receipt_versions", "customer_discounts", "customer_discount_versions", "ticket_batches", "ticket_batch_items", "ticket_batch_versions",

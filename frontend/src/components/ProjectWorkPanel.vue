@@ -4,7 +4,7 @@ import {api} from '../api'
 import {referenceById} from '../workflows/references'
 import type {Craft} from '../workflows/models'
 import {ticketLabel,ticketPrintOrder,type ProjectTicket,type ProjectWork,type TicketDetail} from '../projectWork'
-import {projectError} from '../projects'
+import {packageCoverageGroups,packageDisplayLabel,projectError} from '../projects'
 import {customerMoney,hasCustomerPrice} from '../customerPrices'
 import type {PrintOrder} from '../printOrder'
 import ReceiptManagementPanel from './ReceiptManagementPanel.vue'
@@ -19,6 +19,7 @@ const work=ref<ProjectWork|null>(null),loading=ref(false),busy=ref(false),error=
 const printOrder=ref<PrintOrder|null>(null),selected=ref<TicketDetail|null>(null),receiptCompany=ref('')
 let generation=0
 const submittedTickets=computed(()=>work.value?.tickets||[])
+const packageCoverage=computed(()=>packageCoverageGroups(work.value?.project.package?.coverage||[]))
 const categoryOrder=ref<string[]>([]),orderingCrafts=ref<Craft[]>([]),sortingWarning=ref('')
 async function load(page=1){
   if(!props.projectId)return
@@ -64,8 +65,8 @@ defineExpose({refresh:load,printSummary:()=>preview()})
     <p v-if="error" class="error" role="alert">{{error}}；已填写的内容仍保留，请核对后重试。</p><p v-if="notice" class="notice" role="status">{{notice}}</p>
     <template v-if="work">
       <p class="hint">本工地正常{{work.project.ticket_mode==='split'?'分两次':'统一'}}交票。不同日期、不同师傅的施工按配置累计；交票和打印不会再次扣料或计工资。</p>
-      <section v-if="canCustomerPrices&&work.project.package" class="package-overview"><strong>{{work.project.package.name}} · {{work.project.package.room_count}} 房</strong><span>套餐费 {{money(work.project.package.price_cents)}}，套餐内施工照常计工资。</span><span v-if="work.project.package.coverage.filter(item=>item.mapping==='mapped').length">套餐覆盖：{{work.project.package.coverage.filter(item=>item.mapping==='mapped').map(item=>item.item_name).join('、')}}</span><span v-if="work.project.package.coverage.filter(item=>item.mapping!=='mapped').length">待核实覆盖（仍按实际收费）：{{work.project.package.coverage.filter(item=>item.mapping!=='mapped').map(item=>item.item_name).join('、')}}</span></section>
-      <div class="ticket-list"><article v-for="ticket in submittedTickets" :key="ticket.id" class="ticket-card"><div><strong>{{ticketLabel(ticket)}}</strong><span class="ticket-status">{{ticket.status}}</span></div><small>{{ticket.number}} · 第 {{ticket.version}} 版</small><dl><div><dt>票面金额</dt><dd>{{money(ticket.total_cents)}}</dd></div><div v-if="canCustomerPrices&&ticket.package_charge"><dt>房型套餐费</dt><dd>{{ticket.package_charge.name}} · {{money(ticket.package_charge.amount_cents)}}</dd></div><div><dt>已分配收款</dt><dd>{{financeMoney(ticket.received_cents)}}</dd></div><div><dt>尚未核销</dt><dd>{{financeMoney(ticket.outstanding_cents)}}</dd></div></dl><div class="ticket-buttons"><button type="button" :disabled="busy||!canCustomerPrices||!hasCustomerPrice(ticket.total_cents)" @click="preview(ticket)">预览 / 打印</button><button type="button" :disabled="busy" @click="inspect(ticket)">版本 / 记录</button><button v-if="financeAllowed" type="button" :disabled="busy" @click="receiptCompany=work.project.company_id">公司收款 / 欠款</button></div></article></div>
+      <section v-if="canCustomerPrices&&work.project.package" class="package-overview"><strong>{{packageDisplayLabel(work.project.package)}}</strong><span>套餐费 {{money(work.project.package.price_cents)}}，套餐内施工照常计工资。</span><span v-if="packageCoverage.mapped.length">具体对应工艺（套餐内免重复收费）：{{packageCoverage.mapped.join('、')}}</span><span v-if="packageCoverage.includedUnmapped.length">来源明确属于套餐但未对应独立工艺（不按相似名称自动免收）：{{packageCoverage.includedUnmapped.join('、')}}</span><span v-if="packageCoverage.pending.length">待确认套餐关系（按实际收费）：{{packageCoverage.pending.join('、')}}</span></section>
+      <div class="ticket-list"><article v-for="ticket in submittedTickets" :key="ticket.id" class="ticket-card"><div><strong>{{ticketLabel(ticket)}}</strong><span class="ticket-status">{{ticket.status}}</span></div><small>{{ticket.number}} · 第 {{ticket.version}} 版</small><dl><div><dt>票面金额</dt><dd>{{money(ticket.total_cents)}}</dd></div><div v-if="canCustomerPrices&&ticket.package_charge"><dt>套餐费</dt><dd>{{packageDisplayLabel(ticket.package_charge)}} · {{money(ticket.package_charge.amount_cents)}}</dd></div><div><dt>已分配收款</dt><dd>{{financeMoney(ticket.received_cents)}}</dd></div><div><dt>尚未核销</dt><dd>{{financeMoney(ticket.outstanding_cents)}}</dd></div></dl><div class="ticket-buttons"><button type="button" :disabled="busy||!canCustomerPrices||!hasCustomerPrice(ticket.total_cents)" @click="preview(ticket)">预览 / 打印</button><button type="button" :disabled="busy" @click="inspect(ticket)">版本 / 记录</button><button v-if="financeAllowed" type="button" :disabled="busy" @click="receiptCompany=work.project.company_id">公司收款 / 欠款</button></div></article></div>
       <p v-if="!submittedTickets.length" class="empty">尚无已填写的施工或售料；保存后按公司配置累计成票。</p>
       <details v-if="work.orders.length" :open="!compact" class="work-records">
         <summary>已保存施工 / 送货记录（共 {{work.total}} 次）</summary>
@@ -79,7 +80,7 @@ defineExpose({refresh:load,printSummary:()=>preview()})
       </details>
     </template>
     <section v-if="selected" class="ticket-details"><div class="toolbar"><h4>{{ticketLabel(selected.ticket)}} · {{selected.ticket.number}}</h4><button type="button" :disabled="busy" @click="selected=null">关闭票据记录</button></div>
-      <p v-if="canCustomerPrices&&selected.ticket.package_charge" class="package-charge-detail">房型套餐收费：{{selected.ticket.package_charge.name}} · {{selected.ticket.package_charge.room_count}} 房 · {{money(selected.ticket.package_charge.amount_cents)}} 元。套餐覆盖施工不再逐项收费，施工工资照常计算。</p>
+      <p v-if="canCustomerPrices&&selected.ticket.package_charge" class="package-charge-detail">套餐收费：{{packageDisplayLabel(selected.ticket.package_charge)}} · {{money(selected.ticket.package_charge.amount_cents)}} 元。仅已确认映射的施工项目免重复收费，未映射项目仍按公司报价计价；施工工资照常计算。</p>
       <div class="version-list"><strong>已保留版本</strong><button v-for="version in selected.versions||[]" :key="version.version" type="button" :disabled="busy||!canCustomerPrices" @click="preview(selected.ticket,version.version)">第 {{version.version}} 版 · {{version.created_at}} {{version.event}}</button><p v-if="!selected.versions?.length" class="hint">尚无交票版本记录。</p></div>
       <div v-if="financeAllowed" class="receipt-list"><strong>此工地收费的收款分配</strong><p class="hint">这里显示分配到本工地收费的钱；公司实际到账、预收、纠错与减免统一在收款管理操作。</p><article v-for="receipt in selected.payment_receipts||[]" :key="receipt.id"><span>{{receipt.received_at}} · {{financeMoney(receipt.amount_cents)}} · {{receipt.method||'未填写方式'}}</span><span v-if="receipt.voided||receipt.voided_at">历史已解除分配</span></article><button type="button" :disabled="busy" @click="receiptCompany=work?.project.company_id||''">打开公司收款管理</button></div>
     </section>

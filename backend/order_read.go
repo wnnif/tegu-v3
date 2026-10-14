@@ -25,6 +25,7 @@ type orderLineView struct {
 	Price                int64                `json:"price_cents"`
 	Total                int64                `json:"total_cents"`
 	Temporary            bool                 `json:"temporary"`
+	WageConfigured       bool                 `json:"wage_configured"`
 	Wage                 *int64               `json:"wage_cents,omitempty"`
 	Labor                *int64               `json:"labor_cents,omitempty"`
 	SubitemID            string               `json:"subitem_id"`
@@ -245,10 +246,16 @@ func readOrderDetail(tx *sql.Tx, orderID string, u User) (orderDetailView, error
 		if l.Worker == "" {
 			l.Worker, l.WorkerName = d.WorkerID, d.WorkerName
 		}
-		v := orderLineView{customerPricesHidden: !u.can(customerPricePermission), WorkerID: l.Worker, WorkerName: l.WorkerName, ID: l.ID, OrderID: d.ID, CraftID: l.CraftID, Category: l.Category, Name: l.Name, Spec: l.Spec, Region: l.Region, SubitemName: l.SubitemName, ActualLocation: l.ActualLocation, Description: l.Description, Mode: l.Mode, Segments: l.Segments, Qty: l.Qty, Price: l.Price, Total: l.Total, Temporary: l.Temporary, SubitemID: l.SubitemID, SortOrder: l.SortOrder, Editable: d.Editable && lineFillAllowed(u, l) && l.ticketBatchID == "", TicketClaimed: l.ticketBatchID != "", WaivedQty: l.WaivedQty, ChargeableQty: l.Qty - l.WaivedQty, UseIncludedPrice: l.UseIncludedPrice, IncludedByCraftID: l.IncludedByCraftID, ChargeNote: l.ChargeNote, ChargeMode: normalizeChargeMode(l.ChargeMode), PackageIncluded: l.PackageIncluded}
+		v := orderLineView{customerPricesHidden: !u.can(customerPricePermission), WorkerID: l.Worker, WorkerName: l.WorkerName, ID: l.ID, OrderID: d.ID, CraftID: l.CraftID, Category: l.Category, Name: l.Name, Spec: l.Spec, Region: l.Region, SubitemName: l.SubitemName, ActualLocation: l.ActualLocation, Description: l.Description, Mode: l.Mode, Segments: l.Segments, Qty: l.Qty, Price: l.Price, Total: l.Total, Temporary: l.Temporary, WageConfigured: !u.can("wages") || l.WageConfigured, SubitemID: l.SubitemID, SortOrder: l.SortOrder, Editable: d.Editable && lineFillAllowed(u, l) && l.ticketBatchID == "", TicketClaimed: l.ticketBatchID != "", WaivedQty: l.WaivedQty, ChargeableQty: l.Qty - l.WaivedQty, UseIncludedPrice: l.UseIncludedPrice, IncludedByCraftID: l.IncludedByCraftID, ChargeNote: l.ChargeNote, ChargeMode: normalizeChargeMode(l.ChargeMode), PackageIncluded: l.PackageIncluded}
 		if u.can("wages") {
 			w, lab := l.Wage, l.Labor
-			v.Wage, v.Labor, v.WageOverrideCents, v.WageAdjustmentReason = &w, &lab, l.WageOverrideCents, l.WageAdjustmentReason
+			if l.WageConfigured {
+				v.Wage = &w
+			}
+			if l.WageConfigured || l.WageOverrideCents != nil {
+				v.Labor = &lab
+			}
+			v.WageOverrideCents, v.WageAdjustmentReason = l.WageOverrideCents, l.WageAdjustmentReason
 			v.WageAdjustments = adjustments[l.ID]
 		}
 		d.Lines = append(d.Lines, v)

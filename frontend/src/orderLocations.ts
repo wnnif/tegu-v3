@@ -1,6 +1,6 @@
 import type { OrderLine } from './workflows/models'
 
-type LocationIdentity = Pick<OrderLine, 'craft_id' | 'category' | 'name' | 'spec' | 'subitem_id' | 'subitem_name' | 'mode' | 'price_cents' | 'wage_cents' | 'temporary' | 'editable' | 'included_by_craft_id' | 'use_included_price'>
+type LocationIdentity = Pick<OrderLine, 'craft_id' | 'category' | 'name' | 'spec' | 'subitem_id' | 'subitem_name' | 'mode' | 'price_cents' | 'wage_cents' | 'wage_configured' | 'temporary' | 'editable' | 'included_by_craft_id' | 'use_included_price'>
 let nextClientKey = 0
 
 // A configured subitem can have several rows; its ID is not a unique Vue key.
@@ -13,7 +13,7 @@ export function createOrderLocation(identity: LocationIdentity, sortOrder: numbe
     id: '', craft_id: identity.craft_id, category: identity.category, name: identity.name, spec: identity.spec,
     subitem_id: identity.subitem_id || '', subitem_name: identity.subitem_name || '',
     region: '', actual_location: '', sort_order: sortOrder, description: '', mode: identity.mode,
-    ...(identity.price_cents === undefined ? {} : { price_cents: Number(identity.price_cents) }), wage_cents: Number(identity.wage_cents || 0),
+    ...(identity.price_cents === undefined ? {} : { price_cents: Number(identity.price_cents) }), ...(identity.wage_cents === undefined ? {} : { wage_cents: Number(identity.wage_cents) }), wage_configured: identity.wage_configured ?? true,
     included_by_craft_id: identity.included_by_craft_id || '', use_included_price: !!identity.use_included_price,
     temporary: identity.temporary, editable: identity.editable, entered: false,
     // A new location follows the category default, not another location's explicit person.

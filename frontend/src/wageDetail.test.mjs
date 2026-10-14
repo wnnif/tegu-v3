@@ -48,6 +48,8 @@ async function component(name){
 }
 const {default:PayrollDetailPanel}=await import(await component('PayrollDetailPanel'))
 const {default:PayrollActionDialog}=await import(await component('PayrollActionDialog'))
+const {default:WageDetailPanel}=await import(await component('WageDetailPanel'))
+const {default:WageFinancePanel}=await import(await component('WageFinancePanel'))
 const {default:ProjectWorkPanel}=await import(await component('ProjectWorkPanel'))
 const {default:OrderPrint}=await import(await component('OrderPrint'))
 const response=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{'Content-Type':'application/json'}})
@@ -71,6 +73,7 @@ function mount(t,Component,props={},override=()=>null){
   const alternate=override(path,init);if(alternate)return alternate
   if(path==='/api/me')return response({user:{id:'admin',role:'admin',permissions:[],crafts:['防水涂料']},categories:['防水涂料']})
   if(path==='/api/reference')return response({companies:[],workers:[],products:[],warehouses:[],crafts:[]})
+  if(path.startsWith('/api/payroll-workers?'))return response({rows:[],total:0,page:1,page_size:100})
   if(path.startsWith('/api/payroll?'))return response({rows:[{id:'wa',order_id:'source-order',number:'O-1',work_date:'2026-10-08',worker_id:'a',worker_name:'历史甲',project_id:'p',project_name:'合成工地',wage_cents:1800,delivery_wage_cents:0,settled:false}],total:1,page:1,page_size:100})
   if(path.startsWith('/api/payroll-history?'))return response({rows:[{id:'history-a',entity_type:'deduction',entity_id:'deduction-a',event:'edit-deduction',reason:'更正扣款金额',before_snapshot:{amount_cents:5000},after_snapshot:{amount_cents:3000},actor_name:'管理员甲',operation_id:'op-a',created_at:'2026-10-12 10:00:00'}],total:1,page:1,page_size:100})
   throw new Error('Unexpected synthetic request '+path)
@@ -93,6 +96,45 @@ test('payroll detail scopes wages to the selected worker and forwards date and p
  h.state.from='2026-10-01';h.state.to='2026-10-31';h.state.projectId='p';await h.state.applyFilters();await settle()
  request=h.requests.filter(item=>item.path.startsWith('/api/payroll?')).at(-1);q=new URL('http://synthetic'+request.path).searchParams
  assert.equal(q.get('worker_id'),'a');assert.equal(q.get('tab'),'wages');assert.equal(q.get('from'),'2026-10-01');assert.equal(q.get('to'),'2026-10-31');assert.equal(q.get('project_id'),'p');assert.equal(q.get('page'),'1')
+})
+
+test('pending payroll wages show unknown amount and cannot be selected for settlement',async(t)=>{
+ const worker={worker_id:'a',worker_name:'待配置甲',order_count:1,wage_pending_count:1,gross_cents:0,adjustment_cents:0,deduction_cents:0,advance_issued_cents:0,advance_applied_cents:0,advance_balance_cents:0,paid_cents:0,unpaid_cents:0}
+ const h=mount(t,PayrollDetailPanel,{worker},path=>path.startsWith('/api/payroll?')?response({rows:[{id:'wa',order_id:'pending-order',number:'O-P',work_date:'2026-10-08',worker_id:'a',worker_name:'待配置甲',wage_configured:false,delivery_wage_cents:0,settled:false}],total:1,page:1,page_size:100}):null)
+ await settle()
+ assert.match(h.text(),/工价待配置/)
+ assert.doesNotMatch(h.text(),/总工资 ¥ 0\.00|施工 ¥ 0\.00/)
+ const checkbox=h.elements().find(node=>node.props?.['aria-label']?.includes('纳入结算'))
+ assert.ok(checkbox)
+ assert.equal(checkbox.props.disabled,true)
+ assert.equal(h.button('确认工资结算').props.disabled,true)
+})
+
+test('wage detail keeps pending wages distinct from an explicitly configured zero',async(t)=>{
+ const base={id:'wa',order_id:'o1',number:'O-1',company_id:'c',company_name:'合成公司',project_id:'p',project_name:'',address:'合成地址',work_date:'2026-10-08',worker_id:'a',worker_name:'甲',status:'施工中',wage_paid:false,version:1,delivery_wage_cents:0,legacy:false,handles_delivery:false,lines:[{id:'l1',category:'开工',name:'合成施工',spec:'',region:'',description:'',mode:'平方',subitem_id:'',sort_order:1,worker_id:'a',worker_name:'甲',qty_micro:6000000,segments:[{mode:'平方',surface:'地面',length:2,width:3}]}]}
+ const pending=mount(t,WageDetailPanel,{wageId:'wa'},path=>path==='/api/wage?id=wa'?response({...base,wage_configured:false,lines:[{...base.lines[0],wage_configured:false}]}):null)
+ await settle()
+ assert.match(pending.content(),/工资状态工价待配置/)
+ assert.match(pending.content(),/工资标准工价待配置本项工资工价待配置/)
+ assert.match(pending.content(),/此人工资合计：工价待配置/)
+ assert.doesNotMatch(pending.content(),/0\.00/)
+})
+
+test('an explicitly configured zero wage remains visible as zero',async(t)=>{
+ const base={id:'wa',order_id:'o1',number:'O-1',company_id:'c',company_name:'合成公司',project_id:'p',project_name:'',address:'合成地址',work_date:'2026-10-08',worker_id:'a',worker_name:'甲',status:'施工中',wage_cents:0,wage_configured:true,wage_paid:false,version:1,delivery_wage_cents:0,legacy:false,handles_delivery:false,lines:[{id:'l1',category:'开工',name:'明确零工资施工',spec:'',region:'',description:'',mode:'平方',subitem_id:'',sort_order:1,worker_id:'a',worker_name:'甲',qty_micro:6000000,wage_cents:0,labor_cents:0,wage_configured:true,segments:[{mode:'平方',surface:'地面',length:2,width:3}]}]}
+ const h=mount(t,WageDetailPanel,{wageId:'wa'},path=>path==='/api/wage?id=wa'?response(base):null)
+ await settle()
+ assert.match(h.content(),/工资标准0\.00 元\/㎡本项工资0\.00 元/)
+ assert.match(h.content(),/此人工资合计：0\.00 元/)
+ assert.doesNotMatch(h.content(),/工价待配置/)
+})
+
+test('worker wage summary labels configured totals and pending record count separately',async(t)=>{
+ const h=mount(t,WageFinancePanel,{},path=>path.startsWith('/api/payroll-workers?')?response({rows:[{worker_id:'a',worker_name:'待配置甲',order_count:3,wage_pending_count:2,gross_cents:12500,adjustment_cents:0,deduction_cents:0,advance_issued_cents:0,advance_applied_cents:0,advance_balance_cents:0,paid_cents:0,unpaid_cents:12500}],total:1,page:1,page_size:100}):null)
+ await settle()
+ assert.match(h.text(),/工价待配置 2 笔/)
+ assert.match(h.text(),/已配置施工工资¥ 125\.00/)
+ assert.match(h.text(),/已配置剩余未发工资¥ 125\.00/)
 })
 
 test('payroll operation history uses the same worker, date and project filters and displays snapshots as text',async(t)=>{

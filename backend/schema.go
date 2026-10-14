@@ -32,7 +32,7 @@ var schema = []string{
 	`CREATE TABLE IF NOT EXISTS settings(setting_key VARCHAR(100) PRIMARY KEY,value JSON NOT NULL)`,
 }
 
-var backupTables = []string{"users", "companies", "catalog_seed_imports", "catalog_seed_provenance", "catalog_seed_packages", "catalog_seed_package_coverage", "projects", "workers", "payroll_bonus_worker_locks", "warehouses", "products", "product_unit_definitions", "product_purchase_costs", "crafts", "company_wage_overrides", "orders", "order_lines", "order_line_wage_adjustments", "order_worker_wages", "wage_settlements", "order_materials", "order_sales", "project_craft_slots", "project_combinations", "project_tickets", "project_packages", "project_ticket_items", "project_ticket_versions", "project_ticket_receipts", "company_receipts", "company_receipt_versions", "customer_discounts", "customer_discount_versions", "ticket_batches", "ticket_batch_items", "ticket_batch_versions", "stock_balances", "stock_documents", "stock_movements", "settlements", "payment_receipts", "attachment_files", "requests", "audit", "archive_runs", "backup_runs", "maintenance_jobs", "settings", "payroll_adjustments", "payroll_deductions", "payroll_advances", "payroll_settlements", "payroll_settlement_sources", "payroll_payments", "payroll_history", "payroll_bonus_entries", "payroll_bonus_settlements", "payroll_bonus_payments", "expense_claims", "expense_advances", "expense_advance_allocations", "expense_payments", "expense_advance_returns", "expense_history"}
+var backupTables = []string{"users", "companies", "catalog_seed_imports", "catalog_seed_provenance", "catalog_seed_packages", "catalog_seed_package_coverage", "projects", "workers", "payroll_bonus_worker_locks", "warehouses", "products", "product_unit_definitions", "product_purchase_costs", "company_product_prices", "crafts", "company_wage_overrides", "orders", "order_lines", "order_line_wage_adjustments", "order_worker_wages", "wage_settlements", "order_materials", "order_sales", "project_craft_slots", "project_combinations", "project_tickets", "project_packages", "project_ticket_items", "project_ticket_versions", "project_ticket_receipts", "company_receipts", "company_receipt_versions", "customer_discounts", "customer_discount_versions", "ticket_batches", "ticket_batch_items", "ticket_batch_versions", "stock_balances", "stock_documents", "stock_movements", "settlements", "payment_receipts", "attachment_files", "requests", "audit", "archive_runs", "backup_runs", "maintenance_jobs", "settings", "payroll_adjustments", "payroll_deductions", "payroll_advances", "payroll_settlements", "payroll_settlement_sources", "payroll_payments", "payroll_history", "payroll_bonus_entries", "payroll_bonus_settlements", "payroll_bonus_payments", "expense_claims", "expense_advances", "expense_advance_allocations", "expense_payments", "expense_advance_returns", "expense_history"}
 
 func initSchema(db *sql.DB) error {
 	conn, err := db.Conn(context.Background())
@@ -184,7 +184,13 @@ func initSchema(db *sql.DB) error {
 	if err = migrateProjectPackages(db); err != nil {
 		return err
 	}
-	return migrateBonusWorkerLocks(db)
+	if err := migrateBonusWorkerLocks(db); err != nil {
+		return err
+	}
+	if err := migrateCompanyProductPrices(db); err != nil {
+		return err
+	}
+	return migrateCraftWageStatus(db)
 }
 
 // Version 300 fills the first project snapshot for orders saved before snapshot

@@ -31,7 +31,7 @@ export interface OrderLineShape {
   charge_mode?: 'normal' | 'free' | 'redo'
   waived_qty_micro?: string | number
 }
-const countCraftModes = new Set(['个', '根', '处', '孔位', '副', '张', '套'])
+const countCraftModes = new Set(['个', '家', '根', '处', '孔位', '副', '张', '套'])
 export const isCountCraftMode = (mode?: string) => countCraftModes.has(mode || '')
 export const measureUnit = (mode?: string) => mode === '米' ? '米' : mode === '立方' ? 'm³' : isCountCraftMode(mode) ? mode! : mode === '金额' ? '项' : '㎡'
 export function segmentFilled(s: OrderSegmentShape): boolean {

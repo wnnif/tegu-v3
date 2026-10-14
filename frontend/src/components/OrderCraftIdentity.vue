@@ -9,7 +9,7 @@ const emit=defineEmits<{mode:[];remove:[]}>()
   <fieldset v-else class="temporary-identity" :disabled="!editable">
     <label>临时类别<select v-model="line.category"><option v-for="category in allowedCrafts" :key="category">{{category}}</option></select></label>
     <label>临时项目<input v-model="line.name" required maxlength="200"></label>
-    <label>计量<select v-model="line.mode" @change="emit('mode')"><option>平方</option><option>立方</option><option>米</option><option>个</option><option>根</option><option>处</option><option>孔位</option><option>副</option><option>张</option><option>套</option><option>金额</option></select></label>
+    <label>计量<select v-model="line.mode" @change="emit('mode')"><option>平方</option><option>立方</option><option>米</option><option>个</option><option>家</option><option>根</option><option>处</option><option>孔位</option><option>副</option><option>张</option><option>套</option><option>金额</option></select></label>
     <label v-if="canWages">{{line.mode==='金额'?'整项工资（元）':'工资单价（元/'+measureUnit(line.mode)+'）'}}<input type="number" min="0" max="1000000" step="0.01" :value="Number(line.wage_cents||0)/100" @input="line.wage_cents=Math.round(Number(($event.target as HTMLInputElement).value)*100)"></label>
     <button type="button" :disabled="!removable" @click="emit('remove')">移除临时项</button>
   </fieldset>

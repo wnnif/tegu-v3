@@ -34,6 +34,7 @@ export interface CatalogRow {
     price_cents?: Numeric;
     wage_cents?: Numeric;
     public_wage_cents?: Numeric;
+    wage_configured?: boolean;
     wage_override_cents?: Numeric | null;
     customer_price_test_only?: boolean;
     wage_test_only?: boolean;
@@ -54,6 +55,7 @@ export interface Craft extends CatalogRow {
     mode: string;
     price_cents?: Numeric;
     wage_cents?: Numeric;
+    wage_configured?: boolean;
     source_id?: string;
 }
 export interface CatalogDraft extends CatalogRow {
@@ -157,6 +159,7 @@ export interface OrderLine {
     mode: string;
     price_cents?: Numeric;
     wage_cents?: Numeric;
+    wage_configured?: boolean;
     wage_override_cents?: Numeric | null;
     wage_adjustment_reason?: string;
     wage_adjustments?: readonly WageAdjustment[];

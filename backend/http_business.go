@@ -41,6 +41,8 @@ func (a *App) get(w http.ResponseWriter, r *http.Request, u User) error {
 		return a.reference(w, r, u)
 	case "/api/reference-options":
 		return a.referenceOptions(w, r, u)
+	case "/api/company-product-prices":
+		return a.companyProductPrices(w, r, u)
 	case "/api/catalog":
 		return a.listCatalog(w, r, u)
 	case "/api/company-packages":

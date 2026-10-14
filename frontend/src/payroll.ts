@@ -5,6 +5,7 @@ export interface PayrollWorkerSummary {
   worker_id: string
   worker_name: string
   order_count: number
+  wage_pending_count?: number
   gross_cents: CentsValue
   adjustment_cents: CentsValue
   deduction_cents: CentsValue
@@ -76,8 +77,9 @@ export interface PayrollWageRow extends PayrollRowBase {
   order_id: string
   number: string
   work_date: string
-  wage_cents: CentsValue
+  wage_cents?: CentsValue
   delivery_wage_cents: CentsValue
+  wage_configured?: boolean
   settled: boolean | number
 }
 
@@ -176,7 +178,11 @@ export interface PayrollSettlementSelection {
 
 export function payrollSettlementCanConfirm(selection: PayrollSettlementSelection): boolean {
   const sourceCount = selection.wages.length + selection.adjustments.length + selection.deductions.length
-  return sourceCount > 0 && payrollSettlementBase(selection) >= 0n && payrollSettlementScopeCompatible(selection)
+  return sourceCount > 0 && !selection.wages.some(row => row.wage_configured === false) && payrollSettlementBase(selection) >= 0n && payrollSettlementScopeCompatible(selection)
+}
+
+export function payrollHasUnconfiguredWage(selection: PayrollSettlementSelection): boolean {
+  return selection.wages.some(row => row.wage_configured === false)
 }
 
 export function payrollSettlementScopeCompatible(selection: PayrollSettlementSelection): boolean {
@@ -194,7 +200,7 @@ export function payrollSettlementCanReverse(row: PayrollSettlementRow): boolean 
 }
 
 export function payrollSourceSelectable(tab: PayrollTab, row: PayrollRow): boolean {
-  if (tab === 'wages') return 'wage_cents' in row && !Boolean(Number(row.settled))
+  if (tab === 'wages') return 'order_id' in row && row.wage_configured !== false && !Boolean(Number(row.settled))
   if (tab === 'adjustments') return 'effective_date' in row && !Boolean(Number(row.settled)) && !row.reversal_id && !row.reversal_of && !row.reversed_by
   if (tab === 'deductions') return 'deduction_date' in row && row.status === 'confirmed' && !Boolean(Number(row.settled)) && !row.reversed_by
   if (tab === 'advances') return 'advance_date' in row && row.status !== 'voided' && payrollCents(row.remaining_cents) > 0n
@@ -304,6 +310,7 @@ export function buildPayrollAction(draft: PayrollActionDraft): PayrollActionPayl
     case 'edit-advance': return { action: draft.action, id: required(draft.id, '原记录'), version: draft.version, amount_cents: parsePayrollAmount(draft.amount), advance_date: requiredDate(draft.advance_date, '预支日期'), project_id: optionalProject(draft.project_id), note: draft.note.trim() }
     case 'reverse-advance': return { action: draft.action, id: required(draft.id, '原记录'), version: draft.version, reason: required(draft.reason, '更正原因') }
     case 'create-settlement': {
+      if (payrollHasUnconfiguredWage(draft.selection)) throw new Error('存在工价待配置的施工工资，不能纳入结算')
       const base = payrollSettlementBase(draft.selection)
       if (base < 0n) throw new Error('所选工资、调整和扣款不能形成负工资')
       if (base === 0n && draft.selection.wages.length + draft.selection.adjustments.length + draft.selection.deductions.length === 0) throw new Error('没有工资来源时不能单独结算工资预支')

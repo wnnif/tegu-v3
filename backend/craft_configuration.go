@@ -16,11 +16,11 @@ type CraftSubitem struct {
 const craftCatalogOrder = "display_order,name,id"
 
 func validCraftMode(mode string) bool {
-	return contains([]string{"平方", "立方", "金额", "个", "米", "根", "处", "孔位", "副", "张", "套"}, mode)
+	return contains([]string{"平方", "立方", "金额", "个", "家", "米", "根", "处", "孔位", "副", "张", "套"}, mode)
 }
 
 func countCraftMode(mode string) bool {
-	return contains([]string{"个", "根", "处", "孔位", "副", "张", "套"}, mode)
+	return contains([]string{"个", "家", "根", "处", "孔位", "副", "张", "套"}, mode)
 }
 
 func normalizeCraftSubitems(items []CraftSubitem) ([]CraftSubitem, error) {
@@ -60,6 +60,7 @@ const craftConfigurationSource = `(SELECT c.id,c.company_id,
 	IF(c.company_id='',0,c.price_cents) AS price_cents,
 	IF(c.company_id='',c.wage_cents,COALESCE(wo.wage_cents,c.wage_override_cents,p.wage_cents,0)) AS wage_cents,
 	IF(c.company_id='',c.wage_cents,COALESCE(p.wage_cents,0)) AS public_wage_cents,
+	IF(c.company_id='',c.wage_configured,CASE WHEN p.id IS NULL THEN c.wage_configured WHEN wo.company_id IS NOT NULL OR c.wage_override_cents IS NOT NULL THEN 1 ELSE p.wage_configured END) AS wage_configured,
 	IF(c.company_id='',NULL,COALESCE(wo.wage_cents,c.wage_override_cents)) AS wage_override_cents,
 	c.active,c.version,IF(p.id IS NULL,c.spec,p.spec) AS spec,
 	c.source_id,IF(c.company_id='',c.subitems,p.subitems) AS subitems,

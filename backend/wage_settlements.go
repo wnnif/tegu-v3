@@ -10,7 +10,10 @@ func (a *App) settleWorkerWages(_ *sql.Tx, u User, _ []byte, _ string) (any, err
 }
 
 func materializeLegacyWage(tx *sql.Tx, orderID string) error {
-	_, err := tx.Exec(`INSERT INTO order_worker_wages(id,order_id,worker_id,worker_name,wage_cents,delivery_wage_cents,wage_paid,version,legacy) SELECT MD5(CONCAT('legacy-wage:',o.id)),o.id,o.worker_id,o.worker_name,o.wage_cents,o.delivery_wage_cents,o.wage_paid,o.version,1 FROM orders o WHERE o.id=? AND NOT EXISTS(SELECT 1 FROM order_worker_wages w WHERE w.order_id=o.id)`, orderID)
+	_, err := tx.Exec(`INSERT INTO order_worker_wages(id,order_id,worker_id,worker_name,wage_cents,wage_configured,delivery_wage_cents,wage_paid,version,legacy)
+		SELECT MD5(CONCAT('legacy-wage:',o.id)),o.id,o.worker_id,o.worker_name,o.wage_cents,
+		NOT EXISTS(SELECT 1 FROM order_lines l WHERE l.order_id=o.id AND l.wage_configured=0 AND l.wage_override_cents IS NULL),o.delivery_wage_cents,o.wage_paid,o.version,1
+		FROM orders o WHERE o.id=? AND NOT EXISTS(SELECT 1 FROM order_worker_wages w WHERE w.order_id=o.id)`, orderID)
 	return err
 }
 

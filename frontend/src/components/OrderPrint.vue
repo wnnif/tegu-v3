@@ -3,7 +3,8 @@ import { computed, ref } from 'vue'
 import { acceptanceGroups, formatCents, formatQuantity, printableLines, printLineLocation, printWorkerNames, wageRecordKey, type PrintOrder } from '../printOrder'
 import { measureUnit } from '../orderSegments'
 
-const props = defineProps<{ order: PrintOrder; company: string; worker: string; canWages: boolean }>()
+type OrderPrintModel = PrintOrder & { package_charge?: NonNullable<PrintOrder['package_charge']> & { package_type?: 'room_count' | 'fixed_scope' } }
+const props = defineProps<{ order: OrderPrintModel; company: string; worker: string; canWages: boolean }>()
 const emit = defineEmits<{ close: [] }>()
 const mode = ref<'customer' | 'internal'>('customer')
 const internalAvailable = computed(() => props.canWages && props.order.wage_cents != null)
@@ -46,7 +47,7 @@ function print() { window.print() }
               <tr v-if="!groups.length"><td colspan="9">暂无已施工项目</td></tr>
               <tr v-if="order.sales?.length" class="group-summary"><th colspan="9">单独销售材料</th></tr>
               <tr v-for="(sale,index) in order.sales || []" :key="sale.id || index" class="detail-row"><td>{{ order.worker_name || worker || '—' }}</td><td>{{ sale.product_name }}</td><td>售料</td><td>{{ formatCents(sale.price_cents) }}<small>元/{{ sale.price_unit || sale.unit }}</small></td><td>{{ formatQuantity(sale.sale_qty_micro || sale.qty_micro) }} {{ sale.price_unit || sale.unit }}</td><td>{{ formatQuantity(sale.sale_qty_micro || sale.qty_micro) }} {{ sale.price_unit || sale.unit }}</td><td>{{ formatCents(sale.total_cents) }} 元</td><td>单独销售材料</td><td>—</td></tr>
-              <tr v-if="order.package_charge" class="detail-row"><td>—</td><td>墙地固房型套餐</td><td>{{order.package_charge.room_count}} 房</td><td>—</td><td>一次性收费</td><td>1 项</td><td>{{formatCents(order.package_charge.amount_cents)}} 元</td><td>套餐覆盖施工不再逐项收费</td><td>—</td></tr>
+              <tr v-if="order.package_charge" class="detail-row"><td>—</td><td>{{order.package_charge.package_type==='fixed_scope'?'墙地固整套套餐':'墙地固房型套餐'}}</td><td>{{order.package_charge.package_type==='fixed_scope'?'整套':`${order.package_charge.room_count} 房`}}</td><td>—</td><td>一次性收费</td><td>1 项</td><td>{{formatCents(order.package_charge.amount_cents)}} 元</td><td>已确认映射的套餐项免重复收费</td><td>—</td></tr>
               <tr class="grand-total"><th colspan="8">合计金额</th><td>{{ formatCents(total) }} 元</td></tr>
             </tbody>
           </table>

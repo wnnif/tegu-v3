@@ -81,6 +81,7 @@ type workerWageRecord struct {
 	WorkerID     string `json:"worker_id"`
 	WorkerName   string `json:"worker_name"`
 	WageCents    int64  `json:"wage_cents"`
+	WageConfigured bool `json:"wage_configured"`
 	WagePaid     bool   `json:"wage_paid"`
 	Version      int64  `json:"version"`
 	DeliveryWage int64  `json:"delivery_wage_cents"`
@@ -91,8 +92,9 @@ type workerWageRecord struct {
 // A single compatibility source is used by lists, exports, archives and detail.
 // Fixtures and pre-feature restored records without accounts retain the exact
 // original whole-order amount/state; no current prices or names are inferred.
-const workerWageSource = `(SELECT id,order_id,worker_id,worker_name,wage_cents,wage_paid,version,delivery_wage_cents FROM order_worker_wages
-	UNION ALL SELECT MD5(CONCAT('legacy-wage:',o.id)),o.id,o.worker_id,o.worker_name,o.wage_cents,o.wage_paid,o.version,o.delivery_wage_cents
+const workerWageSource = `(SELECT id,order_id,worker_id,worker_name,wage_cents,wage_configured,wage_paid,version,delivery_wage_cents FROM order_worker_wages
+	UNION ALL SELECT MD5(CONCAT('legacy-wage:',o.id)),o.id,o.worker_id,o.worker_name,o.wage_cents,
+	NOT EXISTS(SELECT 1 FROM order_lines l WHERE l.order_id=o.id AND l.wage_configured=0 AND l.wage_override_cents IS NULL),o.wage_paid,o.version,o.delivery_wage_cents
 	FROM orders o WHERE NOT EXISTS(SELECT 1 FROM order_worker_wages x WHERE x.order_id=o.id))`
 
 func lockOrderWorkerPayroll(tx *sql.Tx, orderID string) (paid, settled bool, err error) {
@@ -135,8 +137,8 @@ func readWorkerWages(tx *sql.Tx, orderID string) ([]workerWageRecord, error) {
 }
 
 func readWorkerWagesFrom(tx *sql.Tx, source, orderID string) ([]workerWageRecord, error) {
-	return scanRows[workerWageRecord](tx, "SELECT id,order_id,worker_id,worker_name,wage_cents,wage_paid,version,delivery_wage_cents FROM "+source+" ww WHERE order_id=? ORDER BY worker_id,id", []any{orderID}, func(r *sql.Rows, v *workerWageRecord) error {
-		return r.Scan(&v.ID, &v.OrderID, &v.WorkerID, &v.WorkerName, &v.WageCents, &v.WagePaid, &v.Version, &v.DeliveryWage)
+	return scanRows[workerWageRecord](tx, "SELECT id,order_id,worker_id,worker_name,wage_cents,wage_configured,wage_paid,version,delivery_wage_cents FROM "+source+" ww WHERE order_id=? ORDER BY worker_id,id", []any{orderID}, func(r *sql.Rows, v *workerWageRecord) error {
+		return r.Scan(&v.ID, &v.OrderID, &v.WorkerID, &v.WorkerName, &v.WageCents, &v.WageConfigured, &v.WagePaid, &v.Version, &v.DeliveryWage)
 	})
 }
 
@@ -154,13 +156,20 @@ func persistWorkerWages(tx *sql.Tx, o Order, headerName string) error {
 	}
 	current := map[string]workerWageRecord{}
 	for _, l := range o.Lines {
-		v := current[l.Worker]
+		v, exists := current[l.Worker]
+		if !exists {
+			v.WageConfigured = true
+		}
 		v.WorkerID, v.WorkerName = l.Worker, l.WorkerName
 		v.WageCents += l.Labor
+		v.WageConfigured = v.WageConfigured && (l.WageConfigured || l.WageOverrideCents != nil)
 		current[l.Worker] = v
 	}
 	if len(o.Sales) > 0 || o.DeliveryWage > 0 {
 		v := current[o.Worker]
+		if _, exists := current[o.Worker]; !exists {
+			v.WageConfigured = true
+		}
 		v.WorkerID = o.Worker
 		if v.WorkerName == "" {
 			v.WorkerName = headerName
@@ -184,7 +193,7 @@ func persistWorkerWages(tx *sql.Tx, o Order, headerName string) error {
 		} else {
 			v.ID, v.Version = id(), 1
 		}
-		if _, err = tx.Exec(`INSERT INTO order_worker_wages(id,order_id,worker_id,worker_name,wage_cents,delivery_wage_cents,wage_paid,version,legacy) VALUES(?,?,?,?,?,?,0,?,0) ON DUPLICATE KEY UPDATE worker_name=VALUES(worker_name),wage_cents=VALUES(wage_cents),delivery_wage_cents=VALUES(delivery_wage_cents),version=VALUES(version),legacy=0`, v.ID, o.ID, key, v.WorkerName, v.WageCents, v.DeliveryWage, v.Version); err != nil {
+		if _, err = tx.Exec(`INSERT INTO order_worker_wages(id,order_id,worker_id,worker_name,wage_cents,wage_configured,delivery_wage_cents,wage_paid,version,legacy) VALUES(?,?,?,?,?,?,?,0,?,0) ON DUPLICATE KEY UPDATE worker_name=VALUES(worker_name),wage_cents=VALUES(wage_cents),wage_configured=VALUES(wage_configured),delivery_wage_cents=VALUES(delivery_wage_cents),version=VALUES(version),legacy=0`, v.ID, o.ID, key, v.WorkerName, v.WageCents, v.WageConfigured, v.DeliveryWage, v.Version); err != nil {
 			return err
 		}
 	}

@@ -11,8 +11,8 @@ test('按个数量同时作为公司收费和工资计算的工程量',()=>{
   assert.equal(lineAmount({...line,price_cents:8000}),16000)
   assert.equal(quantityLabel(line),'2 个')
 })
-test('根、处、孔位、副、张、套均使用整数计数并保留原计价单位',()=>{
-  for(const mode of ['根','处','孔位','副','张','套']){
+test('家、根、处、孔位、副、张、套均使用整数计数并保留原计价单位',()=>{
+  for(const mode of ['家','根','处','孔位','副','张','套']){
     const line={mode,price_cents:125,segments:[{mode,count:2},{mode,count:3}]}
     assert.equal(isCountCraftMode(mode),true)
     assert.equal(filled(line),true)
@@ -23,6 +23,16 @@ test('根、处、孔位、副、张、套均使用整数计数并保留原计�
     assert.equal(filled({mode,segments:[{mode,count:1.5}]}),false)
   }
   assert.equal(isCountCraftMode('平方'),false)
+})
+test('按家收费使用整数户数，2家乘100元/家为20000分',()=>{
+  const line={mode:'家',price_cents:10000,segments:[{mode:'家',count:2}]}
+  assert.equal(filled(line),true)
+  assert.equal(isCountCraftMode('家'),true)
+  assert.equal(lineQuantity(line),2)
+  assert.equal(lineAmount(line),20000)
+  assert.equal(quantityLabel(line),'2 家')
+  assert.equal(measureUnit('家'),'家')
+  for(const count of ['',0,-1,1.5]) assert.equal(segmentFilled({mode:'家',count}),false)
 })
 test('空数量不计费，金额模式明确整项是否施工',()=>{
   assert.equal(filled({mode:'个',segments:[{mode:'个',count:''}]}),false)

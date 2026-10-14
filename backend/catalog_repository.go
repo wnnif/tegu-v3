@@ -67,6 +67,7 @@ type craftsRecord struct {
 	PriceCents           int64          `json:"price_cents"`
 	WageCents            *int64         `json:"wage_cents,omitempty"`
 	PublicWageCents      *int64         `json:"public_wage_cents,omitempty"`
+	WageConfigured       bool           `json:"wage_configured"`
 	WageOverrideCents    *int64         `json:"wage_override_cents,omitempty"`
 	CustomerPriceTestOnly bool          `json:"customer_price_test_only,omitempty"`
 	WageTestOnly          bool          `json:"wage_test_only,omitempty"`
@@ -136,10 +137,10 @@ func readCatalog(q rowQuery, table, source, suffix string, args []any, u User) (
 			return nil
 		})
 	case "crafts":
-		return scanRows[craftsRecord](q, "SELECT id,company_id,category,name,mode,price_cents,wage_cents,public_wage_cents,wage_override_cents,active,version,spec,source_id,subitems,ticket_slot,included_by_craft_id,display_order,customer_price_test_only,wage_test_only,source_missing,source_active FROM "+craftConfigurationSource+suffix, args, func(r *sql.Rows, item *craftsRecord) error {
+		return scanRows[craftsRecord](q, "SELECT id,company_id,category,name,mode,price_cents,wage_cents,public_wage_cents,wage_configured,wage_override_cents,active,version,spec,source_id,subitems,ticket_slot,included_by_craft_id,display_order,customer_price_test_only,wage_test_only,source_missing,source_active FROM "+craftConfigurationSource+suffix, args, func(r *sql.Rows, item *craftsRecord) error {
 			var raw []byte
 			var wageOverride sql.NullInt64
-			if err := r.Scan(&item.ID, &item.CompanyID, &item.Category, &item.Name, &item.Mode, &item.PriceCents, &item.WageCents, &item.PublicWageCents, &wageOverride, &item.Active, &item.Version, &item.Spec, &item.SourceID, &raw, &item.TicketSlot, &item.IncludedByCraftID, &item.DisplayOrder, &item.CustomerPriceTestOnly, &item.WageTestOnly, &item.SourceMissing, &item.SourceActive); err != nil {
+			if err := r.Scan(&item.ID, &item.CompanyID, &item.Category, &item.Name, &item.Mode, &item.PriceCents, &item.WageCents, &item.PublicWageCents, &item.WageConfigured, &wageOverride, &item.Active, &item.Version, &item.Spec, &item.SourceID, &raw, &item.TicketSlot, &item.IncludedByCraftID, &item.DisplayOrder, &item.CustomerPriceTestOnly, &item.WageTestOnly, &item.SourceMissing, &item.SourceActive); err != nil {
 				return err
 			}
 			if (u.can("rates") || u.can("wages")) && item.CompanyID != "" && wageOverride.Valid {

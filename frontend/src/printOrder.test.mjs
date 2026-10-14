@@ -61,8 +61,8 @@ test('按个打印保留数量单位单价和金额，含价实际施工仍打�
   assert.equal(groups[1].rows[0].description,'费用已含在防水中')
   assert.equal(groups[1].total_cents,0n)
 })
-test('根、处、孔位、副、张、套在交付打印中保留各自整数单位',()=>{
-  const modes=['根','处','孔位','副','张','套']
+test('家、根、处、孔位、副、张、套在交付打印中保留各自整数单位',()=>{
+  const modes=['家','根','处','孔位','副','张','套']
   const groups=acceptanceGroups({lines:modes.map((mode,index)=>({id:'count-'+index,category:'维修',name:'计数工艺-'+mode,mode,qty_micro:2000000,price_cents:100,total_cents:200,segments:[{mode,count:2}]}))})
   assert.deepEqual(groups.map(group=>group.rows[0].quantity),modes.map(mode=>'2 '+mode))
   assert.deepEqual(groups.map(group=>group.rows[0].floor),modes.map(mode=>'2 '+mode))

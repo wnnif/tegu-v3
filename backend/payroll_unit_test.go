@@ -63,6 +63,17 @@ func TestPayrollActionRequiresWagePermissionBeforeDecode(t *testing.T) {
 	}
 }
 
+func TestUnconfiguredWageCannotEnterPayrollSettlement(t *testing.T) {
+	if err := (payrollWageSource{WageConfigured: true}).configurationError(); err != nil {
+		t.Fatalf("configured explicit-zero wage was rejected: %v", err)
+	}
+	err := (payrollWageSource{WageConfigured: false}).configurationError()
+	f, ok := err.(failure)
+	if !ok || f.Code != 409 || !strings.Contains(f.Message, "工价待配置") {
+		t.Fatalf("pending wage settlement error = %v, want actionable 409", err)
+	}
+}
+
 func TestPayrollActionRouteChecksPermissionBeforeIdempotentReplay(t *testing.T) {
 	if err := customerPriceMutationAllowed("/api/payroll-action", User{Role: "employee"}, []byte(`{}`)); err == nil {
 		t.Fatal("revoked payroll permission passed the route preflight")

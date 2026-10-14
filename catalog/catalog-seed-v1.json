@@ -1792,6 +1792,286 @@
         "sheet": "包管",
         "row": 11
       }
+    },
+    {
+      "id": "craft-v3-wall-ground-standard",
+      "category": "开工",
+      "name": "普通墙固地固组合",
+      "mode": "平方",
+      "spec": "公司报价含墙顶、弹线、喷字、门框及地脚线；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 3}
+    },
+    {
+      "id": "craft-v3-door-protection-unit",
+      "category": "开工",
+      "name": "门保护·按副",
+      "mode": "副",
+      "spec": "客户价按原表门保护口径保存；材料、胶带及换门责任按来源备注处理。工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 6}
+    },
+    {
+      "id": "craft-v3-advertising-grid-text",
+      "category": "开工",
+      "name": "网格喷绘大字",
+      "mode": "副",
+      "spec": "独立广告加项；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 12}
+    },
+    {
+      "id": "craft-v3-wall-sticker",
+      "category": "开工",
+      "name": "墙贴",
+      "mode": "平方",
+      "spec": "按建筑面积；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 13}
+    },
+    {
+      "id": "craft-v3-kitchen-stair-sticker",
+      "category": "开工",
+      "name": "厨卫楼梯贴",
+      "mode": "平方",
+      "spec": "原表数量栏为斜线，计量由实际施工面积确定；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 14}
+    },
+    {
+      "id": "craft-v3-dust-net",
+      "category": "安全防护架",
+      "name": "防尘网",
+      "mode": "张",
+      "spec": "按张收费并交公司；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 15}
+    },
+    {
+      "id": "craft-v3-backfill-toilet",
+      "category": "回填",
+      "name": "回填王·按厕所",
+      "mode": "个",
+      "spec": "按厕所个数收费；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "唐卡", "row": 14}
+    },
+    {
+      "id": "craft-v3-waterproof-combo-tooth-two-coats",
+      "category": "防水涂料",
+      "name": "刮齿连二遍防水（含丙纶保护）",
+      "mode": "平方",
+      "spec": "组合价包含丙纶保护；选择本项时不得重复收取独立丙纶价；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "唐卡", "row": 15}
+    },
+    {
+      "id": "craft-v3-polypropylene-thick",
+      "category": "丙纶",
+      "name": "加厚丙纶",
+      "mode": "平方",
+      "spec": "独立加厚丙纶收费；工资待配置，不能套用普通丙纶工价。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "唐卡", "row": 19}
+    },
+    {
+      "id": "craft-v3-safety-install-transport",
+      "category": "安全防护架",
+      "name": "架子安装运输",
+      "mode": "套",
+      "spec": "安装运输费与架子数量费分开；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 11}
+    },
+    {
+      "id": "craft-v3-safety-frame-a",
+      "category": "安全防护架",
+      "name": "A架",
+      "mode": "个",
+      "spec": "A架客户收费；安装工资按工价规则另配。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 12}
+    },
+    {
+      "id": "craft-v3-safety-frame-b",
+      "category": "安全防护架",
+      "name": "B架",
+      "mode": "个",
+      "spec": "B架客户收费；与A架共用来源合并单元格，安装工资另配。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 13}
+    },
+    {
+      "id": "craft-v3-backfill-area",
+      "category": "回填",
+      "name": "回填王·按平方",
+      "mode": "平方",
+      "spec": "按平方米收费，不能转换为按厕所计价；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 14}
+    },
+    {
+      "id": "craft-v3-waterproof-standard-two-coats",
+      "category": "防水涂料",
+      "name": "正常两遍防水",
+      "mode": "平方",
+      "spec": "正常两遍收费；若来源未声明含丙纶保护则不自动包含；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 15}
+    },
+    {
+      "id": "craft-v3-waterproof-scraped-tooth-source",
+      "category": "防水涂料",
+      "name": "齿形防水",
+      "mode": "平方",
+      "spec": "齿形防水收费；来源未说明含丙纶保护时不自动包含；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 16}
+    },
+    {
+      "id": "craft-v3-safety-net-ordinary",
+      "category": "安全防护架",
+      "name": "普通防护网（4米×1.8米）",
+      "mode": "张",
+      "spec": "网材规格固定为4米×1.8米；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 11}
+    },
+    {
+      "id": "craft-v3-safety-net-large",
+      "category": "安全防护架",
+      "name": "安全架专用大网（6米×2.5米）",
+      "mode": "张",
+      "spec": "网材收费，不从客户价推导安装工资。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 15}
+    },
+    {
+      "id": "craft-v3-safety-net-small",
+      "category": "安全防护架",
+      "name": "安全架专用小网（3米×2.5米）",
+      "mode": "张",
+      "spec": "网材收费，不从客户价推导安装工资。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 16}
+    },
+    {
+      "id": "craft-v3-tile-protection",
+      "category": "开工",
+      "name": "瓷砖保护",
+      "mode": "平方",
+      "spec": "材料、胶带及人工范围按来源说明保存；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 10}
+    },
+    {
+      "id": "craft-v3-living-room-frame-protection",
+      "category": "安全防护架",
+      "name": "客厅架子保护",
+      "mode": "套",
+      "spec": "架子保护按套；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 14}
+    },
+    {
+      "id": "craft-v3-living-frame-protection",
+      "category": "安全防护架",
+      "name": "生活架子保护",
+      "mode": "套",
+      "spec": "架子保护按套；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 15}
+    },
+    {
+      "id": "craft-v3-marking-house",
+      "category": "开工",
+      "name": "施工前弹线",
+      "mode": "家",
+      "spec": "按家收费；不是墙固或地固施工费，工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "一半设计", "row": 3}
+    },
+    {
+      "id": "craft-v3-marking-set",
+      "category": "开工",
+      "name": "三线弹线喷字",
+      "mode": "套",
+      "spec": "独立三线弹线喷字收费；与房型套餐含项互斥，工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 6}
+    },
+    {
+      "id": "craft-v3-door-protection-area",
+      "category": "开工",
+      "name": "门保护·按建筑面积",
+      "mode": "平方",
+      "spec": "按建筑面积计价；换门另收的对象按来源备注，不自动并入公司价。工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "欧派装饰", "row": 11}
+    },
+    {
+      "id": "craft-v3-wall-ground-wall-ceiling",
+      "category": "开工",
+      "name": "精工墙固地固·墙顶",
+      "mode": "平方",
+      "spec": "仅墙、顶施工收费；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "欧派装饰", "row": 8}
+    },
+    {
+      "id": "craft-v3-slot-ground",
+      "category": "开工",
+      "name": "蓝色线槽地固",
+      "mode": "平方",
+      "spec": "线槽与地固组合收费，不再拆收被包含的地固；工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "欧派装饰", "row": 9}
+    },
+    {
+      "id": "craft-v3-waterproof-extra-two-coats",
+      "category": "防水涂料",
+      "name": "单独刷两遍防水",
+      "mode": "平方",
+      "spec": "与含丙纶保护的齿形防水互斥；一半设计来源另列15元/㎡。工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "一半设计", "row": 23}
+    },
+    {
+      "id": "craft-v3-wall-ground-package",
+      "category": "开工",
+      "name": "普通墙固地固·整套",
+      "mode": "套",
+      "spec": "整套收费；不是已建房型套餐表，工资待配置。",
+      "active": true,
+      "subitems": [],
+      "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 3}
     }
   ],
   "company_crafts": [
@@ -2030,197 +2310,2190 @@
       "id": "cc-company-tangka-self-adhesive",
       "company_id": "company-tangka",
       "craft_id": "craft-v3-membrane-self-adhesive",
-      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "唐卡", "row": 18, "note": "自粘卷材客户收费55元/㎡"}},
-      "source": {"source_id": "excel-prices", "sheet": "唐卡", "row": 18, "note": "原工作簿单位㎡；与工人工资分开保存"}
+      "price": {
+        "cents": 5500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "唐卡",
+          "row": 18,
+          "note": "自粘卷材客户收费55元/㎡"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "唐卡",
+        "row": 18,
+        "note": "原工作簿单位㎡；与工人工资分开保存"
+      }
     },
     {
       "id": "cc-company-yuli-self-adhesive",
       "company_id": "company-yuli",
       "craft_id": "craft-v3-membrane-self-adhesive",
-      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 19, "note": "自粘卷材客户收费55元/㎡"}},
-      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 19, "note": "原工作簿单位㎡；与工人工资分开保存"}
+      "price": {
+        "cents": 5500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "予里设计",
+          "row": 19,
+          "note": "自粘卷材客户收费55元/㎡"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "予里设计",
+        "row": 19,
+        "note": "原工作簿单位㎡；与工人工资分开保存"
+      }
     },
     {
       "id": "cc-company-guyi-self-adhesive",
       "company_id": "company-guyi",
       "craft_id": "craft-v3-membrane-self-adhesive",
-      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 21, "note": "自粘卷材客户收费55元/㎡"}},
-      "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 21, "note": "原工作簿单位㎡；与工人工资分开保存"}
+      "price": {
+        "cents": 5500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 21,
+          "note": "自粘卷材客户收费55元/㎡"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 21,
+        "note": "原工作簿单位㎡；与工人工资分开保存"
+      }
     },
     {
       "id": "cc-company-yousuo-self-adhesive",
       "company_id": "company-yousuo",
       "craft_id": "craft-v3-membrane-self-adhesive",
-      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 20, "note": "自粘卷材客户收费55元/㎡"}},
-      "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 20, "note": "原工作簿单位㎡；与工人工资分开保存"}
+      "price": {
+        "cents": 5500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 20,
+          "note": "自粘卷材客户收费55元/㎡"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 20,
+        "note": "原工作簿单位㎡；与工人工资分开保存"
+      }
     },
     {
       "id": "cc-company-xuqiao-self-adhesive",
       "company_id": "company-xuqiao",
       "craft_id": "craft-v3-membrane-self-adhesive",
-      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 20, "note": "自粘卷材客户收费55元/㎡"}},
-      "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 20, "note": "原工作簿单位㎡；与工人工资分开保存"}
+      "price": {
+        "cents": 5500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 20,
+          "note": "自粘卷材客户收费55元/㎡"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 20,
+        "note": "原工作簿单位㎡；与工人工资分开保存"
+      }
     },
     {
       "id": "cc-company-dingge-self-adhesive",
       "company_id": "company-dingge",
       "craft_id": "craft-v3-membrane-self-adhesive",
-      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 15, "note": "自粘卷材客户收费55元/㎡"}},
-      "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 15, "note": "原工作簿单位㎡；与工人工资分开保存"}
+      "price": {
+        "cents": 5500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "鼎格装饰",
+          "row": 15,
+          "note": "自粘卷材客户收费55元/㎡"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "鼎格装饰",
+        "row": 15,
+        "note": "原工作簿单位㎡；与工人工资分开保存"
+      }
     },
     {
       "id": "cc-company-baixingjia-self-adhesive",
       "company_id": "company-baixingjia",
       "craft_id": "craft-v3-membrane-self-adhesive",
-      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 20, "note": "自粘卷材客户收费55元/㎡"}},
-      "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 20, "note": "原工作簿单位㎡；与工人工资分开保存"}
+      "price": {
+        "cents": 5500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 20,
+          "note": "自粘卷材客户收费55元/㎡"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 20,
+        "note": "原工作簿单位㎡；与工人工资分开保存"
+      }
     },
     {
       "id": "cc-company-yiban-self-adhesive",
       "company_id": "company-yiban",
       "craft_id": "craft-v3-membrane-self-adhesive",
-      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "一半设计", "row": 26, "note": "自粘卷材客户收费55元/㎡"}},
-      "source": {"source_id": "excel-prices", "sheet": "一半设计", "row": 26, "note": "原工作簿单位㎡；与工人工资分开保存"}
+      "price": {
+        "cents": 5500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 26,
+          "note": "自粘卷材客户收费55元/㎡"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 26,
+        "note": "原工作簿单位㎡；与工人工资分开保存"
+      }
     },
     {
       "id": "cc-company-yuanchuang-self-adhesive",
       "company_id": "company-yuanchuang",
       "craft_id": "craft-v3-membrane-self-adhesive",
-      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 18, "note": "自粘卷材客户收费55元/㎡"}},
-      "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 18, "note": "原工作簿单位㎡；与工人工资分开保存"}
+      "price": {
+        "cents": 5500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "元创设计",
+          "row": 18,
+          "note": "自粘卷材客户收费55元/㎡"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 18,
+        "note": "原工作簿单位㎡；与工人工资分开保存"
+      }
     },
     {
       "id": "cc-company-opai-self-adhesive",
       "company_id": "company-opai",
       "craft_id": "craft-v3-membrane-self-adhesive",
-      "price": {"cents": 5500, "classification": "confirmed", "source": {"source_id": "excel-prices", "sheet": "欧派装饰", "row": 26, "note": "自粘卷材客户收费55元/㎡"}},
-      "source": {"source_id": "excel-prices", "sheet": "欧派装饰", "row": 26, "note": "原工作簿单位㎡；与工人工资分开保存"}
+      "price": {
+        "cents": 5500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 26,
+          "note": "自粘卷材客户收费55元/㎡"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 26,
+        "note": "原工作簿单位㎡；与工人工资分开保存"
+      }
     },
     {
-      "id": "cc-test-zhai-xin-elevator-floor-sticker",
+      "id": "cc-v3-zhai-wallground",
       "company_id": "company-zhai-xin",
-      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 7, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 7, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套"}
+      "craft_id": "craft-v3-wall-ground-standard",
+      "price": {
+        "cents": 600,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "宅心",
+          "row": 3,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "宅心",
+        "row": 3,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-zhai-xin-elevator-wall-sticker",
+      "id": "cc-v3-zhai-ad",
       "company_id": "company-zhai-xin",
-      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "宅心", "row": 8, "note": "原项目电梯口入户墙贴；原单位㎡；备注为门左右各一张、高度3米"}
+      "craft_id": "craft-v3-advertising-grid-text",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "宅心",
+          "row": 12,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "宅心",
+        "row": 12,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-tangka-elevator-floor-sticker",
+      "id": "cc-v3-zhai-wall-sticker",
+      "company_id": "company-zhai-xin",
+      "craft_id": "craft-v3-wall-sticker",
+      "price": {
+        "cents": 600,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "宅心",
+          "row": 13,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "宅心",
+        "row": 13,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-zhai-kitchen-sticker",
+      "company_id": "company-zhai-xin",
+      "craft_id": "craft-v3-kitchen-stair-sticker",
+      "price": {
+        "cents": 600,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "宅心",
+          "row": 14,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "宅心",
+        "row": 14,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-zhai-dust-net",
+      "company_id": "company-zhai-xin",
+      "craft_id": "craft-v3-dust-net",
+      "price": {
+        "cents": 3000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "宅心",
+          "row": 15,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "宅心",
+        "row": 15,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-tangka-wallground",
       "company_id": "company-tangka",
-      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "唐卡", "row": 7, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "唐卡", "row": 7, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套，备注为全套"}
+      "craft_id": "craft-v3-wall-ground-standard",
+      "price": {
+        "cents": 500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "唐卡",
+          "row": 3,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "唐卡",
+        "row": 3,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-yuli-elevator-floor-sticker",
+      "id": "cc-v3-tangka-ad",
+      "company_id": "company-tangka",
+      "craft_id": "craft-v3-advertising-grid-text",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "唐卡",
+          "row": 10,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "唐卡",
+        "row": 10,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-tangka-wall-sticker",
+      "company_id": "company-tangka",
+      "craft_id": "craft-v3-wall-sticker",
+      "price": {
+        "cents": 600,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "唐卡",
+          "row": 11,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "唐卡",
+        "row": 11,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      },
+      "note": "仅导入原表明确的墙贴基础价6元/㎡；10㎡以下工人补贴金额、算法和承担方未确认，不包含在此客户价。"
+    },
+    {
+      "id": "cc-v3-tangka-kitchen-sticker",
+      "company_id": "company-tangka",
+      "craft_id": "craft-v3-kitchen-stair-sticker",
+      "price": {
+        "cents": 600,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "唐卡",
+          "row": 12,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "唐卡",
+        "row": 12,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-tangka-dust-net",
+      "company_id": "company-tangka",
+      "craft_id": "craft-v3-dust-net",
+      "price": {
+        "cents": 3000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "唐卡",
+          "row": 13,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "唐卡",
+        "row": 13,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-tangka-backfill",
+      "company_id": "company-tangka",
+      "craft_id": "craft-v3-backfill-toilet",
+      "price": {
+        "cents": 24000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "唐卡",
+          "row": 14,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "唐卡",
+        "row": 14,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-tangka-waterproof-combo",
+      "company_id": "company-tangka",
+      "craft_id": "craft-v3-waterproof-combo-tooth-two-coats",
+      "price": {
+        "cents": 2500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "唐卡",
+          "row": 15,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "唐卡",
+        "row": 15,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-tangka-thick-poly",
+      "company_id": "company-tangka",
+      "craft_id": "craft-v3-polypropylene-thick",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "唐卡",
+          "row": 19,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "唐卡",
+        "row": 19,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yuli-wallground",
       "company_id": "company-yuli",
-      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 7, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 7, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套"}
+      "craft_id": "craft-v3-wall-ground-standard",
+      "price": {
+        "cents": 1100,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "予里设计",
+          "row": 3,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "予里设计",
+        "row": 3,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-yuli-elevator-wall-sticker",
+      "id": "cc-v3-yuli-transport",
       "company_id": "company-yuli",
-      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 8, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为整套"}
+      "craft_id": "craft-v3-safety-install-transport",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "予里设计",
+          "row": 11,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "予里设计",
+        "row": 11,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-guyi-elevator-floor-sticker",
+      "id": "cc-v3-yuli-frame-a",
+      "company_id": "company-yuli",
+      "craft_id": "craft-v3-safety-frame-a",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "予里设计",
+          "row": 12,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "予里设计",
+        "row": 12,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yuli-frame-b",
+      "company_id": "company-yuli",
+      "craft_id": "craft-v3-safety-frame-b",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "予里设计",
+          "row": 13,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "予里设计",
+        "row": 13,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yuli-backfill",
+      "company_id": "company-yuli",
+      "craft_id": "craft-v3-backfill-area",
+      "price": {
+        "cents": 9000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "予里设计",
+          "row": 14,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "予里设计",
+        "row": 14,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yuli-waterproof",
+      "company_id": "company-yuli",
+      "craft_id": "craft-v3-waterproof-standard-two-coats",
+      "price": {
+        "cents": 2500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "予里设计",
+          "row": 15,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "予里设计",
+        "row": 15,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yuli-tooth",
+      "company_id": "company-yuli",
+      "craft_id": "craft-v3-waterproof-scraped-tooth-source",
+      "price": {
+        "cents": 2600,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "予里设计",
+          "row": 16,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "予里设计",
+        "row": 16,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yuli-thick-poly",
+      "company_id": "company-yuli",
+      "craft_id": "craft-v3-polypropylene-thick",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "予里设计",
+          "row": 20,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "予里设计",
+        "row": 20,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-guyi-wallground",
       "company_id": "company-guyi",
-      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 8, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套"}
+      "craft_id": "craft-v3-wall-ground-standard",
+      "price": {
+        "cents": 800,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 3,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 3,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-guyi-elevator-wall-sticker",
+      "id": "cc-v3-guyi-door",
       "company_id": "company-guyi",
-      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 9, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "顾意设计", "row": 9, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为整套"}
+      "craft_id": "craft-v3-door-protection-unit",
+      "price": {
+        "cents": 15000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 6,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 6,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      },
+      "note": "原表为公司提供材料、客户价含人工和胶带；工人工资状态仍单独待配置。"
     },
     {
-      "id": "cc-test-yousuo-elevator-wall-sticker",
+      "id": "cc-v3-guyi-tile",
+      "company_id": "company-guyi",
+      "craft_id": "craft-v3-tile-protection",
+      "price": {
+        "cents": 250,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 10,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 10,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-guyi-ordinary-net",
+      "company_id": "company-guyi",
+      "craft_id": "craft-v3-safety-net-ordinary",
+      "price": {
+        "cents": 3000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 11,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 11,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-guyi-transport",
+      "company_id": "company-guyi",
+      "craft_id": "craft-v3-safety-install-transport",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 12,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 12,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-guyi-frame-a",
+      "company_id": "company-guyi",
+      "craft_id": "craft-v3-safety-frame-a",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 13,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 13,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-guyi-frame-b",
+      "company_id": "company-guyi",
+      "craft_id": "craft-v3-safety-frame-b",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 14,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 14,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-guyi-large-net",
+      "company_id": "company-guyi",
+      "craft_id": "craft-v3-safety-net-large",
+      "price": {
+        "cents": 5000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 15,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 15,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-guyi-small-net",
+      "company_id": "company-guyi",
+      "craft_id": "craft-v3-safety-net-small",
+      "price": {
+        "cents": 3000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 16,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 16,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-guyi-backfill",
+      "company_id": "company-guyi",
+      "craft_id": "craft-v3-backfill-toilet",
+      "price": {
+        "cents": 30000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 17,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 17,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-guyi-waterproof-combo",
+      "company_id": "company-guyi",
+      "craft_id": "craft-v3-waterproof-combo-tooth-two-coats",
+      "price": {
+        "cents": 2600,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 18,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 18,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-guyi-thick-poly",
+      "company_id": "company-guyi",
+      "craft_id": "craft-v3-polypropylene-thick",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "顾意设计",
+          "row": 22,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "顾意设计",
+        "row": 22,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yousuo-door",
       "company_id": "company-yousuo",
-      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 8, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为整套"}
+      "craft_id": "craft-v3-door-protection-unit",
+      "price": {
+        "cents": 6000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 6,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 6,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      },
+      "note": "原表为公司提供材料、客户价含人工和胶带；工人工资状态仍单独待配置。"
     },
     {
-      "id": "cc-test-yousuo-tile-protection",
+      "id": "cc-v3-yousuo-floor-sticker",
       "company_id": "company-yousuo",
-      "craft_id": "c8e29907887b47448aa42972f2427a1a",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 9, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "友所设计", "row": 9, "note": "原项目瓷砖保护；原单位㎡，数量栏为1"}
+      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
+      "price": {
+        "cents": 250,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 7,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 7,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-xuqiao-elevator-floor-sticker",
+      "id": "cc-v3-yousuo-ad",
+      "company_id": "company-yousuo",
+      "craft_id": "craft-v3-advertising-grid-text",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 10,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 10,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yousuo-transport",
+      "company_id": "company-yousuo",
+      "craft_id": "craft-v3-safety-install-transport",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 11,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 11,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yousuo-frame-a",
+      "company_id": "company-yousuo",
+      "craft_id": "craft-v3-safety-frame-a",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 12,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 12,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yousuo-frame-b",
+      "company_id": "company-yousuo",
+      "craft_id": "craft-v3-safety-frame-b",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 13,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 13,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yousuo-large-net",
+      "company_id": "company-yousuo",
+      "craft_id": "craft-v3-safety-net-large",
+      "price": {
+        "cents": 5000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 14,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 14,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yousuo-small-net",
+      "company_id": "company-yousuo",
+      "craft_id": "craft-v3-safety-net-small",
+      "price": {
+        "cents": 3000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 15,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 15,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yousuo-backfill",
+      "company_id": "company-yousuo",
+      "craft_id": "craft-v3-backfill-area",
+      "price": {
+        "cents": 9000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 16,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 16,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yousuo-waterproof-combo",
+      "company_id": "company-yousuo",
+      "craft_id": "craft-v3-waterproof-combo-tooth-two-coats",
+      "price": {
+        "cents": 2500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 17,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 17,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yousuo-thick-poly",
+      "company_id": "company-yousuo",
+      "craft_id": "craft-v3-polypropylene-thick",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "友所设计",
+          "row": 21,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "友所设计",
+        "row": 21,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-xuqiao-livingroom",
       "company_id": "company-xuqiao",
-      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 9, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 9, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套；套餐未列该贴"}
+      "craft_id": "craft-v3-living-room-frame-protection",
+      "price": {
+        "cents": 15000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 14,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 14,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-xuqiao-elevator-wall-sticker",
+      "id": "cc-v3-xuqiao-living",
       "company_id": "company-xuqiao",
-      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 10, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "旭桥装饰", "row": 10, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为整套；套餐未列该贴"}
+      "craft_id": "craft-v3-living-frame-protection",
+      "price": {
+        "cents": 3000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 15,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 15,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-dingge-elevator-floor-sticker",
+      "id": "cc-v3-xuqiao-backfill",
+      "company_id": "company-xuqiao",
+      "craft_id": "craft-v3-backfill-area",
+      "price": {
+        "cents": 9000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 16,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 16,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-xuqiao-waterproof-combo",
+      "company_id": "company-xuqiao",
+      "craft_id": "craft-v3-waterproof-combo-tooth-two-coats",
+      "price": {
+        "cents": 2500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 17,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 17,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-xuqiao-waterproof-extra-two-coats",
+      "company_id": "company-xuqiao",
+      "craft_id": "craft-v3-waterproof-extra-two-coats",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 17,
+          "note": "来源同列明确写明单独刷两遍另15元/㎡；与含丙纶保护组合互斥。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 17,
+        "note": "单独刷两遍为独立施工口径，不与本行25元含丙纶组合重复收取。"
+      }
+    },
+    {
+      "id": "cc-v3-xuqiao-thick-poly",
+      "company_id": "company-xuqiao",
+      "craft_id": "craft-v3-polypropylene-thick",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "旭桥装饰",
+          "row": 21,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "旭桥装饰",
+        "row": 21,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-dingge-wallground",
       "company_id": "company-dingge",
-      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 7, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 7, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为入户"}
+      "craft_id": "craft-v3-wall-ground-standard",
+      "price": {
+        "cents": 1100,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "鼎格装饰",
+          "row": 3,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "鼎格装饰",
+        "row": 3,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-dingge-elevator-wall-sticker",
+      "id": "cc-v3-dingge-backfill",
       "company_id": "company-dingge",
-      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "鼎格装饰", "row": 8, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为门左右，备注为左右各一张、高度2米"}
+      "craft_id": "craft-v3-backfill-toilet",
+      "price": {
+        "cents": 30000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "鼎格装饰",
+          "row": 11,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "鼎格装饰",
+        "row": 11,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-baixingjia-elevator-floor-sticker",
+      "id": "cc-v3-dingge-waterproof-combo",
+      "company_id": "company-dingge",
+      "craft_id": "craft-v3-waterproof-combo-tooth-two-coats",
+      "price": {
+        "cents": 2500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "鼎格装饰",
+          "row": 12,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "鼎格装饰",
+        "row": 12,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-dingge-thick-poly",
+      "company_id": "company-dingge",
+      "craft_id": "craft-v3-polypropylene-thick",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "鼎格装饰",
+          "row": 16,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "鼎格装饰",
+        "row": 16,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-baixing-wallground",
       "company_id": "company-baixingjia",
-      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 7, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 7, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为入户"}
+      "craft_id": "craft-v3-wall-ground-package",
+      "price": {
+        "cents": 40000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 3,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 3,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-baixingjia-elevator-wall-sticker",
+      "id": "cc-v3-baixing-door",
       "company_id": "company-baixingjia",
-      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 8, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为门左右"}
+      "craft_id": "craft-v3-door-protection-unit",
+      "price": {
+        "cents": 37000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 6,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 6,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      },
+      "note": "原表为公司提供材料、客户价含人工和胶带；工人工资状态仍单独待配置。"
     },
     {
-      "id": "cc-test-baixingjia-tile-protection",
+      "id": "cc-v3-baixing-ad",
       "company_id": "company-baixingjia",
-      "craft_id": "c8e29907887b47448aa42972f2427a1a",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 9, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "百姓家装饰", "row": 9, "note": "原项目瓷砖保护；原单位㎡，数量栏为全屋"}
+      "craft_id": "craft-v3-advertising-grid-text",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 10,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 10,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     },
     {
-      "id": "cc-test-yuanchuang-elevator-floor-sticker",
+      "id": "cc-v3-baixing-transport",
+      "company_id": "company-baixingjia",
+      "craft_id": "craft-v3-safety-install-transport",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 11,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 11,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-baixing-frame-a",
+      "company_id": "company-baixingjia",
+      "craft_id": "craft-v3-safety-frame-a",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 12,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 12,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-baixing-frame-b",
+      "company_id": "company-baixingjia",
+      "craft_id": "craft-v3-safety-frame-b",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 13,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 13,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-baixing-large-net",
+      "company_id": "company-baixingjia",
+      "craft_id": "craft-v3-safety-net-large",
+      "price": {
+        "cents": 5000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 14,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 14,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-baixing-small-net",
+      "company_id": "company-baixingjia",
+      "craft_id": "craft-v3-safety-net-small",
+      "price": {
+        "cents": 3000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 15,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 15,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-baixing-backfill",
+      "company_id": "company-baixingjia",
+      "craft_id": "craft-v3-backfill-toilet",
+      "price": {
+        "cents": 30000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 16,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 16,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-baixing-waterproof-combo",
+      "company_id": "company-baixingjia",
+      "craft_id": "craft-v3-waterproof-combo-tooth-two-coats",
+      "price": {
+        "cents": 2500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 17,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 17,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-baixing-thick-poly",
+      "company_id": "company-baixingjia",
+      "craft_id": "craft-v3-polypropylene-thick",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "百姓家装饰",
+          "row": 21,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "百姓家装饰",
+        "row": 21,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-marking-house",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-marking-house",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 3,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 3,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-door",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-door-protection-unit",
+      "price": {
+        "cents": 80000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 6,
+          "note": "原表注明门保护报价包含人工；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 6,
+        "note": "一半设计原表注明门保护报价包含人工；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-tile",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-tile-protection",
+      "price": {
+        "cents": 350,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 14,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 14,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-transport",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-safety-install-transport",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 15,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 15,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-frame-a",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-safety-frame-a",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 16,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 16,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-frame-b",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-safety-frame-b",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 17,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 17,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-large-net",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-safety-net-large",
+      "price": {
+        "cents": 5000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 18,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 18,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-small-net",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-safety-net-small",
+      "price": {
+        "cents": 3000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 19,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 19,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-backfill",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-backfill-area",
+      "price": {
+        "cents": 9000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 22,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 22,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-waterproof-combo",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-waterproof-combo-tooth-two-coats",
+      "price": {
+        "cents": 2600,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 23,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 23,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-extra-two-coats",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-waterproof-extra-two-coats",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 23,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 23,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yiban-thick-poly",
+      "company_id": "company-yiban",
+      "craft_id": "craft-v3-polypropylene-thick",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 27,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 27,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yuanchuang-door",
       "company_id": "company-yuanchuang",
-      "craft_id": "a317b42faeb2ee6f317ffac535b43799",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 8, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 8, "note": "原项目电梯口入户地贴；原单位㎡，数量栏为整套；套餐未列该贴"}
+      "craft_id": "craft-v3-door-protection-unit",
+      "price": {
+        "cents": 20000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "元创设计",
+          "row": 7,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 7,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      },
+      "note": "原表注明原创公司提供材料、客户价仅人工；工人工资状态仍单独待配置。"
     },
     {
-      "id": "cc-test-yuanchuang-elevator-wall-sticker",
+      "id": "cc-v3-yuanchuang-tile",
       "company_id": "company-yuanchuang",
-      "craft_id": "12c57d091d3c9006acafe59a7b0b3f8a",
-      "price": {"cents": 100, "classification": "test_only", "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 9, "note": "test_only：原单价为空；固定1.00元/㎡测试价，不是真实公司报价"}},
-      "source": {"source_id": "excel-prices", "sheet": "元创设计", "row": 9, "note": "原项目电梯口入户墙贴；原单位㎡，数量栏为整套；套餐未列该贴"}
+      "craft_id": "craft-v3-tile-protection",
+      "price": {
+        "cents": 250,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "元创设计",
+          "row": 12,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 12,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yuanchuang-ordinary-net",
+      "company_id": "company-yuanchuang",
+      "craft_id": "craft-v3-safety-net-ordinary",
+      "price": {
+        "cents": 3000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "元创设计",
+          "row": 13,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 13,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yuanchuang-backfill",
+      "company_id": "company-yuanchuang",
+      "craft_id": "craft-v3-backfill-area",
+      "price": {
+        "cents": 9000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "元创设计",
+          "row": 14,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 14,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yuanchuang-waterproof",
+      "company_id": "company-yuanchuang",
+      "craft_id": "craft-v3-waterproof-standard-two-coats",
+      "price": {
+        "cents": 2500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "元创设计",
+          "row": 15,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 15,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-yuanchuang-thick-poly",
+      "company_id": "company-yuanchuang",
+      "craft_id": "craft-v3-polypropylene-thick",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "元创设计",
+          "row": 19,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "元创设计",
+        "row": 19,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-opai-wall-ceiling",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-wall-ground-wall-ceiling",
+      "price": {
+        "cents": 300,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 8,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 8,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-opai-slot-ground",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-slot-ground",
+      "price": {
+        "cents": 800,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 9,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 9,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-opai-door-area",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-door-protection-area",
+      "price": {
+        "cents": 400,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 11,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 11,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-opai-transport",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-safety-install-transport",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 17,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 17,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-opai-frame-a",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-safety-frame-a",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 18,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 18,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-opai-frame-b",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-safety-frame-b",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 19,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 19,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-opai-large-net",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-safety-net-large",
+      "price": {
+        "cents": 5000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 20,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 20,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-opai-small-net",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-safety-net-small",
+      "price": {
+        "cents": 3000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 21,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 21,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-opai-backfill",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-backfill-toilet",
+      "price": {
+        "cents": 30000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 22,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 22,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-opai-waterproof-combo",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-waterproof-combo-tooth-two-coats",
+      "price": {
+        "cents": 2500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 23,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 23,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
+    },
+    {
+      "id": "cc-v3-opai-thick-poly",
+      "company_id": "company-opai",
+      "craft_id": "craft-v3-polypropylene-thick",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "欧派装饰",
+          "row": 27,
+          "note": "V3固定客户价；客户价与工人工资分别保存。"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "欧派装饰",
+        "row": 27,
+        "note": "V3固定客户价；客户价与工人工资分别保存。"
+      }
     }
   ],
   "company_wage_overrides": [
@@ -2309,7 +4582,94 @@
       "target_craft_id": "craft-v3-waterproof-split-two-coats"
     }
   ],
-  "products": [],
+  "products": [
+    {
+      "id": "product-v3-temporary-toilet",
+      "name": "临时马桶",
+      "unit": "个",
+      "aux_unit": "",
+      "aux_ratio": 1,
+      "active": true,
+      "color": "",
+      "weight_kg": 0,
+      "brand": "",
+      "spec": "",
+      "note": "外部代采购；售料货款不计施工工资。",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 20,
+        "note": "原表代采购"
+      }
+    },
+    {
+      "id": "product-v3-electrical-box",
+      "name": "电箱",
+      "unit": "个",
+      "aux_unit": "",
+      "aux_ratio": 1,
+      "active": true,
+      "color": "",
+      "weight_kg": 0,
+      "brand": "",
+      "spec": "",
+      "note": "原表单位栏空，按单个材料货款保存。",
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 21,
+        "note": "原表单位栏空"
+      }
+    }
+  ],
+  "company_product_prices": [
+    {
+      "id": "cpp-v3-yiban-toilet",
+      "company_id": "company-yiban",
+      "product_id": "product-v3-temporary-toilet",
+      "input_unit": "base",
+      "price": {
+        "cents": 1500,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 20,
+          "note": "代购售价"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 20,
+        "note": "代购售价"
+      },
+      "note": "代购售价，不含工人工资"
+    },
+    {
+      "id": "cpp-v3-yiban-box",
+      "company_id": "company-yiban",
+      "product_id": "product-v3-electrical-box",
+      "input_unit": "base",
+      "price": {
+        "cents": 10000,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "excel-prices",
+          "sheet": "一半设计",
+          "row": 21,
+          "note": "材料售价"
+        }
+      },
+      "source": {
+        "source_id": "excel-prices",
+        "sheet": "一半设计",
+        "row": 21,
+        "note": "材料售价"
+      },
+      "note": "材料售价，不含工人工资"
+    }
+  ],
   "packages": [
     {
       "id": "package-xuqiao-2-room",
@@ -2332,7 +4692,8 @@
         "row": 3,
         "note": "房型套餐档价，作为该套餐唯一客户收费"
       },
-      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算",
+      "package_type": "room_count"
     },
     {
       "id": "package-xuqiao-3-room",
@@ -2355,7 +4716,8 @@
         "row": 4,
         "note": "房型套餐档价，作为该套餐唯一客户收费"
       },
-      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算",
+      "package_type": "room_count"
     },
     {
       "id": "package-xuqiao-4-room",
@@ -2378,7 +4740,8 @@
         "row": 5,
         "note": "房型套餐档价，作为该套餐唯一客户收费"
       },
-      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算",
+      "package_type": "room_count"
     },
     {
       "id": "package-xuqiao-5-room",
@@ -2401,7 +4764,8 @@
         "row": 6,
         "note": "房型套餐档价，作为该套餐唯一客户收费"
       },
-      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算",
+      "package_type": "room_count"
     },
     {
       "id": "package-opai-2-room",
@@ -2424,7 +4788,8 @@
         "row": 3,
         "note": "房型套餐档价，作为该套餐唯一客户收费"
       },
-      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算",
+      "package_type": "room_count"
     },
     {
       "id": "package-opai-3-room",
@@ -2447,7 +4812,8 @@
         "row": 4,
         "note": "房型套餐档价，作为该套餐唯一客户收费"
       },
-      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算",
+      "package_type": "room_count"
     },
     {
       "id": "package-opai-4-room",
@@ -2470,7 +4836,8 @@
         "row": 5,
         "note": "房型套餐档价，作为该套餐唯一客户收费"
       },
-      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算",
+      "package_type": "room_count"
     },
     {
       "id": "package-opai-5-room",
@@ -2493,7 +4860,8 @@
         "row": 6,
         "note": "房型套餐档价，作为该套餐唯一客户收费"
       },
-      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算",
+      "package_type": "room_count"
     },
     {
       "id": "package-yuanchuang-3-room",
@@ -2516,7 +4884,8 @@
         "row": 3,
         "note": "房型套餐档价，作为该套餐唯一客户收费"
       },
-      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算",
+      "package_type": "room_count"
     },
     {
       "id": "package-yuanchuang-4-room",
@@ -2539,7 +4908,8 @@
         "row": 4,
         "note": "房型套餐档价，作为该套餐唯一客户收费"
       },
-      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算",
+      "package_type": "room_count"
     },
     {
       "id": "package-yuanchuang-5-room",
@@ -2562,7 +4932,8 @@
         "row": 5,
         "note": "房型套餐档价，作为该套餐唯一客户收费"
       },
-      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算"
+      "note": "房型套餐整套收费；套餐内含项不再逐项收客户费用，工资按相应工艺工资规则计算",
+      "package_type": "room_count"
     }
   ],
   "package_coverage": [

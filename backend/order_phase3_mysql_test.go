@@ -155,7 +155,7 @@ func TestPhase3WorkflowMySQL(t *testing.T) {
 		t.Fatal("actual wage detail", err)
 	}
 	var wd wageDetailView
-	if err := json.Unmarshal(w.Body.Bytes(), &wd); err != nil || wd.WageCents != account.WageCents {
+	if err := json.Unmarshal(w.Body.Bytes(), &wd); err != nil || wd.WageCents == nil || *wd.WageCents != account.WageCents {
 		t.Fatal("actual wage mismatch", wd, err)
 	}
 

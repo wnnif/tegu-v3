@@ -15,7 +15,7 @@ func lineFillAllowed(u User, l Line) bool {
 }
 
 func readStoredOrderLines(tx *sql.Tx, orderID string) ([]Line, error) {
-	rows, err := tx.Query(`SELECT id,craft_id,category,name,mode,segments,qty_micro,price_cents,wage_cents,total_cents,labor_cents,temporary,spec,region,description,subitem_id,sort_order,use_included_price,included_by_craft_id,charge_note,worker_id,worker_name,COALESCE(subitem_name,''),COALESCE(actual_location,''),COALESCE(charge_mode,'normal'),wage_override_cents,COALESCE(wage_adjustment_reason,''),COALESCE((SELECT SUM(c.waived_qty_micro) FROM project_combinations c WHERE (c.waive_direction='waterproof' AND c.waterproof_line_id=order_lines.id) OR (c.waive_direction='polypropylene' AND c.polypropylene_line_id=order_lines.id)),0),COALESCE(ticket_batch_id,''),package_included FROM order_lines WHERE order_id=? ORDER BY sort_order,id`, orderID)
+	rows, err := tx.Query(`SELECT id,craft_id,category,name,mode,segments,qty_micro,price_cents,wage_cents,total_cents,labor_cents,wage_configured,temporary,spec,region,description,subitem_id,sort_order,use_included_price,included_by_craft_id,charge_note,worker_id,worker_name,COALESCE(subitem_name,''),COALESCE(actual_location,''),COALESCE(charge_mode,'normal'),wage_override_cents,COALESCE(wage_adjustment_reason,''),COALESCE((SELECT SUM(c.waived_qty_micro) FROM project_combinations c WHERE (c.waive_direction='waterproof' AND c.waterproof_line_id=order_lines.id) OR (c.waive_direction='polypropylene' AND c.polypropylene_line_id=order_lines.id)),0),COALESCE(ticket_batch_id,''),package_included FROM order_lines WHERE order_id=? ORDER BY sort_order,id`, orderID)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func readStoredOrderLines(tx *sql.Tx, orderID string) ([]Line, error) {
 		var l Line
 		var override sql.NullInt64
 		var raw []byte
-		if err = rows.Scan(&l.ID, &l.CraftID, &l.Category, &l.Name, &l.Mode, &raw, &l.Qty, &l.Price, &l.Wage, &l.Total, &l.Labor, &l.Temporary, &l.Spec, &l.Region, &l.Description, &l.SubitemID, &l.SortOrder, &l.UseIncludedPrice, &l.IncludedByCraftID, &l.ChargeNote, &l.Worker, &l.WorkerName, &l.SubitemName, &l.ActualLocation, &l.ChargeMode, &override, &l.WageAdjustmentReason, &l.WaivedQty, &l.ticketBatchID, &l.PackageIncluded); err != nil {
+		if err = rows.Scan(&l.ID, &l.CraftID, &l.Category, &l.Name, &l.Mode, &raw, &l.Qty, &l.Price, &l.Wage, &l.Total, &l.Labor, &l.WageConfigured, &l.Temporary, &l.Spec, &l.Region, &l.Description, &l.SubitemID, &l.SortOrder, &l.UseIncludedPrice, &l.IncludedByCraftID, &l.ChargeNote, &l.Worker, &l.WorkerName, &l.SubitemName, &l.ActualLocation, &l.ChargeMode, &override, &l.WageAdjustmentReason, &l.WaivedQty, &l.ticketBatchID, &l.PackageIncluded); err != nil {
 			return nil, err
 		}
 		if override.Valid {
@@ -76,7 +76,7 @@ func prepareOrderLine(tx *sql.Tx, u User, o Order, l *Line, previous *Line) erro
 			l.ActualLocation = previous.ActualLocation
 		}
 		if !l.Temporary {
-			l.Name, l.Spec, l.Price, l.Wage = previous.Name, previous.Spec, previous.Price, previous.Wage
+			l.Name, l.Spec, l.Price, l.Wage, l.WageConfigured = previous.Name, previous.Spec, previous.Price, previous.Wage, previous.WageConfigured
 			l.IncludedByCraftID, l.ChargeNote = previous.IncludedByCraftID, previous.ChargeNote
 		}
 		if l.Temporary && !u.can("wages") {
@@ -88,9 +88,10 @@ func prepareOrderLine(tx *sql.Tx, u User, o Order, l *Line, previous *Line) erro
 		}
 		var company, source, subitems string
 		var active bool
+		var sourceWageConfigured bool
 		var companyWage, legacyCompanyWage sql.NullInt64
-		if err := tx.QueryRow(`SELECT c.company_id,s.category,s.name,s.mode,c.price_cents,s.wage_cents,wo.wage_cents,c.wage_override_cents,s.spec,(c.active AND s.active),c.source_id,COALESCE(s.subitems,JSON_ARRAY()) FROM crafts c JOIN crafts s ON s.id=c.source_id AND s.company_id=''
-			LEFT JOIN company_wage_overrides wo ON wo.company_id=c.company_id AND wo.craft_id=c.source_id WHERE c.id=?`, l.CraftID).Scan(&company, &l.Category, &l.Name, &l.Mode, &l.Price, &l.Wage, &companyWage, &legacyCompanyWage, &l.Spec, &active, &source, &subitems); err != nil {
+		if err := tx.QueryRow(`SELECT c.company_id,s.category,s.name,s.mode,c.price_cents,s.wage_cents,s.wage_configured,wo.wage_cents,c.wage_override_cents,s.spec,(c.active AND s.active),c.source_id,COALESCE(s.subitems,JSON_ARRAY()) FROM crafts c JOIN crafts s ON s.id=c.source_id AND s.company_id=''
+			LEFT JOIN company_wage_overrides wo ON wo.company_id=c.company_id AND wo.craft_id=c.source_id WHERE c.id=?`, l.CraftID).Scan(&company, &l.Category, &l.Name, &l.Mode, &l.Price, &l.Wage, &sourceWageConfigured, &companyWage, &legacyCompanyWage, &l.Spec, &active, &source, &subitems); err != nil {
 			return fail(400, "固定工艺不存在或尚未关联公共工艺")
 		}
 		if company != o.Company || !active {
@@ -114,11 +115,11 @@ func prepareOrderLine(tx *sql.Tx, u User, o Order, l *Line, previous *Line) erro
 			value := legacyCompanyWage.Int64
 			legacyOverride = &value
 		}
-		name, wage, err := effectiveOrderLineWage(l.SubitemID, l.Wage, override, legacyOverride, items)
+		name, wage, configured, err := effectiveOrderLineWageStatus(l.SubitemID, l.Wage, sourceWageConfigured, override, legacyOverride, items)
 		if err != nil {
 			return err
 		}
-		l.SubitemName, l.Wage = name, wage
+		l.SubitemName, l.Wage, l.WageConfigured = name, wage, configured
 		l.IncludedByCraftID, l.ChargeNote = "", ""
 		l.UseIncludedPrice = false
 	} else {
@@ -127,6 +128,7 @@ func prepareOrderLine(tx *sql.Tx, u User, o Order, l *Line, previous *Line) erro
 		}
 		l.SubitemName = ""
 		l.IncludedByCraftID, l.ChargeNote = "", ""
+		l.WageConfigured = true
 		if !u.can("wages") {
 			l.Wage = 0
 		}
@@ -725,9 +727,9 @@ func (a *App) saveOrder(tx *sql.Tx, u User, b []byte, key string) (any, error) {
 			segments = []Segment{}
 		}
 		if _, saved := previous[l.ID]; saved {
-			_, err = tx.Exec(`UPDATE order_lines SET craft_id=?,category=?,name=?,mode=?,segments=?,qty_micro=?,price_cents=?,wage_cents=?,total_cents=?,labor_cents=?,temporary=?,spec=?,region=?,description=?,subitem_id=?,sort_order=?,use_included_price=?,included_by_craft_id=?,charge_note=?,worker_id=?,worker_name=?,subitem_name=?,actual_location=?,charge_mode=?,wage_override_cents=?,wage_adjustment_reason=?,package_included=? WHERE id=? AND order_id=?`, l.CraftID, l.Category, l.Name, l.Mode, jsonText(segments), l.Qty, l.Price, l.Wage, l.Total, l.Labor, l.Temporary, l.Spec, l.Region, l.Description, l.SubitemID, l.SortOrder, l.UseIncludedPrice, l.IncludedByCraftID, l.ChargeNote, l.Worker, l.WorkerName, l.SubitemName, l.ActualLocation, l.ChargeMode, l.WageOverrideCents, l.WageAdjustmentReason, l.PackageIncluded, l.ID, o.ID)
+			_, err = tx.Exec(`UPDATE order_lines SET craft_id=?,category=?,name=?,mode=?,segments=?,qty_micro=?,price_cents=?,wage_cents=?,total_cents=?,labor_cents=?,wage_configured=?,temporary=?,spec=?,region=?,description=?,subitem_id=?,sort_order=?,use_included_price=?,included_by_craft_id=?,charge_note=?,worker_id=?,worker_name=?,subitem_name=?,actual_location=?,charge_mode=?,wage_override_cents=?,wage_adjustment_reason=?,package_included=? WHERE id=? AND order_id=?`, l.CraftID, l.Category, l.Name, l.Mode, jsonText(segments), l.Qty, l.Price, l.Wage, l.Total, l.Labor, l.WageConfigured, l.Temporary, l.Spec, l.Region, l.Description, l.SubitemID, l.SortOrder, l.UseIncludedPrice, l.IncludedByCraftID, l.ChargeNote, l.Worker, l.WorkerName, l.SubitemName, l.ActualLocation, l.ChargeMode, l.WageOverrideCents, l.WageAdjustmentReason, l.PackageIncluded, l.ID, o.ID)
 		} else {
-			_, err = tx.Exec(`INSERT INTO order_lines(id,order_id,craft_id,category,name,mode,segments,qty_micro,price_cents,wage_cents,total_cents,labor_cents,temporary,spec,region,description,subitem_id,sort_order,use_included_price,included_by_craft_id,charge_note,worker_id,worker_name,subitem_name,actual_location,charge_mode,wage_override_cents,wage_adjustment_reason,package_included) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, l.ID, o.ID, l.CraftID, l.Category, l.Name, l.Mode, jsonText(segments), l.Qty, l.Price, l.Wage, l.Total, l.Labor, l.Temporary, l.Spec, l.Region, l.Description, l.SubitemID, l.SortOrder, l.UseIncludedPrice, l.IncludedByCraftID, l.ChargeNote, l.Worker, l.WorkerName, l.SubitemName, l.ActualLocation, l.ChargeMode, l.WageOverrideCents, l.WageAdjustmentReason, l.PackageIncluded)
+			_, err = tx.Exec(`INSERT INTO order_lines(id,order_id,craft_id,category,name,mode,segments,qty_micro,price_cents,wage_cents,total_cents,labor_cents,wage_configured,temporary,spec,region,description,subitem_id,sort_order,use_included_price,included_by_craft_id,charge_note,worker_id,worker_name,subitem_name,actual_location,charge_mode,wage_override_cents,wage_adjustment_reason,package_included) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, l.ID, o.ID, l.CraftID, l.Category, l.Name, l.Mode, jsonText(segments), l.Qty, l.Price, l.Wage, l.Total, l.Labor, l.WageConfigured, l.Temporary, l.Spec, l.Region, l.Description, l.SubitemID, l.SortOrder, l.UseIncludedPrice, l.IncludedByCraftID, l.ChargeNote, l.Worker, l.WorkerName, l.SubitemName, l.ActualLocation, l.ChargeMode, l.WageOverrideCents, l.WageAdjustmentReason, l.PackageIncluded)
 		}
 		if err != nil {
 			return nil, err

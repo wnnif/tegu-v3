@@ -12,7 +12,7 @@ const companyCategoryTabs=computed(()=>orderedCompanyCategories(props.categories
 const companyOrderAvailable=computed(()=>props.editing.fixed_crafts.map(c=>c.category))
 function changeCompanyCategoryOrder(order:string[]){if(props.editing.entity!=='companies'||props.busy||props.locked||!props.can('customers'))return;props.editing.craft_category_order=[...order]}
 const unlinkedIds=new Set(props.editing.fixed_crafts.filter(c=>c.source_missing||!c.source_id).map(c=>c.id))
-const unit=(mode:string)=>({'平方':'平方米','立方':'立方米','米':'米','个':'个','根':'根','处':'处','孔位':'孔位','副':'副','张':'张','套':'套','金额':'项'}[mode]||'项')
+const unit=(mode:string)=>({'平方':'平方米','立方':'立方米','米':'米','个':'个','家':'家','根':'根','处':'处','孔位':'孔位','副':'副','张':'张','套':'套','金额':'项'}[mode]||'项')
 const craftKey=(craft:Craft)=>craft.id||'source:'+craft.source_id
 let subitemSequence=0
 function addSubitem(){(props.editing.subitems ||= []).push({id:'subitem-'+Date.now().toString(36)+'-'+(++subitemSequence),name:''})}
@@ -46,7 +46,7 @@ function setSubitemWage(item:NonNullable<CatalogDraft['subitems']>[number],event
     <template v-if="editing.entity==='crafts'">
      <label>规格 / 颜色 / 工艺<input v-model="editing.spec" maxlength="200"></label>
      <label>施工大类<select v-model="editing.category"><option v-for="c in categories" :key="c">{{c}}</option></select></label>
-     <label>计量方式<select v-model="editing.mode"><option>平方</option><option>立方</option><option>米</option><option>金额</option><option>个</option><option>根</option><option>处</option><option>孔位</option><option>副</option><option>张</option><option>套</option></select></label>
+     <label>计量方式<select v-model="editing.mode"><option>平方</option><option>立方</option><option>米</option><option>金额</option><option>个</option><option>家</option><option>根</option><option>处</option><option>孔位</option><option>副</option><option>张</option><option>套</option></select></label>
      <label>公共标准工资（元/{{unit(editing.mode)}}）<input :value="editing.wage_cents/100" @input="editing.wage_cents=Math.round(Number(($event.target as HTMLInputElement).value)*100)" type="number" min="0" max="1000000" step="0.01" required></label>
     </template>
     <label v-if="['crafts','products','warehouses'].includes(editing.entity)" class="check"><input type="checkbox" v-model="editing.active">启用</label>
@@ -85,7 +85,7 @@ function setSubitemWage(item:NonNullable<CatalogDraft['subitems']>[number],event
        <label v-if="c.included_by_craft_id">历史含价关联（只读保留）<output>{{editing.fixed_crafts.find(item=>craftKey(item)===c.included_by_craft_id)?.name||c.included_by_craft_id}}</output></label>
       </div>
       <p v-if="c.included_by_craft_id&&can('customer_prices')" class="hint">历史关联和旧单快照保持不变。新施工使用这里明确配置的收费单价；若旧配置仍为0，需人工确认并维护正常收费价，系统不会猜价或批量改历史数据。</p>
-      <p class="hint">{{['个','根','处','孔位','副','张','套'].includes(c.mode)?'按'+unit(c.mode)+'填写整数数量，例如2'+unit(c.mode)+' × 公司单价。':c.mode==='金额'?'金额模式按整项收费金额填写。':'制单按'+unit(c.mode)+'计算数量。'}} 小项：{{c.subitems?.map(item=>item.name).join('、')||'未设置'}}</p>
+      <p class="hint">{{['个','家','根','处','孔位','副','张','套'].includes(c.mode)?'按'+unit(c.mode)+'填写整数数量，例如2'+unit(c.mode)+' × 公司单价。':c.mode==='金额'?'金额模式按整项收费金额填写。':'制单按'+unit(c.mode)+'计算数量。'}} 小项：{{c.subitems?.map(item=>item.name).join('、')||'未设置'}}</p>
       <ul v-if="(can('rates')||can('wages'))&&c.subitems?.length" class="subitem-wage-summary"><li v-for="item in c.subitems" :key="item.id">{{item.name}}：{{item.wage_cents==null?'沿用公共工资':(Number(item.wage_cents)/100).toFixed(2)+' 元/'+unit(c.mode)}}</li></ul>
      </article>
     </div>

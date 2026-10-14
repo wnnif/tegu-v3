@@ -27,17 +27,17 @@ onBeforeUnmount(()=>{generation++})
    <p v-if="loading" class="hint" role="status">正在读取该施工人工资明细…</p>
    <div v-if="error" class="error" role="alert">{{error}}<button type="button" :disabled="loading" @click="load">重新读取</button></div>
    <template v-if="detail">
-    <dl class="wage-heading"><div><dt>施工人</dt><dd>{{detail.worker_name||'—'}}</dd></div><div><dt>公司</dt><dd>{{detail.company_name||'—'}}</dd></div><div><dt>施工地址</dt><dd>{{detail.address||'—'}}</dd></div><div><dt>施工 / 送货日期</dt><dd>{{detail.work_date}}</dd></div><div><dt>单号</dt><dd>{{detail.number}}</dd></div><div><dt>工资状态</dt><dd>{{Number(detail.wage_paid)?'已发放':'待发放'}}</dd></div></dl>
+    <dl class="wage-heading"><div><dt>施工人</dt><dd>{{detail.worker_name||'—'}}</dd></div><div><dt>公司</dt><dd>{{detail.company_name||'—'}}</dd></div><div><dt>施工地址</dt><dd>{{detail.address||'—'}}</dd></div><div><dt>施工 / 送货日期</dt><dd>{{detail.work_date}}</dd></div><div><dt>单号</dt><dd>{{detail.number}}</dd></div><div><dt>工资状态</dt><dd>{{!detail.wage_configured?'工价待配置':Number(detail.wage_paid)?'已发放':'待发放'}}</dd></div></dl>
     <p class="hint">仅显示此施工人在本次记录中的施工和工资，明细只读。</p>
     <div class="wage-lines"><article v-for="(line,index) in detail.lines" :key="line.id||index" class="wage-line">
      <div><strong>{{line.category}} / {{line.name}}</strong><p v-if="line.spec">{{line.spec}}</p><p>施工位置：{{line.region||'未填写位置'}}</p><p v-if="line.description">说明：{{line.description}}</p></div>
      <div><span>施工尺寸 / 数量</span><p v-for="(dimension,i) in savedLineDimensions(line)" :key="i">{{dimension}}</p><p>工程量：{{formatQuantity(line.qty_micro)}} {{measureUnit(line.mode)}}</p></div>
-     <div><span>{{line.mode==='金额'?'整项工资':'工资标准'}}</span><strong>{{formatCents(line.wage_cents)}} 元/{{measureUnit(line.mode)}}</strong><span>本项工资</span><strong>{{formatCents(line.labor_cents)}} 元</strong></div>
+     <div><span>{{line.mode==='金额'?'整项工资':'工资标准'}}</span><strong>{{line.wage_cents===undefined?'工价待配置':formatCents(line.wage_cents)+' 元/'+measureUnit(line.mode)}}</strong><span>本项工资</span><strong>{{line.labor_cents===undefined?'工价待配置':formatCents(line.labor_cents)+' 元'}}</strong></div>
     </article></div>
     <p v-if="!detail.lines.length" class="empty">此人在本次记录中没有施工工艺。</p>
     <p v-if="detail.handles_delivery" class="notice">本人带货工资：{{formatCents(detail.delivery_wage_cents)}} 元</p>
     <p v-if="detail.legacy" class="hint">历史单人记录，工资合计按当时保存的金额显示。</p>
-    <div class="wage-total"><strong>此人工资合计：{{formatCents(detail.wage_cents)}} 元</strong></div>
+    <div class="wage-total"><strong>此人工资合计：{{detail.wage_cents===undefined?'工价待配置':formatCents(detail.wage_cents)+' 元'}}</strong></div>
    </template>
    <footer><button type="button" @click="emit('close')">关闭</button></footer>
   </div>

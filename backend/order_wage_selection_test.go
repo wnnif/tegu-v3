@@ -44,6 +44,34 @@ func TestEffectiveOrderLineWagePrecedence(t *testing.T) {
 	}
 }
 
+func TestEffectiveOrderLineWageStatusDistinguishesPendingAndConfiguredZero(t *testing.T) {
+	explicitZero := int64(0)
+	for _, tc := range []struct {
+		name            string
+		subitemID       string
+		configured      bool
+		companyOverride *int64
+		subitems        []CraftSubitem
+		wantWage        int64
+		wantConfigured  bool
+	}{
+		{name: "missing standard wage", configured: false, wantConfigured: false},
+		{name: "explicit zero standard wage", configured: true, wantConfigured: true},
+		{name: "explicit zero subitem wage", subitemID: "zero", configured: false, subitems: []CraftSubitem{{ID: "zero", Name: "免工资", WageCents: &explicitZero}}, wantConfigured: true},
+		{name: "explicit zero company override", configured: false, companyOverride: &explicitZero, wantConfigured: true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			_, wage, configured, err := effectiveOrderLineWageStatus(tc.subitemID, 0, tc.configured, tc.companyOverride, nil, tc.subitems)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if wage != tc.wantWage || configured != tc.wantConfigured {
+				t.Fatalf("wage status = (%d, %v), want (%d, %v)", wage, configured, tc.wantWage, tc.wantConfigured)
+			}
+		})
+	}
+}
+
 func TestEffectiveOrderLineWageRejectsUnknownSubitem(t *testing.T) {
 	if _, _, err := effectiveOrderLineWage("removed", 100, nil, nil, []CraftSubitem{{ID: "current", Name: "当前小项"}}); err == nil {
 		t.Fatal("unknown subitem should be rejected")

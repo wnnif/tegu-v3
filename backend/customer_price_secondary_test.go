@@ -460,7 +460,7 @@ func TestCustomerPriceSecondaryWageDetailsStayIndependent(t *testing.T) {
 		t.Fatal(err)
 	}
 	secondaryPriceNoOrderMoney(t, data)
-	if string(secondaryPriceObject(t, detail)["wage_cents"]) != "600" || detail.Lines[0].Labor != 500 || detail.Lines[0].Segments[0].Length != 3 || detail.Lines[0].Segments[0].Width != 4 {
+	if string(secondaryPriceObject(t, detail)["wage_cents"]) != "600" || detail.Lines[0].Labor == nil || *detail.Lines[0].Labor != 500 || detail.Lines[0].Segments[0].Length != 3 || detail.Lines[0].Segments[0].Width != 4 {
 		t.Fatal("ordinary wage/measurement values changed")
 	}
 }

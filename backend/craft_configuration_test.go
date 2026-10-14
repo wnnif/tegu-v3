@@ -81,7 +81,7 @@ func TestPublicCraftRejectsCompanyPriceBeforeWriting(t *testing.T) {
 }
 
 func TestCraftCountModesPreserveUnitsAndCalculateExactAmounts(t *testing.T) {
-	for _, mode := range []string{"个", "根", "处", "孔位", "副", "张", "套"} {
+	for _, mode := range []string{"个", "家", "根", "处", "孔位", "副", "张", "套"} {
 		if !validCraftMode(mode) || !countCraftMode(mode) {
 			t.Fatalf("count mode was not recognized: %q", mode)
 		}
@@ -103,6 +103,20 @@ func TestCraftCountModesPreserveUnitsAndCalculateExactAmounts(t *testing.T) {
 		if err := calcLine(&wrongMode); err == nil {
 			t.Fatalf("accepted mismatched segment mode for %s", mode)
 		}
+	}
+	perHousehold := Line{Category: "开工", Name: "按家收费", Mode: "家", Price: 10000, Wage: 3000, Segments: []Segment{{Mode: "家", Count: 2}}}
+	if err := calcLine(&perHousehold); err != nil || perHousehold.Qty != 2000000 || perHousehold.Total != 20000 || perHousehold.Labor != 6000 {
+		t.Fatalf("2家×100元/家应为20000分并按独立工价计薪: qty=%d total=%d labor=%d err=%v", perHousehold.Qty, perHousehold.Total, perHousehold.Labor, err)
+	}
+	for _, count := range []int64{0, -1, 1000001} {
+		invalid := Line{Category: "开工", Name: "按家数量校验", Mode: "家", Segments: []Segment{{Mode: "家", Count: count}}}
+		if err := calcLine(&invalid); err == nil {
+			t.Fatalf("accepted invalid household count %d", count)
+		}
+	}
+	tooMany := Line{Category: "开工", Name: "按家合计校验", Mode: "家", Segments: []Segment{{Mode: "家", Count: 1000000}, {Mode: "家", Count: 1}}}
+	if err := calcLine(&tooMany); err == nil {
+		t.Fatal("accepted a household count sum above the existing limit")
 	}
 	for _, mode := range []string{"根", "处", "孔位", "副", "张", "套"} {
 		if !validCraftMode(mode) {

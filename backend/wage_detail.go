@@ -32,8 +32,10 @@ type wageDetailLine struct {
 	WorkerID    string              `json:"worker_id"`
 	WorkerName  string              `json:"worker_name"`
 	Qty         int64               `json:"qty_micro"`
-	Wage        int64               `json:"wage_cents"`
-	Labor       int64               `json:"labor_cents"`
+	Wage        *int64              `json:"wage_cents,omitempty"`
+	Labor       *int64              `json:"labor_cents,omitempty"`
+	WageConfigured bool              `json:"wage_configured"`
+	WageOverrideCents *int64         `json:"wage_override_cents,omitempty"`
 	Segments    []wageDetailSegment `json:"segments"`
 }
 
@@ -50,7 +52,8 @@ type wageDetailView struct {
 	WorkerID        string           `json:"worker_id"`
 	WorkerName      string           `json:"worker_name"`
 	Status          string           `json:"status"`
-	WageCents       int64            `json:"wage_cents"`
+	WageCents       *int64           `json:"wage_cents,omitempty"`
+	WageConfigured  bool             `json:"wage_configured"`
 	WagePaid        bool             `json:"wage_paid"`
 	Version         int64            `json:"version"`
 	DeliveryWage    int64            `json:"delivery_wage_cents"`
@@ -85,22 +88,36 @@ func (a *App) readWage(w http.ResponseWriter, r *http.Request, u User) error {
 
 func readWageDetail(tx *sql.Tx, accountID string) (wageDetailView, error) {
 	d := wageDetailView{Lines: []wageDetailLine{}}
-	err := tx.QueryRow(`SELECT ww.id,ww.order_id,o.number,o.company_id,COALESCE(NULLIF(o.company_name,''),c.name,''),o.project_id,COALESCE(NULLIF(o.project_name,''),p.name,''),o.address,DATE_FORMAT(o.work_date,'%Y-%m-%d'),ww.worker_id,ww.worker_name,o.status,ww.wage_cents,ww.wage_paid,ww.version,ww.delivery_wage_cents,COALESCE(saved.legacy,1),
+	var wageCents int64
+	err := tx.QueryRow(`SELECT ww.id,ww.order_id,o.number,o.company_id,COALESCE(NULLIF(o.company_name,''),c.name,''),o.project_id,COALESCE(NULLIF(o.project_name,''),p.name,''),o.address,DATE_FORMAT(o.work_date,'%Y-%m-%d'),ww.worker_id,ww.worker_name,o.status,ww.wage_cents,ww.wage_configured,ww.wage_paid,ww.version,ww.delivery_wage_cents,COALESCE(saved.legacy,1),
 		(ww.worker_id=o.worker_id AND (o.delivery_wage_cents>0 OR EXISTS(SELECT 1 FROM order_sales s WHERE s.order_id=o.id)))
-		FROM `+workerWageSource+` ww JOIN orders o ON o.id=ww.order_id LEFT JOIN companies c ON c.id=o.company_id LEFT JOIN projects p ON p.id=o.project_id LEFT JOIN order_worker_wages saved ON saved.id=ww.id WHERE ww.id=?`, accountID).Scan(&d.ID, &d.OrderID, &d.Number, &d.CompanyID, &d.CompanyName, &d.ProjectID, &d.ProjectName, &d.Address, &d.WorkDate, &d.WorkerID, &d.WorkerName, &d.Status, &d.WageCents, &d.WagePaid, &d.Version, &d.DeliveryWage, &d.Legacy, &d.HandlesDelivery)
+		FROM `+workerWageSource+` ww JOIN orders o ON o.id=ww.order_id LEFT JOIN companies c ON c.id=o.company_id LEFT JOIN projects p ON p.id=o.project_id LEFT JOIN order_worker_wages saved ON saved.id=ww.id WHERE ww.id=?`, accountID).Scan(&d.ID, &d.OrderID, &d.Number, &d.CompanyID, &d.CompanyName, &d.ProjectID, &d.ProjectName, &d.Address, &d.WorkDate, &d.WorkerID, &d.WorkerName, &d.Status, &wageCents, &d.WageConfigured, &d.WagePaid, &d.Version, &d.DeliveryWage, &d.Legacy, &d.HandlesDelivery)
 	if err == sql.ErrNoRows {
 		return d, fail(404, "工资记录不存在")
 	}
 	if err != nil {
 		return d, err
 	}
+	if d.WageConfigured {
+		d.WageCents = &wageCents
+	}
 	if err = validateOrderWorkerAccount(tx, d.OrderID); err != nil {
 		return d, err
 	}
-	lines, err := scanRows[wageDetailLine](tx, `SELECT l.id,l.category,l.name,l.spec,l.region,l.description,l.mode,l.subitem_id,l.sort_order,COALESCE(NULLIF(l.worker_id,''),o.worker_id),COALESCE(NULLIF(l.worker_name,''),?),l.qty_micro,l.wage_cents,l.labor_cents,l.segments FROM order_lines l JOIN orders o ON o.id=l.order_id WHERE l.order_id=? AND COALESCE(NULLIF(l.worker_id,''),o.worker_id)=? ORDER BY l.sort_order,l.id`, []any{d.WorkerName, d.OrderID, d.WorkerID}, func(r *sql.Rows, v *wageDetailLine) error {
+	lines, err := scanRows[wageDetailLine](tx, `SELECT l.id,l.category,l.name,l.spec,l.region,l.description,l.mode,l.subitem_id,l.sort_order,COALESCE(NULLIF(l.worker_id,''),o.worker_id),COALESCE(NULLIF(l.worker_name,''),?),l.qty_micro,l.wage_cents,l.labor_cents,l.wage_configured,l.wage_override_cents,l.segments FROM order_lines l JOIN orders o ON o.id=l.order_id WHERE l.order_id=? AND COALESCE(NULLIF(l.worker_id,''),o.worker_id)=? ORDER BY l.sort_order,l.id`, []any{d.WorkerName, d.OrderID, d.WorkerID}, func(r *sql.Rows, v *wageDetailLine) error {
 		var raw string
-		if err := r.Scan(&v.ID, &v.Category, &v.Name, &v.Spec, &v.Region, &v.Description, &v.Mode, &v.SubitemID, &v.SortOrder, &v.WorkerID, &v.WorkerName, &v.Qty, &v.Wage, &v.Labor, &raw); err != nil {
+		var override sql.NullInt64
+		var wage, labor int64
+		if err := r.Scan(&v.ID, &v.Category, &v.Name, &v.Spec, &v.Region, &v.Description, &v.Mode, &v.SubitemID, &v.SortOrder, &v.WorkerID, &v.WorkerName, &v.Qty, &wage, &labor, &v.WageConfigured, &override, &raw); err != nil {
 			return err
+		}
+		if override.Valid {
+			value := override.Int64
+			v.WageOverrideCents = &value
+		}
+		if v.WageConfigured || v.WageOverrideCents != nil {
+			v.Wage = &wage
+			v.Labor = &labor
 		}
 		v.Segments = []wageDetailSegment{}
 		if err := json.Unmarshal([]byte(raw), &v.Segments); err != nil {

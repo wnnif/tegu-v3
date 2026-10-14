@@ -5,6 +5,7 @@ import { printWorkerNames, savedLineWorkerName, wageRecordKey, type PrintOrder, 
 export interface Sale extends Material {
   id?: string
   editable?: boolean
+  company_price_fixed?: boolean
   price_cents?: Numeric
   total_cents?: Numeric
   sale_qty_micro?: Numeric
@@ -27,7 +28,7 @@ export interface ProjectTicket {
   received_cents?: Numeric
   outstanding_cents?: Numeric
   package_charge_cents?: Numeric
-  package_charge?: {id: string; name: string; room_count: number; amount_cents: Numeric}
+  package_charge?: {id: string; name: string; package_type?: 'room_count' | 'fixed_scope'; room_count: number; amount_cents: Numeric}
   delivered_at?: string
   recipient?: string
 }
@@ -46,7 +47,10 @@ export interface TicketDetail {
   payment_receipts?: {id: string; amount_cents?: Numeric; received_at: string; method?: string; voucher_no?: string; note?: string; voided?: boolean; voided_at?: string}[]
 }
 export const ticketLabel = (ticket: ProjectTicket) => ticket.kind === 'summary' ? '全工地累计' : ticket.kind === 'append' ? '追加票' : ticket.ticket_mode_snapshot === 'single' ? '统一票' : ticket.ticket_mode_snapshot === 'split' ? (ticket.slot === 2 ? '第二票' : '第一票') : '正常票'
-export function ticketPrintOrder(detail: TicketDetail): PrintOrder {
+export type ProjectTicketPrintOrder = PrintOrder & {
+  package_charge?: NonNullable<PrintOrder['package_charge']> & {package_type?: 'room_count' | 'fixed_scope'}
+}
+export function ticketPrintOrder(detail: TicketDetail): ProjectTicketPrintOrder {
   if (!hasCustomerPrice(detail.ticket.total_cents)) throw new Error('打印客户金额需要查看客户价格权限')
   const orders = detail.orders
   const first = orders[0]
@@ -67,7 +71,12 @@ export function ticketPrintOrder(detail: TicketDetail): PrintOrder {
     worker_name: workerNames, worker_names: workerNames,
     number: detail.ticket.number, address: detail.ticket.address || first?.address || '', work_date: dates.join('、'),
     status: detail.ticket.status, total_cents: detail.ticket.total_cents,
-    ...(detail.ticket.package_charge ? { package_charge: { name: detail.ticket.package_charge.name, room_count: detail.ticket.package_charge.room_count, amount_cents: detail.ticket.package_charge.amount_cents } } : {}),
+    ...(detail.ticket.package_charge ? { package_charge: {
+      name: detail.ticket.package_charge.name,
+      ...(detail.ticket.package_charge.package_type ? { package_type: detail.ticket.package_charge.package_type } : {}),
+      room_count: detail.ticket.package_charge.room_count,
+      amount_cents: detail.ticket.package_charge.amount_cents,
+    } } : {}),
     project_name: detail.ticket.project_name || first?.project_name, project_number: first?.project_number,
     contact: first?.contact, print_settings: first?.print_settings,
     lines: orders.flatMap(order => order.lines.map(line => ({...line, work_date: order.work_date, worker_id: line.worker_id || order.worker_id, worker_name:savedLineWorkerName(line,order)}))),

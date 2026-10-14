@@ -16,7 +16,7 @@ import type {ProjectRecord} from '../projects'
 import type {ProjectWork} from '../projectWork'
 import {ticketLabel} from '../projectWork'
 import {needsMaterialWorker} from '../orderWorkers'
-import type {CompanyPackageOption,ProjectPackage} from '../projects'
+import {packageCoverageGroups,packageDisplayLabel,type CompanyPackageOption,type ProjectPackage} from '../projects'
 import type {OrderDraft,OrderLine,References,CatalogRow,Balance,Entity} from '../workflows/models'
 const props=withDefaults(defineProps<{draft:OrderDraft;references:References;projects:ProjectRecord[];packageOptions?:CompanyPackageOption[];projectPage:number;projectTotal:number;workerOptions:CatalogRow[];companyCraftCategories:string[];selectedCategory:string;inventory:Balance[];busy:boolean;orderLocked:boolean;orderWarehouse:string;allowedCrafts:string[];can:(p:string)=>boolean}>(),{packageOptions:()=>[]})
 const emit=defineEmits<{save:[];company:[];project:[];projectSearch:[query:string];projectPage:[page:number];category:[category:string];worker:[item:CatalogRow|null];lineWorker:[line:OrderLine,item:CatalogRow|null];categoryWorker:[category:string,item:CatalogRow|null];addLocation:[line:OrderLine];removeLocation:[line:OrderLine];materialProduct:[item:CatalogRow|null];materialSource:[];print:[];cancelOrder:[];temporary:[];material:[];sale:[];close:[]}>()
@@ -33,8 +33,10 @@ const financeMoney=(value:unknown)=>customerMoney(value,props.can('finance')&&pr
 const activePackage=computed<ProjectPackage|undefined>(()=>editing.value.project_id?currentProjectWork.value?.project.package:props.packageOptions.find(item=>item.id===editing.value.package_id))
 const packageCoverage=computed(()=>activePackage.value?.coverage||[])
 const coveredLine=(line:OrderLine)=>packageCoverage.value.some(item=>item.mapping==='mapped'&&!!item.craft_id&&item.craft_id===line.craft_id&&(item.subitem_id||'')===(line.subitem_id||''))
-const includedPackageItems=computed(()=>packageCoverage.value.filter(item=>item.mapping==='mapped').map(item=>item.item_name))
-const pendingPackageItems=computed(()=>packageCoverage.value.filter(item=>item.mapping!=='mapped').map(item=>item.item_name))
+const packageCoverageSummary=computed(()=>packageCoverageGroups(packageCoverage.value))
+const includedPackageItems=computed(()=>packageCoverageSummary.value.mapped)
+const includedUnmappedPackageItems=computed(()=>packageCoverageSummary.value.includedUnmapped)
+const pendingPackageItems=computed(()=>packageCoverageSummary.value.pending)
 const label=(type:Entity,id:string)=>props.references[type]?.find((x:CatalogRow)=>x.id===id)?.name||'—'
 const companyTotal=computed(()=>{
  const lines=editing.value.lines.filter(filled),sales=editing.value.sales||[]
@@ -96,12 +98,13 @@ function projectLoaded(work:ProjectWork){if(work.project.id===editing.value.proj
         <ProjectSelector class="order-project" :draft="editing" :projects="projects" :page="projectPage" :total="projectTotal" :disabled="orderLocked||busy||!!editing.id" @change="projectWork=null;emit('project')" @search="emit('projectSearch',$event)" @page="emit('projectPage',$event)" />
       </div>
       <section v-if="!editing.id&&!editing.project_id&&packageOptions.length&&can('customer_prices')" class="package-selection">
-        <label>工地房型套餐（可选）<select v-model="editing.package_id"><option value="">不选择套餐</option><option v-for="option in packageOptions" :key="option.id" :value="option.id">{{option.name}} · {{option.room_count}} 房 · {{money(option.price_cents)}}</option></select></label>
+        <label>工地房型套餐（含整套收费，可选）<select v-model="editing.package_id"><option value="">不选择套餐</option><option v-for="option in packageOptions" :key="option.id" :value="option.id">{{packageDisplayLabel(option)}} · {{money(option.price_cents)}}</option></select></label>
       </section>
       <section v-if="activePackage&&can('customer_prices')" class="package-summary">
-        <strong>房型套餐：{{activePackage.name}} · {{activePackage.room_count}} 房</strong>
+        <strong>收费套餐：{{packageDisplayLabel(activePackage)}}</strong>
         <span>{{editing.project_id?'套餐已绑定此工地，金额只计入首张票':'套餐金额 '+money(activePackage.price_cents)+'，保存后只计入首张票'}}</span>
         <span v-if="includedPackageItems.length">套餐内免重复收费：{{includedPackageItems.join('、')}}；施工工资照常计算。</span>
+        <span v-if="includedUnmappedPackageItems.length">来源明确属于套餐但未对应独立工艺：{{includedUnmappedPackageItems.join('、')}}；不会按相似名称自动免收。</span>
         <span v-if="pendingPackageItems.length">以下项目尚未唯一对应系统工艺，不自动免收：{{pendingPackageItems.join('、')}}。</span>
       </section>
       <div class="form-grid compact order-basics">

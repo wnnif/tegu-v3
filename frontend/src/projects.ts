@@ -3,22 +3,40 @@ export type ProjectStatus = '进行中' | '已停用' | '已结项'
 export type ProjectAction = 'disable' | 'enable' | 'close'
 
 export interface CompanyOption { id: string; name: string }
+export type PackageCoverageMapping = 'mapped' | 'included_unmapped' | 'pending_mapping' | 'pending'
 export interface PackageCoverage {
   item_name: string
   craft_id?: string
   source_craft_id?: string
   subitem_id?: string
-  mapping: string
+  mapping: PackageCoverageMapping
 }
 export interface ProjectPackage {
   id: string
   name: string
+  package_type?: 'room_count' | 'fixed_scope'
   room_count: number
   price_cents?: number | string
   coverage: PackageCoverage[]
 }
 export interface CompanyPackageOption extends ProjectPackage {
   price_cents: number | string
+}
+export interface PackageCoverageGroups {
+  mapped: string[]
+  includedUnmapped: string[]
+  pending: string[]
+}
+export function packageCoverageGroups(coverage: PackageCoverage[] = []): PackageCoverageGroups {
+  return coverage.reduce<PackageCoverageGroups>((groups, item) => {
+    if (item.mapping === 'mapped') groups.mapped.push(item.item_name)
+    else if (item.mapping === 'included_unmapped') groups.includedUnmapped.push(item.item_name)
+    else groups.pending.push(item.item_name)
+    return groups
+  }, {mapped: [], includedUnmapped: [], pending: []})
+}
+export function packageDisplayLabel(pkg: Pick<ProjectPackage, 'name' | 'package_type' | 'room_count'>): string {
+  return pkg.package_type === 'fixed_scope' ? pkg.name : `${pkg.name} · ${pkg.room_count} 房`
 }
 export interface ProjectRecord {
   id: string

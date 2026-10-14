@@ -109,7 +109,7 @@ func TestWorkerWageDetailHTTPMySQL(t *testing.T) {
 		{"detail-c", "合成送货丙", 0, 500, true},
 	} {
 		d, raw := wageDetailHTTPRead(t, a, wageViewer, accounts[tc.worker].ID)
-		if d.WorkerID != tc.worker || d.WorkerName != tc.name || d.OrderID != saved.ID || d.CompanyName != "合成公司快照" || len(d.Lines) != tc.lines || d.WageCents != tc.wage || d.HandlesDelivery != tc.delivery || d.Legacy || d.WagePaid {
+		if d.WorkerID != tc.worker || d.WorkerName != tc.name || d.OrderID != saved.ID || d.CompanyName != "合成公司快照" || len(d.Lines) != tc.lines || d.WageCents == nil || *d.WageCents != tc.wage || d.HandlesDelivery != tc.delivery || d.Legacy || d.WagePaid {
 			t.Fatal("wrong person/snapshot/amount", d)
 		}
 		for _, l := range d.Lines {
@@ -117,10 +117,10 @@ func TestWorkerWageDetailHTTPMySQL(t *testing.T) {
 				t.Fatal("another worker's line returned", l)
 			}
 		}
-		if tc.worker == "detail-a" && (d.Lines[0].Region != "" || d.Lines[0].SubitemID != "master" || d.Lines[0].Qty != 6000000 || d.Lines[0].Wage != 300 || d.Lines[0].Labor != 1800 || d.Lines[0].Segments[0].Width != 3) {
+		if tc.worker == "detail-a" && (d.Lines[0].Region != "" || d.Lines[0].SubitemID != "master" || d.Lines[0].Qty != 6000000 || d.Lines[0].Wage == nil || *d.Lines[0].Wage != 300 || d.Lines[0].Labor == nil || *d.Lines[0].Labor != 1800 || d.Lines[0].Segments[0].Width != 3) {
 			t.Fatal("master bathroom dimensions/wage snapshot", d.Lines)
 		}
-		if tc.worker == "detail-b" && (d.Lines[0].Region != "" || d.Lines[0].SubitemID != "kitchen" || d.Lines[1].Wage != 0 || d.Lines[1].Labor != 0 || !strings.Contains(raw, "阳台")) {
+		if tc.worker == "detail-b" && (d.Lines[0].Region != "" || d.Lines[0].SubitemID != "kitchen" || d.Lines[1].Wage == nil || *d.Lines[1].Wage != 0 || d.Lines[1].Labor == nil || *d.Lines[1].Labor != 0 || !strings.Contains(raw, "阳台")) {
 			t.Fatal("kitchen/zero-wage own work lost", d.Lines)
 		}
 		if tc.worker == "detail-c" && (d.DeliveryWage != 500 || !strings.Contains(raw, `"lines":[]`)) {
@@ -176,7 +176,7 @@ func TestWorkerWageDetailLegacyAndDamagedHTTPMySQL(t *testing.T) {
 			}
 		}
 		d, _ := wageDetailHTTPRead(t, a, wageViewer, accountID)
-		if !d.Legacy || d.WageCents != 987 || !d.WagePaid || d.Version != 7 || d.WorkerName != "历史人员快照" || d.CompanyName != "历史公司快照" || len(d.Lines) != 1 || d.Lines[0].Labor != 111 || d.Lines[0].WorkerName != "历史人员快照" {
+		if !d.Legacy || d.WageCents == nil || *d.WageCents != 987 || !d.WagePaid || d.Version != 7 || d.WorkerName != "历史人员快照" || d.CompanyName != "历史公司快照" || len(d.Lines) != 1 || d.Lines[0].Labor == nil || *d.Lines[0].Labor != 111 || d.Lines[0].WorkerName != "历史人员快照" {
 			t.Fatal("legacy snapshot was recalculated/current-name substituted", d)
 		}
 		wantAccounts := 0
@@ -227,7 +227,7 @@ func TestWorkerWageDetailZeroDeliveryHTTPMySQL(t *testing.T) {
 		t.Fatal("delivery-only list", w.Code, w.Body.String())
 	}
 	d, raw := wageDetailHTTPRead(t, a, wageViewer, page.Rows[0].ID)
-	if !d.HandlesDelivery || d.WageCents != 0 || d.DeliveryWage != 0 || len(d.Lines) != 0 || !strings.Contains(raw, `"lines":[]`) || d.WorkerName != "合成0工资送货人" {
+	if !d.HandlesDelivery || d.WageCents == nil || *d.WageCents != 0 || d.DeliveryWage != 0 || len(d.Lines) != 0 || !strings.Contains(raw, `"lines":[]`) || d.WorkerName != "合成0工资送货人" {
 		t.Fatal("zero delivery fact lost", d)
 	}
 }

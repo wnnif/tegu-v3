@@ -303,8 +303,8 @@ test('保存微量格式保留6位精度和大整数，非法或缺省不显示�
   assert.match(row.dimensions[0].text, /未记录方量明细/)
 })
 
-test('保存查看保留根、处、孔位、副、张、套单位及计数段原文', () => {
-  const modes=['根','处','孔位','副','张','套']
+test('保存查看保留家、根、处、孔位、副、张、套单位及计数段原文', () => {
+  const modes=['家','根','处','孔位','副','张','套']
   const saved=order({lines:modes.map((mode,index)=>line('count-'+index,mode,{qty_micro:2000000,segments:[{mode,count:2}]}))})
   const actual=rows(savedOrderWorkView(saved,true))
   assert.deepEqual(actual.map(row=>row.quantity_text),modes.map(mode=>'2 '+mode))

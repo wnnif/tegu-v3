@@ -65,6 +65,14 @@ func validCatalogSeedFixture() catalogSeedManifest {
 			{CompanyID: "company-dongjian", CraftID: "craft-polypropylene", Wage: *seedValue(550, "confirmed", "user-wage-rules", "已确认工资规则", 0), Source: seedRef("user-wage-rules", "已确认工资规则", 0)},
 			{CompanyID: "company-yiren", CraftID: "craft-polypropylene", Wage: *seedValue(550, "confirmed", "user-wage-rules", "已确认工资规则", 0), Source: seedRef("user-wage-rules", "已确认工资规则", 0)},
 		},
+		Products: []catalogSeedProduct{{
+			ID: "temporary-toilet", Name: "临时马桶", Unit: "个", AuxUnit: "", AuxRatio: json.RawMessage("1"),
+			Active: json.RawMessage("true"), WeightKG: json.RawMessage("0"), Source: seedRef("excel-prices", "一半设计", 20),
+		}},
+		CompanyProductPrices: []catalogSeedCompanyProductPrice{{
+			ID: "company-toilet-dongjian", CompanyID: "company-dongjian", ProductID: "temporary-toilet", InputUnit: "base",
+			Price: *seedValue(1500, "confirmed", "excel-prices", "一半设计", 20), Source: seedRef("excel-prices", "一半设计", 20), Note: "代购售价，不含工人工资",
+		}},
 		BonusRules: []catalogSeedBonusRule{
 			{Key: "waterproof_split_two_coats", Category: "防水涂料", CraftName: "分开两遍防水工艺", Mode: "平方", RateCents: 50, Unit: "㎡", OverrideReason: "按已确认工资规则", Source: seedRef("user-wage-rules", "已确认工资规则", 0), TargetCraftID: "craft-v3-waterproof-split-two-coats"},
 			{Key: "fine_start_wall_ground_wall", Category: "开工", CraftName: "精开工·墙地固", SubitemName: "墙", Mode: "平方", RateCents: 15, Unit: "㎡", OverrideReason: "按已确认工资规则", Source: seedRef("excel-wages", "开工工资", 15), TargetCraftID: "craft-v3-fine-wall-ground", TargetSubitemID: "fine-wall"},
@@ -95,8 +103,8 @@ func TestParseCatalogSeedValidatesSourcesBonusRulesAndOverrides(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if digest == "" || len(manifest.Companies) != 2 || len(manifest.Crafts) != 3 || len(manifest.BonusRules) != 2 {
-		t.Fatalf("解析后的基础资料不完整: digest=%q companies=%d crafts=%d bonus=%d", digest, len(manifest.Companies), len(manifest.Crafts), len(manifest.BonusRules))
+	if digest == "" || len(manifest.Companies) != 2 || len(manifest.Crafts) != 3 || len(manifest.CompanyProductPrices) != 1 || len(manifest.BonusRules) != 2 {
+		t.Fatalf("解析后的基础资料不完整: digest=%q companies=%d crafts=%d company_product_prices=%d bonus=%d", digest, len(manifest.Companies), len(manifest.Crafts), len(manifest.CompanyProductPrices), len(manifest.BonusRules))
 	}
 }
 
@@ -109,11 +117,11 @@ func TestProjectCatalogSeedParsesWithoutDatabaseWrites(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if digest == "" || len(manifest.Companies) != 13 || len(manifest.Crafts) != 67 || len(manifest.CompanyCrafts) != 39 || len(manifest.CompanyWageOverrides) != 2 {
+	if digest == "" || len(manifest.Companies) != 13 || len(manifest.Crafts) < 67 || len(manifest.CompanyCrafts) < 21 || len(manifest.CompanyWageOverrides) != 2 {
 		t.Fatalf("基础资料数量不符: companies=%d crafts=%d company_crafts=%d wage_overrides=%d", len(manifest.Companies), len(manifest.Crafts), len(manifest.CompanyCrafts), len(manifest.CompanyWageOverrides))
 	}
-	if len(manifest.Products) != 0 || len(manifest.Packages) != 11 || len(manifest.PackageCoverage) != 74 || len(manifest.BonusRules) != 2 {
-		t.Fatalf("商品、套餐或奖金数量不符: products=%d packages=%d coverage=%d bonuses=%d", len(manifest.Products), len(manifest.Packages), len(manifest.PackageCoverage), len(manifest.BonusRules))
+	if len(manifest.Products) == 0 || len(manifest.CompanyProductPrices) == 0 || len(manifest.Packages) != 11 || len(manifest.PackageCoverage) != 74 || len(manifest.BonusRules) != 2 {
+		t.Fatalf("商品、公司售价、套餐或奖金数量不符: products=%d company_product_prices=%d packages=%d coverage=%d bonuses=%d", len(manifest.Products), len(manifest.CompanyProductPrices), len(manifest.Packages), len(manifest.PackageCoverage), len(manifest.BonusRules))
 	}
 	yuanchuangCoverage := 0
 	for _, item := range manifest.PackageCoverage {
@@ -159,44 +167,120 @@ func TestProjectCatalogSeedParsesWithoutDatabaseWrites(t *testing.T) {
 			t.Fatalf("遗漏有明确映射的自粘卷材客户价: %s row %d", sheet, row)
 		}
 	}
-	testOnlySources := map[string]struct {
-		companyID string
-		craftID   string
-	}{
-		"宅心:7":    {"company-zhai-xin", "a317b42faeb2ee6f317ffac535b43799"},
-		"宅心:8":    {"company-zhai-xin", "12c57d091d3c9006acafe59a7b0b3f8a"},
-		"唐卡:7":    {"company-tangka", "a317b42faeb2ee6f317ffac535b43799"},
-		"予里设计:7":  {"company-yuli", "a317b42faeb2ee6f317ffac535b43799"},
-		"予里设计:8":  {"company-yuli", "12c57d091d3c9006acafe59a7b0b3f8a"},
-		"顾意设计:8":  {"company-guyi", "a317b42faeb2ee6f317ffac535b43799"},
-		"顾意设计:9":  {"company-guyi", "12c57d091d3c9006acafe59a7b0b3f8a"},
-		"友所设计:8":  {"company-yousuo", "12c57d091d3c9006acafe59a7b0b3f8a"},
-		"友所设计:9":  {"company-yousuo", "c8e29907887b47448aa42972f2427a1a"},
-		"旭桥装饰:9":  {"company-xuqiao", "a317b42faeb2ee6f317ffac535b43799"},
-		"旭桥装饰:10": {"company-xuqiao", "12c57d091d3c9006acafe59a7b0b3f8a"},
-		"鼎格装饰:7":  {"company-dingge", "a317b42faeb2ee6f317ffac535b43799"},
-		"鼎格装饰:8":  {"company-dingge", "12c57d091d3c9006acafe59a7b0b3f8a"},
-		"百姓家装饰:7": {"company-baixingjia", "a317b42faeb2ee6f317ffac535b43799"},
-		"百姓家装饰:8": {"company-baixingjia", "12c57d091d3c9006acafe59a7b0b3f8a"},
-		"百姓家装饰:9": {"company-baixingjia", "c8e29907887b47448aa42972f2427a1a"},
-		"元创设计:8":  {"company-yuanchuang", "a317b42faeb2ee6f317ffac535b43799"},
-		"元创设计:9":  {"company-yuanchuang", "12c57d091d3c9006acafe59a7b0b3f8a"},
+	ordinaryPolypropyleneRows := map[string]int{
+		"宅心": 16, "唐卡": 16, "予里设计": 17, "顾意设计": 19, "友所设计": 18,
+		"旭桥装饰": 18, "鼎格装饰": 13, "百姓家装饰": 18, "一半设计": 24, "元创设计": 16, "欧派装饰": 24,
 	}
-	seenTestOnly := make(map[string]bool, len(testOnlySources))
+	seenOrdinaryPolypropylene := make(map[string]bool, len(ordinaryPolypropyleneRows))
 	for _, item := range manifest.CompanyCrafts {
-		if item.Price.Classification != "test_only" {
+		if item.Price.Classification == "test_only" {
+			t.Fatalf("V1初始化资料不能包含测试客户价: %s!%d", item.Source.Sheet, item.Source.Row)
+		}
+		if item.CraftID != "1ff20429655bace0933b240d1f5f9d59" {
 			continue
 		}
-		key := item.Source.Sheet + ":" + strconv.Itoa(item.Source.Row)
-		want, ok := testOnlySources[key]
-		if !ok || seenTestOnly[key] || item.CompanyID != want.companyID || item.CraftID != want.craftID || item.Price.Cents != 100 || item.Price.Source.SourceID != "excel-prices" || item.Price.Source.Sheet != item.Source.Sheet || item.Price.Source.Row != item.Source.Row || !strings.Contains(item.Price.Source.Note, "test_only") || !strings.Contains(item.Source.Note, "㎡") {
-			t.Fatalf("缺价模拟价来源/工艺/金额不符: key=%q item=%+v", key, item)
+		row, ok := ordinaryPolypropyleneRows[item.Source.Sheet]
+		if !ok || seenOrdinaryPolypropylene[item.Source.Sheet] || item.Source.Row != row || item.Price.Cents != 1200 || item.Price.Classification != "confirmed" || item.Price.Source.SourceID != "excel-prices" {
+			t.Fatalf("原有丙纶客户价来源/工艺/金额不符: item=%+v", item)
 		}
-		seenTestOnly[key] = true
+		seenOrdinaryPolypropylene[item.Source.Sheet] = true
 	}
-	if len(seenTestOnly) != len(testOnlySources) {
-		t.Fatalf("缺价模拟价数量不符: got=%d want=%d", len(seenTestOnly), len(testOnlySources))
+	if len(seenOrdinaryPolypropylene) != len(ordinaryPolypropyleneRows) {
+		t.Fatalf("原有丙纶真实客户价数量不符: got=%d want=%d", len(seenOrdinaryPolypropylene), len(ordinaryPolypropyleneRows))
 	}
+	for _, item := range manifest.CompanyProductPrices {
+		if item.Price.Classification == "test_only" {
+			t.Fatalf("V1初始化资料不能包含测试商品价: %s!%d", item.Source.Sheet, item.Source.Row)
+		}
+	}
+}
+
+func TestProjectCatalogSeedCustomerPriceBackfill(t *testing.T) {
+	data, err := os.ReadFile("../catalog/catalog-seed-v1.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	manifest, _, err := parseCatalogSeed(data)
+	if err != nil {
+		t.Fatalf("V1报价种子解析失败: %v", err)
+	}
+	if len(manifest.CompanyCrafts) != 115 {
+		t.Fatalf("公司固定收费数量不符: got=%d want=115", len(manifest.CompanyCrafts))
+	}
+	if len(manifest.Products) != 2 || len(manifest.CompanyProductPrices) != 2 {
+		t.Fatalf("一半设计材料/代购固定价不完整: products=%d prices=%d", len(manifest.Products), len(manifest.CompanyProductPrices))
+	}
+	if len(manifest.Packages) != 11 || len(manifest.PackageCoverage) != 74 {
+		t.Fatalf("既有墙地固套餐被改动: packages=%d coverage=%d", len(manifest.Packages), len(manifest.PackageCoverage))
+	}
+
+	legacyCrafts := map[string]bool{
+		"1ff20429655bace0933b240d1f5f9d59": true,
+		"craft-v3-membrane-self-adhesive":   true,
+	}
+	newSourceRows := make(map[string]bool)
+	for _, item := range manifest.CompanyCrafts {
+		if item.Price.Classification == "test_only" {
+			t.Fatalf("V1种子仍有测试客户价: %s!%d", item.Source.Sheet, item.Source.Row)
+		}
+		if !legacyCrafts[item.CraftID] {
+			newSourceRows[item.Source.Sheet+"!"+strconv.Itoa(item.Source.Row)] = true
+		}
+	}
+	if len(newSourceRows) != 92 {
+		t.Fatalf("固定报价来源行数量不符: got=%d want=92", len(newSourceRows))
+	}
+	for _, unresolved := range []string{"宅心!6", "唐卡!6", "旭桥装饰!8", "元创设计!6"} {
+		if newSourceRows[unresolved] {
+			t.Fatalf("未决歧义行被错误导入固定收费: %s", unresolved)
+		}
+	}
+
+	wantYiban := map[string]int64{
+		"craft-v3-marking-house":                    10000,
+		"craft-v3-door-protection-unit":             80000,
+		"craft-v3-tile-protection":                    350,
+		"craft-v3-safety-install-transport":         10000,
+		"craft-v3-safety-frame-a":                    1500,
+		"craft-v3-safety-frame-b":                    1500,
+		"craft-v3-safety-net-large":                  5000,
+		"craft-v3-safety-net-small":                  3000,
+		"craft-v3-backfill-area":                     9000,
+		"craft-v3-waterproof-combo-tooth-two-coats":  2600,
+		"craft-v3-waterproof-extra-two-coats":        1500,
+		"1ff20429655bace0933b240d1f5f9d59":           1200,
+		"craft-v3-membrane-self-adhesive":            5500,
+	}
+	seenYiban := make(map[string]bool)
+	for _, item := range manifest.CompanyCrafts {
+		if item.CompanyID != "company-yiban" {
+			continue
+		}
+		if want, ok := wantYiban[item.CraftID]; ok {
+			if item.Price.Cents != want || item.Price.Classification != "confirmed" {
+				t.Fatalf("一半设计客户价错误: craft=%s cents=%d want=%d", item.CraftID, item.Price.Cents, want)
+			}
+			seenYiban[item.CraftID] = true
+		}
+		if item.ID == "cc-v3-yiban-door" && !strings.Contains(item.Price.Source.Note, "包含人工") {
+			t.Fatal("一半设计门保护未保留原表包含人工说明")
+		}
+	}
+	if len(seenYiban) != len(wantYiban) {
+		t.Fatalf("一半设计重点收费映射不完整: got=%d want=%d", len(seenYiban), len(wantYiban))
+	}
+
+	productPrices := make(map[string]int64)
+	for _, item := range manifest.CompanyProductPrices {
+		if item.CompanyID != "company-yiban" || item.InputUnit != "base" || item.Price.Classification != "confirmed" {
+			t.Fatalf("材料/代购固定价身份错误: %+v", item)
+		}
+		productPrices[item.ProductID] = item.Price.Cents
+	}
+	if productPrices["product-v3-temporary-toilet"] != 1500 || productPrices["product-v3-electrical-box"] != 10000 {
+		t.Fatalf("材料/代购固定价金额错误: %+v", productPrices)
+	}
+
 }
 
 func TestParseCatalogSeedRejectsUnmarkedTestOnlyOrAlteredBonus(t *testing.T) {
@@ -235,6 +319,54 @@ func TestParseCatalogSeedRejectsUnmarkedTestOnlyOrAlteredBonus(t *testing.T) {
 			t.Fatalf("工资覆盖不应依赖公司客户收费关系: %v", err)
 		}
 	})
+}
+
+func TestCatalogSeedCompanyProductPriceValidation(t *testing.T) {
+	valid := validCatalogSeedFixture()
+	if err := validateCatalogSeed(valid); err != nil {
+		t.Fatalf("有效公司商品固定价应通过校验: %v", err)
+	}
+	tests := []struct {
+		name   string
+		mutate func(*catalogSeedManifest)
+	}{
+		{name: "unknown-company", mutate: func(m *catalogSeedManifest) { m.CompanyProductPrices[0].CompanyID = "missing-company" }},
+		{name: "unknown-product", mutate: func(m *catalogSeedManifest) { m.CompanyProductPrices[0].ProductID = "missing-product" }},
+		{name: "unsupported-unit", mutate: func(m *catalogSeedManifest) { m.CompanyProductPrices[0].InputUnit = "aux" }},
+		{name: "source-row-mismatch", mutate: func(m *catalogSeedManifest) { m.CompanyProductPrices[0].Price.Source.Row++ }},
+		{name: "zero-confirmed-price", mutate: func(m *catalogSeedManifest) { m.CompanyProductPrices[0].Price.Cents = 0 }},
+		{name: "database-price-limit", mutate: func(m *catalogSeedManifest) { m.CompanyProductPrices[0].Price.Cents = 100000001 }},
+		{name: "duplicate-company-product-unit", mutate: func(m *catalogSeedManifest) {
+			duplicate := m.CompanyProductPrices[0]
+			duplicate.ID = "duplicate-product-price"
+			m.CompanyProductPrices = append(m.CompanyProductPrices, duplicate)
+		}},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			manifest := validCatalogSeedFixture()
+			test.mutate(&manifest)
+			if err := validateCatalogSeed(manifest); err == nil {
+				t.Fatal("非法公司商品固定价被接受")
+			}
+		})
+	}
+}
+
+func TestCatalogSeedAllowsActiveCraftWithPendingWage(t *testing.T) {
+	manifest := validCatalogSeedFixture()
+	active := true
+	manifest.Crafts = append(manifest.Crafts, catalogSeedCraft{
+		ID: "craft-pending-wage", Category: "开工", Name: "待配置工价施工", Mode: "套", Active: &active,
+		Subitems: []catalogSeedSubitem{{ID: "pending-subitem", Name: "待配置小项"}}, Source: seedRef("excel-prices", "一半设计", 15),
+	})
+	if err := validateCatalogSeed(manifest); err != nil {
+		t.Fatalf("客户收费已知但工资待配置的启用工艺应可导入: %v", err)
+	}
+	runtime := catalogSeedRuntimeSubitems(manifest.Crafts[len(manifest.Crafts)-1].Subitems)
+	if runtime[0].WageCents != nil {
+		t.Fatalf("待配置小项工资不能转换成零工资: %v", *runtime[0].WageCents)
+	}
 }
 
 func TestCatalogSeedPackageRelationCanReferForwardWithinSameCompany(t *testing.T) {

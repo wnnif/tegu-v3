@@ -40,6 +40,7 @@ async function componentURL(name,inlineTemplate=true){
 const component=async(name,inlineTemplate=true)=>(await import(await componentURL(name,inlineTemplate))).default
 const OrderCraftEditor=await component('OrderCraftEditor')
 const EntityEditor=await component('EntityEditor')
+const OrderCraftIdentity=await component('OrderCraftIdentity')
 const line=()=>({id:'',craft_id:'craft',category:'包管',name:'合成长度工艺',spec:'',region:'位置',description:'',mode:'米',price_cents:3000,wage_cents:1000,
   temporary:false,editable:true,entered:false,segments:[{mode:'米',length:2.5,width:0,height:0,count:0,amount_cents:0},{mode:'米',length:1.25,width:0,height:0,count:0,amount_cents:0}]})
 function orderProps(item=line()){
@@ -56,7 +57,7 @@ test('按米固定和临时工艺实际表单只显示长度，并显示按米�
   assert.match(fixed,/3\.75 米/)
   assert.match(fixed,/112\.50 元/)
   assert.match(fixed,/30\.00 元<span>\/米<\/span>/)
-  assert.match(fixed,/＋ 一段长度/)
+  assert.match(fixed,/＋ 添加一段/)
   const temporary=await html(OrderCraftEditor,orderProps({...line(),temporary:true,craft_id:''}))
   assert.match(temporary,/客户单价（元\/米）/)
   assert.match(temporary,/工资单价（元\/米）/)
@@ -72,6 +73,22 @@ test('工艺维护及公司固定工艺的工资和收费单位显示元每米',
   const company=await html(EntityEditor,{...props,editing:{...props.editing,entity:'companies',fixed_crafts:[craft],ticket_mode:'single'},companyFixedVisible:[craft]})
   assert.match(company,/收费单价（元\/米）/)
   assert.match(company,/公共标准工资（元\/米）/)
+})
+
+test('按家计量在基础资料、公司收费及临时项目中保留整数单位',async()=>{
+  const craft={id:'household',source_id:'household-source',source_active:true,name:'按家收费',category:'开工',mode:'家',price_cents:10000,wage_cents:3000,subitems:[]}
+  const props={editing:{entity:'crafts',name:'按家收费',mode:'家',wage_cents:3000,fixed_crafts:[],subitems:[]},categories:['开工'],references:{crafts:[]},busy:false,
+    craftCategory:'全部',companyCraftOptions:[],companyFixedVisible:[craft],craftPage:1,craftTotal:0,can:()=>true,hasCompanyCraft:()=>false}
+  const publicEditor=await html(EntityEditor,props)
+  assert.match(publicEditor,/公共标准工资（元\/家）/)
+  assert.match(publicEditor,/<select[^>]*>[\s\S]*?<option[^>]*>家<\/option>[\s\S]*?<\/select>/)
+  const companyEditor=await html(EntityEditor,{...props,editing:{...props.editing,entity:'companies',fixed_crafts:[craft],ticket_mode:'single'}})
+  assert.match(companyEditor,/收费单价（元\/家）/)
+  assert.match(companyEditor,/公共标准工资（元\/家）/)
+  assert.match(companyEditor,/按家填写整数数量/)
+  const temporary=await html(OrderCraftIdentity,{line:{...line(),temporary:true,mode:'家',wage_cents:3000},editable:true,removable:true,canWages:true,allowedCrafts:['开工']})
+  assert.match(temporary,/工资单价（元\/家）/)
+  assert.match(temporary,/<select[^>]*>[\s\S]*?<option[^>]*>家<\/option>[\s\S]*?<\/select>/)
 })
 
 test('公司特殊工资覆盖的空值恢复继承，0仍是明确零工资',async t=>{

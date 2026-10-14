@@ -14,21 +14,22 @@ import (
 )
 
 type payrollSummary struct {
-	WorkerID        string `json:"worker_id,omitempty"`
-	WorkerName      string `json:"worker_name,omitempty"`
-	OrderCount      int64  `json:"order_count,omitempty"`
-	GrossCents      int64  `json:"gross_cents"`
-	AdjustmentCents int64  `json:"adjustment_cents"`
-	DeductionCents  int64  `json:"deduction_cents"`
-	AdvanceIssued   int64  `json:"advance_issued_cents"`
-	AdvanceApplied  int64  `json:"advance_applied_cents"`
-	AdvanceBalance  int64  `json:"advance_balance_cents"`
-	PaidCents       int64  `json:"paid_cents"`
-	UnpaidCents     int64  `json:"unpaid_cents"`
-	BonusAccruedCents    int64 `json:"bonus_accrued_cents"`
-	BonusAdjustmentCents int64 `json:"bonus_adjustment_cents"`
-	BonusPaidCents       int64 `json:"bonus_paid_cents"`
-	BonusBalanceCents    int64 `json:"bonus_balance_cents"`
+	WorkerID             string `json:"worker_id,omitempty"`
+	WorkerName           string `json:"worker_name,omitempty"`
+	OrderCount           int64  `json:"order_count,omitempty"`
+	WagePendingCount     int64  `json:"wage_pending_count"`
+	GrossCents           int64  `json:"gross_cents"`
+	AdjustmentCents      int64  `json:"adjustment_cents"`
+	DeductionCents       int64  `json:"deduction_cents"`
+	AdvanceIssued        int64  `json:"advance_issued_cents"`
+	AdvanceApplied       int64  `json:"advance_applied_cents"`
+	AdvanceBalance       int64  `json:"advance_balance_cents"`
+	PaidCents            int64  `json:"paid_cents"`
+	UnpaidCents          int64  `json:"unpaid_cents"`
+	BonusAccruedCents    int64  `json:"bonus_accrued_cents"`
+	BonusAdjustmentCents int64  `json:"bonus_adjustment_cents"`
+	BonusPaidCents       int64  `json:"bonus_paid_cents"`
+	BonusBalanceCents    int64  `json:"bonus_balance_cents"`
 }
 
 type payrollWorkerPage struct {
@@ -54,19 +55,20 @@ type payrollPage struct {
 }
 
 type payrollWageRow struct {
-	ID           string `json:"id"`
-	WorkerID     string `json:"worker_id"`
-	WorkerName   string `json:"worker_name"`
-	OrderID      string `json:"order_id"`
-	Number       string `json:"number"`
-	WorkDate     string `json:"work_date"`
-	ProjectID    string `json:"project_id"`
-	ProjectName  string `json:"project_name"`
-	Address      string `json:"address"`
-	WageCents    int64  `json:"wage_cents"`
-	DeliveryWage int64  `json:"delivery_wage_cents"`
-	Settled      bool   `json:"settled"`
-	Version      int64  `json:"version"`
+	ID             string `json:"id"`
+	WorkerID       string `json:"worker_id"`
+	WorkerName     string `json:"worker_name"`
+	OrderID        string `json:"order_id"`
+	Number         string `json:"number"`
+	WorkDate       string `json:"work_date"`
+	ProjectID      string `json:"project_id"`
+	ProjectName    string `json:"project_name"`
+	Address        string `json:"address"`
+	WageCents      *int64 `json:"wage_cents,omitempty"`
+	DeliveryWage   int64  `json:"delivery_wage_cents"`
+	WageConfigured bool   `json:"wage_configured"`
+	Settled        bool   `json:"settled"`
+	Version        int64  `json:"version"`
 }
 
 type payrollAdjustmentRow struct {
@@ -181,7 +183,7 @@ func (a *App) listPayrollWorkers(w http.ResponseWriter, r *http.Request, u User)
 	if err = tx.QueryRow("SELECT COUNT(*) FROM ("+base+") filtered", args...).Scan(&total); err != nil {
 		return err
 	}
-	rows, err := scanRows[payrollSummary](tx, "SELECT worker_id,worker_name,order_count,gross_cents,adjustment_cents,deduction_cents,advance_issued_cents,advance_applied_cents,advance_balance_cents,paid_cents,unpaid_cents,bonus_accrued_cents,bonus_adjustment_cents,bonus_paid_cents,bonus_balance_cents FROM ("+base+") s ORDER BY worker_name,worker_id LIMIT 100 OFFSET ?", append(append([]any{}, args...), (page-1)*100), scanPayrollSummary)
+	rows, err := scanRows[payrollSummary](tx, "SELECT worker_id,worker_name,order_count,wage_pending_count,gross_cents,adjustment_cents,deduction_cents,advance_issued_cents,advance_applied_cents,advance_balance_cents,paid_cents,unpaid_cents,bonus_accrued_cents,bonus_adjustment_cents,bonus_paid_cents,bonus_balance_cents FROM ("+base+") s ORDER BY worker_name,worker_id LIMIT 100 OFFSET ?", append(append([]any{}, args...), (page-1)*100), scanPayrollSummary)
 	if err != nil {
 		return err
 	}
@@ -194,7 +196,7 @@ func (a *App) listPayrollWorkers(w http.ResponseWriter, r *http.Request, u User)
 
 const payrollWorkerSummarySQL = `
 SELECT ids.worker_id,COALESCE(NULLIF(w.name,''),NULLIF(names.worker_name,''),'') worker_name,
- COALESCE(ws.order_count,0) order_count,COALESCE(ws.gross_cents,0) gross_cents,
+	COALESCE(ws.order_count,0) order_count,COALESCE(ws.wage_pending_count,0) wage_pending_count,COALESCE(ws.gross_cents,0) gross_cents,
  COALESCE(adj.adjustment_cents,0) adjustment_cents,COALESCE(ded.deduction_cents,0) deduction_cents,
  COALESCE(adv.advance_issued_cents,0) advance_issued_cents,COALESCE(applied.advance_applied_cents,0) advance_applied_cents,
  COALESCE(adv.advance_issued_cents,0)-COALESCE(applied.advance_applied_cents,0) advance_balance_cents,
@@ -222,7 +224,7 @@ LEFT JOIN (SELECT worker_id,MAX(worker_name) worker_name FROM (
 	UNION ALL SELECT worker_id,worker_name FROM payroll_bonus_entries
 	UNION ALL SELECT worker_id,worker_name FROM payroll_bonus_settlements
 ) all_names GROUP BY worker_id) names ON names.worker_id=ids.worker_id
-LEFT JOIN (SELECT ww.worker_id,COUNT(*) order_count,SUM(ww.wage_cents) gross_cents FROM ` + workerWageSource + ` ww JOIN orders o ON o.id=ww.order_id WHERE o.status<>'已取消' GROUP BY ww.worker_id) ws ON ws.worker_id=ids.worker_id
+LEFT JOIN (SELECT ww.worker_id,COUNT(*) order_count,SUM(IF(ww.wage_configured=0,1,0)) wage_pending_count,SUM(IF(ww.wage_configured=1,ww.wage_cents,0)) gross_cents FROM ` + workerWageSource + ` ww JOIN orders o ON o.id=ww.order_id WHERE o.status<>'已取消' GROUP BY ww.worker_id) ws ON ws.worker_id=ids.worker_id
 LEFT JOIN (SELECT worker_id,SUM(amount_cents) adjustment_cents FROM payroll_adjustments GROUP BY worker_id) adj ON adj.worker_id=ids.worker_id
 LEFT JOIN (SELECT worker_id,SUM(amount_cents) deduction_cents FROM payroll_deductions WHERE status='confirmed' GROUP BY worker_id) ded ON ded.worker_id=ids.worker_id
 LEFT JOIN (SELECT worker_id,SUM(amount_cents) advance_issued_cents FROM payroll_advances WHERE status='active' GROUP BY worker_id) adv ON adv.worker_id=ids.worker_id
@@ -234,7 +236,7 @@ LEFT JOIN (SELECT e.worker_id,SUM(IF(e.entry_kind='automatic',e.amount_cents,0))
 	FROM payroll_bonus_entries e LEFT JOIN (SELECT s.worker_id,SUM(p.amount_cents) paid_cents FROM payroll_bonus_payments p JOIN payroll_bonus_settlements s ON s.id=p.settlement_id WHERE p.status='active' AND s.status='confirmed' GROUP BY s.worker_id) p ON p.worker_id=e.worker_id GROUP BY e.worker_id) bonus ON bonus.worker_id=ids.worker_id`
 
 func scanPayrollSummary(r *sql.Rows, v *payrollSummary) error {
-	return r.Scan(&v.WorkerID, &v.WorkerName, &v.OrderCount, &v.GrossCents, &v.AdjustmentCents, &v.DeductionCents, &v.AdvanceIssued, &v.AdvanceApplied, &v.AdvanceBalance, &v.PaidCents, &v.UnpaidCents, &v.BonusAccruedCents, &v.BonusAdjustmentCents, &v.BonusPaidCents, &v.BonusBalanceCents)
+	return r.Scan(&v.WorkerID, &v.WorkerName, &v.OrderCount, &v.WagePendingCount, &v.GrossCents, &v.AdjustmentCents, &v.DeductionCents, &v.AdvanceIssued, &v.AdvanceApplied, &v.AdvanceBalance, &v.PaidCents, &v.UnpaidCents, &v.BonusAccruedCents, &v.BonusAdjustmentCents, &v.BonusPaidCents, &v.BonusBalanceCents)
 }
 
 func (a *App) listPayrollProjects(w http.ResponseWriter, r *http.Request, u User) error {
@@ -362,7 +364,7 @@ func (a *App) listPayroll(w http.ResponseWriter, r *http.Request, u User) error 
 func readPayrollSummary(tx *sql.Tx, workerID string) (payrollSummary, error) {
 	var summary payrollSummary
 	err := tx.QueryRow("SELECT * FROM ("+payrollWorkerSummarySQL+") summary WHERE worker_id=?", workerID).Scan(
-		&summary.WorkerID, &summary.WorkerName, &summary.OrderCount, &summary.GrossCents, &summary.AdjustmentCents,
+		&summary.WorkerID, &summary.WorkerName, &summary.OrderCount, &summary.WagePendingCount, &summary.GrossCents, &summary.AdjustmentCents,
 		&summary.DeductionCents, &summary.AdvanceIssued, &summary.AdvanceApplied, &summary.AdvanceBalance, &summary.PaidCents, &summary.UnpaidCents,
 		&summary.BonusAccruedCents, &summary.BonusAdjustmentCents, &summary.BonusPaidCents, &summary.BonusBalanceCents)
 	if err == sql.ErrNoRows {
@@ -379,9 +381,16 @@ func readPayrollWages(tx *sql.Tx, filters []any, page int) (any, int64, error) {
 	if err := tx.QueryRow("SELECT COUNT(*)"+base, args...).Scan(&total); err != nil {
 		return nil, 0, err
 	}
-	rows, err := scanRows[payrollWageRow](tx, `SELECT ww.id,ww.worker_id,ww.worker_name,ww.order_id,o.number,DATE_FORMAT(o.work_date,'%Y-%m-%d'),o.project_id,COALESCE(NULLIF(o.project_name,''),p.name,''),o.address,ww.wage_cents-ww.delivery_wage_cents,ww.delivery_wage_cents,
+	rows, err := scanRows[payrollWageRow](tx, `SELECT ww.id,ww.worker_id,ww.worker_name,ww.order_id,o.number,DATE_FORMAT(o.work_date,'%Y-%m-%d'),o.project_id,COALESCE(NULLIF(o.project_name,''),p.name,''),o.address,ww.wage_cents-ww.delivery_wage_cents,ww.delivery_wage_cents,ww.wage_configured,
 	 EXISTS(SELECT 1 FROM payroll_settlement_sources src JOIN payroll_settlements s ON s.id=src.settlement_id WHERE src.source_type='wage' AND src.source_id=ww.id AND s.status='confirmed'),ww.version`+base+` ORDER BY o.work_date DESC,ww.order_id,ww.id LIMIT 100 OFFSET ?`, append(append([]any{}, args...), (page-1)*100), func(r *sql.Rows, v *payrollWageRow) error {
-		return r.Scan(&v.ID, &v.WorkerID, &v.WorkerName, &v.OrderID, &v.Number, &v.WorkDate, &v.ProjectID, &v.ProjectName, &v.Address, &v.WageCents, &v.DeliveryWage, &v.Settled, &v.Version)
+		var wage int64
+		if err := r.Scan(&v.ID, &v.WorkerID, &v.WorkerName, &v.OrderID, &v.Number, &v.WorkDate, &v.ProjectID, &v.ProjectName, &v.Address, &wage, &v.DeliveryWage, &v.WageConfigured, &v.Settled, &v.Version); err != nil {
+			return err
+		}
+		if v.WageConfigured {
+			v.WageCents = &wage
+		}
+		return nil
 	})
 	return rows, total, err
 }
@@ -494,13 +503,13 @@ func readPayrollPayments(tx *sql.Tx, r *http.Request, settlements []payrollSettl
 }
 
 func (a *App) exportPayrollWorkers(w http.ResponseWriter, r *http.Request, u User, q string) error {
-	return a.servePayrollCSV(w, r, u, "payroll-workers.csv", "导出工资汇总", []string{"工人编号", "工人", "施工记录数", "施工工资（元）", "工资调整（元）", "已确认扣款（元）", "累计预支（元）", "已抵扣预支（元）", "未抵扣预支余额（元）", "实际已发（元）", "剩余未发工资（元）", "自动累计奖金（元）", "手工奖金调整（元）", "已发奖金（元）", "剩余未发奖金（元）"}, func(tx *sql.Tx, writer *csv.Writer) error {
+	return a.servePayrollCSV(w, r, u, "payroll-workers.csv", "导出工资汇总", []string{"工人编号", "工人", "施工记录数", "工价待配置记录数", "施工工资（元）", "工资调整（元）", "已确认扣款（元）", "累计预支（元）", "已抵扣预支（元）", "未抵扣预支余额（元）", "实际已发（元）", "剩余未发工资（元）", "自动累计奖金（元）", "手工奖金调整（元）", "已发奖金（元）", "剩余未发奖金（元）"}, func(tx *sql.Tx, writer *csv.Writer) error {
 		base, args := payrollWorkerSummarySQL, []any{}
 		if q != "" {
 			base = "SELECT * FROM (" + base + ") s WHERE INSTR(s.worker_name,?)>0"
 			args = append(args, q)
 		}
-		rows, err := tx.QueryContext(r.Context(), "SELECT worker_id,worker_name,order_count,gross_cents,adjustment_cents,deduction_cents,advance_issued_cents,advance_applied_cents,advance_balance_cents,paid_cents,unpaid_cents,bonus_accrued_cents,bonus_adjustment_cents,bonus_paid_cents,bonus_balance_cents FROM ("+base+") s ORDER BY worker_name,worker_id", args...)
+		rows, err := tx.QueryContext(r.Context(), "SELECT worker_id,worker_name,order_count,wage_pending_count,gross_cents,adjustment_cents,deduction_cents,advance_issued_cents,advance_applied_cents,advance_balance_cents,paid_cents,unpaid_cents,bonus_accrued_cents,bonus_adjustment_cents,bonus_paid_cents,bonus_balance_cents FROM ("+base+") s ORDER BY worker_name,worker_id", args...)
 		if err != nil {
 			return err
 		}
@@ -510,7 +519,7 @@ func (a *App) exportPayrollWorkers(w http.ResponseWriter, r *http.Request, u Use
 			if err = scanPayrollSummary(rows, &v); err != nil {
 				return err
 			}
-			if err = writer.Write([]string{payrollCSVText(v.WorkerID), payrollCSVText(v.WorkerName), strconv.FormatInt(v.OrderCount, 10), payrollMoneyCSV(v.GrossCents), payrollMoneyCSV(v.AdjustmentCents), payrollMoneyCSV(v.DeductionCents), payrollMoneyCSV(v.AdvanceIssued), payrollMoneyCSV(v.AdvanceApplied), payrollMoneyCSV(v.AdvanceBalance), payrollMoneyCSV(v.PaidCents), payrollMoneyCSV(v.UnpaidCents), payrollMoneyCSV(v.BonusAccruedCents), payrollMoneyCSV(v.BonusAdjustmentCents), payrollMoneyCSV(v.BonusPaidCents), payrollMoneyCSV(v.BonusBalanceCents)}); err != nil {
+			if err = writer.Write([]string{payrollCSVText(v.WorkerID), payrollCSVText(v.WorkerName), strconv.FormatInt(v.OrderCount, 10), strconv.FormatInt(v.WagePendingCount, 10), payrollMoneyCSV(v.GrossCents), payrollMoneyCSV(v.AdjustmentCents), payrollMoneyCSV(v.DeductionCents), payrollMoneyCSV(v.AdvanceIssued), payrollMoneyCSV(v.AdvanceApplied), payrollMoneyCSV(v.AdvanceBalance), payrollMoneyCSV(v.PaidCents), payrollMoneyCSV(v.UnpaidCents), payrollMoneyCSV(v.BonusAccruedCents), payrollMoneyCSV(v.BonusAdjustmentCents), payrollMoneyCSV(v.BonusPaidCents), payrollMoneyCSV(v.BonusBalanceCents)}); err != nil {
 				return err
 			}
 		}
@@ -580,7 +589,7 @@ func writePayrollTabRows(writer *csv.Writer, tab string, value any) (int, error)
 	switch rows := value.(type) {
 	case []payrollWageRow:
 		for _, v := range rows {
-			if err := write(payrollCSVText(v.ID), payrollCSVText(v.WorkerName), payrollCSVText(v.Number), v.WorkDate, payrollCSVText(v.ProjectName), payrollCSVText(v.Address), payrollMoneyCSV(v.WageCents), payrollMoneyCSV(v.DeliveryWage), payrollCSVYesNo(v.Settled)); err != nil {
+			if err := write(payrollCSVText(v.ID), payrollCSVText(v.WorkerName), payrollCSVText(v.Number), v.WorkDate, payrollCSVText(v.ProjectName), payrollCSVText(v.Address), payrollOptionalMoneyCSV(v.WageCents), payrollMoneyCSV(v.DeliveryWage), payrollCSVYesNo(v.Settled)); err != nil {
 				return count, err
 			}
 		}
@@ -680,6 +689,13 @@ func payrollMoneyCSV(cents int64) string {
 		return "-" + value
 	}
 	return value
+}
+
+func payrollOptionalMoneyCSV(cents *int64) string {
+	if cents == nil {
+		return ""
+	}
+	return payrollMoneyCSV(*cents)
 }
 
 func (a *App) servePayrollCSV(w http.ResponseWriter, r *http.Request, u User, filename, auditAction string, headers []string, export func(*sql.Tx, *csv.Writer) error) error {

@@ -38,6 +38,7 @@ type Line struct {
 	Qty                  int64     `json:"qty_micro"`
 	Price                int64     `json:"price_cents"`
 	Wage                 int64     `json:"wage_cents"`
+	WageConfigured       bool      `json:"wage_configured"`
 	Total                int64     `json:"total_cents"`
 	Labor                int64     `json:"labor_cents"`
 	Temporary            bool      `json:"temporary"`
@@ -329,8 +330,8 @@ func (a *App) listOrders(w http.ResponseWriter, r *http.Request, u User) error {
 		return e
 	}
 	defer tx.Rollback()
-	var count, total, wages int64
-	if e = tx.QueryRow("SELECT COUNT(*),COALESCE(SUM(CASE WHEN o.status<>'已取消' THEN o.total_cents ELSE 0 END),0),COALESCE(SUM(CASE WHEN o.status<>'已取消' THEN o.wage_cents ELSE 0 END),0) FROM orders o WHERE "+where, args...).Scan(&count, &total, &wages); e != nil {
+	var count, total, wages, wagePendingCount int64
+	if e = tx.QueryRow("SELECT COUNT(*),COALESCE(SUM(CASE WHEN o.status<>'已取消' THEN o.total_cents ELSE 0 END),0),COALESCE(SUM(CASE WHEN o.status<>'已取消' AND NOT EXISTS(SELECT 1 FROM order_lines l WHERE l.order_id=o.id AND l.wage_configured=0 AND l.wage_override_cents IS NULL) THEN o.wage_cents ELSE 0 END),0),COALESCE(SUM(CASE WHEN o.status<>'已取消' AND EXISTS(SELECT 1 FROM order_lines l WHERE l.order_id=o.id AND l.wage_configured=0 AND l.wage_override_cents IS NULL) THEN 1 ELSE 0 END),0) FROM orders o WHERE "+where, args...).Scan(&count, &total, &wages, &wagePendingCount); e != nil {
 		return e
 	}
 	v, e := readOrderList(tx, where, args, page, u)
@@ -338,8 +339,8 @@ func (a *App) listOrders(w http.ResponseWriter, r *http.Request, u User) error {
 		return e
 	}
 	if !u.can("wages") {
-		wages = 0
+		wages, wagePendingCount = 0, 0
 	}
-	writeOrderList(w, v, count, total, wages, page, u)
+	writeOrderList(w, v, count, total, wages, wagePendingCount, page, u)
 	return nil
 }

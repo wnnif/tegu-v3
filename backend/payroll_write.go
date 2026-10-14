@@ -67,8 +67,16 @@ type payrollWageSource struct {
 	WorkerName  string
 	Amount      int64
 	Delivery    int64
+	WageConfigured bool
 	Version     int64
 	WagePaid    bool
+}
+
+func (w payrollWageSource) configurationError() error {
+	if !w.WageConfigured {
+		return fail(409, "该施工人工价待配置，不能纳入工资结算；请在施工记录中填写本项实际工资并说明原因")
+	}
+	return nil
 }
 
 type payrollAdjustmentSource struct {
@@ -832,13 +840,16 @@ func lockPayrollWages(tx *sql.Tx, workerID string, ids []string, versions map[st
 	rows := make([]payrollWageSource, 0, len(ids))
 	for _, wageID := range ids {
 		var v payrollWageSource
-		err := tx.QueryRow(`SELECT id,order_id,worker_id,worker_name,wage_cents,delivery_wage_cents,wage_paid,version
-		 FROM order_worker_wages WHERE id=? FOR UPDATE`, wageID).Scan(&v.ID, &v.OrderID, &v.WorkerID, &v.WorkerName, &v.Amount, &v.Delivery, &v.WagePaid, &v.Version)
+		err := tx.QueryRow(`SELECT id,order_id,worker_id,worker_name,wage_cents,delivery_wage_cents,wage_configured,wage_paid,version
+		 FROM order_worker_wages WHERE id=? FOR UPDATE`, wageID).Scan(&v.ID, &v.OrderID, &v.WorkerID, &v.WorkerName, &v.Amount, &v.Delivery, &v.WageConfigured, &v.WagePaid, &v.Version)
 		if err != nil {
 			return nil, fail(409, "施工工资来源已变化，请刷新后重试")
 		}
 		if orderByWage[wageID] != v.OrderID || v.WorkerID != workerID || v.Version != versions[wageID] || v.WagePaid {
 			return nil, fail(409, "施工工资来源已变化或已经发放，请刷新后重试")
+		}
+		if err := v.configurationError(); err != nil {
+			return nil, err
 		}
 		v.ProjectID = orderProjects[v.OrderID]
 		allocated, err := payrollSourceAllocated(tx, "wage", wageID)

@@ -70,7 +70,7 @@ func omitOrderCustomerMoney(data []byte) ([]byte, error) {
 		}
 		for key, value := range object {
 			switch strings.ToLower(key) {
-			case "price_cents", "total_cents", "amount_cents", "received_cents", "outstanding_cents", "charge_mode", "package_included":
+			case "price_cents", "total_cents", "amount_cents", "received_cents", "outstanding_cents", "charge_mode", "package_included", "company_price_fixed":
 				delete(object, key)
 			default:
 				filtered, err := omitOrderCustomerMoney(value)

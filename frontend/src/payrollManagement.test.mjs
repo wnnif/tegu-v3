@@ -142,7 +142,18 @@ test('only confirmed deductions, unpaid wages, unsettled adjustments and advance
  assert.equal(payroll.payrollSourceSelectable('adjustments',{...base,effective_date:'2026-10-01',amount_cents:500,reversal_of:'original'}),false)
  assert.equal(payroll.payrollAdjustmentCanReverse({...base,effective_date:'2026-10-01',amount_cents:500,reversal_id:'replacement'}),false)
  assert.equal(payroll.payrollSourceSelectable('wages',{...base,order_id:'o1',number:'1',work_date:'2026-10-01',wage_cents:400,delivery_wage_cents:100,settled:false}),true)
+ assert.equal(payroll.payrollSourceSelectable('wages',{...base,order_id:'pending-order',number:'2',work_date:'2026-10-02',delivery_wage_cents:100,wage_configured:false,settled:false}),false)
+ assert.equal(payroll.payrollSourceSelectable('wages',{...base,order_id:'zero-order',number:'3',work_date:'2026-10-03',wage_cents:0,delivery_wage_cents:0,wage_configured:true,settled:false}),true)
  assert.equal(payroll.payrollSourceSelectable('advances',{...base,advance_date:'2026-10-01',amount_cents:500,allocated_cents:500,remaining_cents:0,status:'active'}),false)
+})
+
+test('pending wages block settlement while an explicitly configured zero remains valid',()=>{
+ const base={id:'w',order_id:'o',number:'1',work_date:'2026-10-01',delivery_wage_cents:0,settled:false}
+ const selection={wages:[{...base,wage_configured:false}],adjustments:[],deductions:[],advances:[]}
+ assert.equal(payroll.payrollSettlementCanConfirm(selection),false)
+ assert.throws(()=>payroll.buildPayrollAction({action:'create-settlement',worker_id:'a',settlement_date:'2026-10-12',note:'',selection,advance_allocation:'0'}),/工价待配置/)
+ const explicitZero={wages:[{...base,wage_cents:0,wage_configured:true}],adjustments:[],deductions:[],advances:[]}
+ assert.equal(payroll.payrollSettlementCanConfirm(explicitZero),true)
 })
 
 test('payroll, bonus and dashboard views compile as Vue components with their actual templates',async()=>{

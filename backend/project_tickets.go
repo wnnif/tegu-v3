@@ -59,9 +59,9 @@ func ensureProjectTicketSnapshot(tx *sql.Tx, projectID, companyID string) (strin
 func readProjectTicketSummary(tx *sql.Tx, ticketID string) (projectTicketView, error) {
 	var t projectTicketView
 	var slot sql.NullInt64
-	var packageID, packageName string
+	var packageID, packageName, packageType string
 	var packageRooms sql.NullInt64
-	err := tx.QueryRow(`SELECT t.id,t.project_id,t.company_id,t.number,t.kind,t.slot,t.status,t.version,t.total_cents,t.ticket_no,COALESCE(DATE_FORMAT(t.delivered_at,'%Y-%m-%d'),''),t.recipient,t.created_at,COALESCE((SELECT SUM(r.amount_cents) FROM project_ticket_receipts r WHERE r.ticket_id=t.id AND r.voided=0),0),t.company_name,t.project_name,t.address,p.ticket_mode_snapshot,COALESCE(pp.package_id,''),COALESCE(pp.name,''),pp.room_count,COALESCE(pp.price_cents,0) FROM project_tickets t JOIN projects p ON p.id=t.project_id LEFT JOIN project_packages pp ON pp.charged_ticket_id=t.id WHERE t.id=?`, ticketID).Scan(&t.ID, &t.ProjectID, &t.CompanyID, &t.Number, &t.Kind, &slot, &t.Status, &t.Version, &t.TotalCents, &t.TicketNo, &t.DeliveredAt, &t.Recipient, &t.CreatedAt, &t.ReceivedCents, &t.CompanyName, &t.ProjectName, &t.Address, &t.TicketMode, &packageID, &packageName, &packageRooms, &t.PackageChargeCents)
+	err := tx.QueryRow(`SELECT t.id,t.project_id,t.company_id,t.number,t.kind,t.slot,t.status,t.version,t.total_cents,t.ticket_no,COALESCE(DATE_FORMAT(t.delivered_at,'%Y-%m-%d'),''),t.recipient,t.created_at,COALESCE((SELECT SUM(r.amount_cents) FROM project_ticket_receipts r WHERE r.ticket_id=t.id AND r.voided=0),0),t.company_name,t.project_name,t.address,p.ticket_mode_snapshot,COALESCE(pp.package_id,''),COALESCE(pp.name,''),COALESCE(pp.package_type,''),pp.room_count,COALESCE(pp.price_cents,0) FROM project_tickets t JOIN projects p ON p.id=t.project_id LEFT JOIN project_packages pp ON pp.charged_ticket_id=t.id WHERE t.id=?`, ticketID).Scan(&t.ID, &t.ProjectID, &t.CompanyID, &t.Number, &t.Kind, &slot, &t.Status, &t.Version, &t.TotalCents, &t.TicketNo, &t.DeliveredAt, &t.Recipient, &t.CreatedAt, &t.ReceivedCents, &t.CompanyName, &t.ProjectName, &t.Address, &t.TicketMode, &packageID, &packageName, &packageType, &packageRooms, &t.PackageChargeCents)
 	if err == sql.ErrNoRows {
 		return t, fail(404, "工地票据不存在")
 	}
@@ -77,7 +77,7 @@ func readProjectTicketSummary(tx *sql.Tx, ticketID string) (projectTicketView, e
 		if packageRooms.Valid {
 			rooms = int(packageRooms.Int64)
 		}
-		t.PackageCharge = &projectPackageChargeView{ID: packageID, Name: packageName, RoomCount: rooms, Amount: t.PackageChargeCents}
+		t.PackageCharge = &projectPackageChargeView{ID: packageID, Name: packageName, PackageType: packageType, RoomCount: rooms, Amount: t.PackageChargeCents}
 	}
 	if err = tx.QueryRow("SELECT COALESCE(SUM(amount_cents),0) FROM customer_discounts WHERE ticket_id=? AND voided=0", ticketID).Scan(&t.DiscountCents); err != nil {
 		return t, err

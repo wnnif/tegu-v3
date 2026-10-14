@@ -60,15 +60,15 @@ func (a *App) listWorkerWages(w http.ResponseWriter, r *http.Request, u User) er
 	if err = validateWorkerAccountScope(tx, scope, scopeArgs); err != nil {
 		return err
 	}
-	var count, total int64
-	if err = tx.QueryRow("SELECT COUNT(*),COALESCE(SUM(ww.wage_cents),0) FROM "+workerWageSource+" ww JOIN orders o ON o.id=ww.order_id WHERE "+where, args...).Scan(&count, &total); err != nil {
+	var count, total, wagePendingCount int64
+	if err = tx.QueryRow("SELECT COUNT(*),COALESCE(SUM(IF(ww.wage_configured=1,ww.wage_cents,0)),0),COALESCE(SUM(IF(ww.wage_configured=0,1,0)),0) FROM "+workerWageSource+" ww JOIN orders o ON o.id=ww.order_id WHERE "+where, args...).Scan(&count, &total, &wagePendingCount); err != nil {
 		return err
 	}
 	items, err := readOrderListMode(tx, where, args, page, u, true)
 	if err != nil {
 		return err
 	}
-	writeOrderList(w, items, count, 0, total, page, u)
+	writeOrderList(w, items, count, 0, total, wagePendingCount, page, u)
 	return nil
 }
 
@@ -106,6 +106,7 @@ const invalidWorkerAccountsSQL = `(
    OR EXISTS(SELECT 1 FROM order_worker_wages w FORCE INDEX(order_id) WHERE w.order_id=o.id AND (
     w.wage_cents<>(SELECT COALESCE(SUM(l.labor_cents),0) FROM order_lines l FORCE INDEX(order_id) WHERE l.order_id=o.id AND COALESCE(NULLIF(l.worker_id,''),o.worker_id)=w.worker_id)+IF(w.worker_id=o.worker_id,o.delivery_wage_cents,0)
     OR w.delivery_wage_cents<>IF(w.worker_id=o.worker_id,o.delivery_wage_cents,0)
+    OR w.wage_configured<>NOT EXISTS(SELECT 1 FROM order_lines l FORCE INDEX(order_id) WHERE l.order_id=o.id AND COALESCE(NULLIF(l.worker_id,''),o.worker_id)=w.worker_id AND l.wage_configured=0 AND l.wage_override_cents IS NULL)
     OR (NOT EXISTS(SELECT 1 FROM order_lines l FORCE INDEX(order_id) WHERE l.order_id=o.id AND COALESCE(NULLIF(l.worker_id,''),o.worker_id)=w.worker_id)
      AND NOT(w.worker_id=o.worker_id AND (o.delivery_wage_cents>0 OR EXISTS(SELECT 1 FROM order_sales s WHERE s.order_id=o.id))))))
   ))

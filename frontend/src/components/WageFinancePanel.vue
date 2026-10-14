@@ -43,13 +43,13 @@ defineExpose({refresh})
   <p class="list-count">{{loading?'正在读取…':`共 ${total} 位施工人 · 第 ${page} / ${pageCount()} 页`}}</p>
   <div class="worker-list">
    <article v-for="row in workers" :key="row.worker_id" class="worker-row">
-    <div class="worker-name"><strong>{{row.worker_name||'历史施工人'}}</strong><small>{{row.order_count}} 张施工记录</small></div>
-    <div><span>累计施工工资</span><strong>{{money(row.gross_cents)}}</strong></div>
+    <div class="worker-name"><strong>{{row.worker_name||'历史施工人'}}</strong><small>{{row.order_count}} 张施工记录<span v-if="row.wage_pending_count"> · 工价待配置 {{row.wage_pending_count}} 笔</span></small></div>
+    <div><span>{{row.wage_pending_count?'已配置施工工资':'累计施工工资'}}</span><strong>{{money(row.gross_cents)}}</strong></div>
     <div><span>工资调整</span><strong>{{money(row.adjustment_cents)}}</strong></div>
     <div><span>已确认扣款</span><strong>{{money(row.deduction_cents)}}</strong></div>
     <div><span>工资预支</span><strong>{{money(row.advance_issued_cents)}}</strong><small>已抵扣 {{money(row.advance_applied_cents)}} · 余额 {{money(row.advance_balance_cents)}}</small></div>
     <div><span>实际工资付款</span><strong>{{money(row.paid_cents)}}</strong></div>
-    <div class="unpaid"><span>剩余未发工资</span><strong>{{money(row.unpaid_cents)}}</strong></div>
+    <div class="unpaid"><span>{{row.wage_pending_count?'已配置剩余未发工资':'剩余未发工资'}}</span><strong>{{money(row.unpaid_cents)}}</strong></div>
     <div class="bonus-summary"><span>年终奖金累计 / 已发 / 未发</span><strong>{{money(row.bonus_accrued_cents||0)}} / {{money(row.bonus_paid_cents||0)}} / {{money(row.bonus_balance_cents||0)}}</strong></div>
     <div class="worker-actions"><button type="button" :disabled="loading" @click="open(row,'wages')">查看工资明细</button><button type="button" :disabled="loading" @click="open(row,'bonuses')">奖金明细</button></div>
    </article>

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"sort"
+	"strings"
 )
 
 type packageCoverageSnapshot struct {
@@ -21,6 +22,7 @@ type projectPackageSnapshot struct {
 	PackageID      string                    `json:"package_id"`
 	CompanyID      string                    `json:"company_id"`
 	Name           string                    `json:"name"`
+	PackageType    string                    `json:"package_type"`
 	RoomCount      int                       `json:"room_count"`
 	PriceCents     int64                     `json:"price_cents"`
 	SourceID       string                    `json:"source_id"`
@@ -32,29 +34,45 @@ type projectPackageSnapshot struct {
 }
 
 type projectPackageView struct {
-	ID        string                    `json:"id"`
-	Name      string                    `json:"name"`
-	RoomCount int                       `json:"room_count"`
-	Price     *int64                    `json:"price_cents,omitempty"`
-	Coverage  []packageCoverageSnapshot `json:"coverage"`
+	ID          string                    `json:"id"`
+	Name        string                    `json:"name"`
+	PackageType string                    `json:"package_type"`
+	RoomCount   int                       `json:"room_count"`
+	Price       *int64                    `json:"price_cents,omitempty"`
+	Coverage    []packageCoverageSnapshot `json:"coverage"`
 }
 
 type projectPackageChargeView struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	RoomCount int    `json:"room_count"`
-	Amount    int64  `json:"amount_cents"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	PackageType string `json:"package_type"`
+	RoomCount   int    `json:"room_count"`
+	Amount      int64  `json:"amount_cents"`
 }
 
 type companyPackageOption struct {
-	ID        string                    `json:"id"`
-	Name      string                    `json:"name"`
-	RoomCount int                       `json:"room_count"`
-	Price     int64                     `json:"price_cents"`
-	Coverage  []packageCoverageSnapshot `json:"coverage"`
+	ID          string                    `json:"id"`
+	Name        string                    `json:"name"`
+	PackageType string                    `json:"package_type"`
+	RoomCount   int                       `json:"room_count"`
+	Price       int64                     `json:"price_cents"`
+	Coverage    []packageCoverageSnapshot `json:"coverage"`
 }
 
 const projectPackageMigrationVersion = 454
+const projectPackageScopeMigrationVersion = 459
+const projectPackageScopeCheck = "ck_project_package_scope_price"
+
+func validProjectPackageScope(packageType string, roomCount int) bool {
+	switch packageType {
+	case "room_count":
+		return roomCount >= 2 && roomCount <= 5
+	case "fixed_scope":
+		return roomCount == 0
+	default:
+		return false
+	}
+}
 
 func migrateProjectPackages(db *sql.DB) error {
 	if _, err := db.Exec(`CREATE TABLE IF NOT EXISTS project_packages(
@@ -63,6 +81,7 @@ func migrateProjectPackages(db *sql.DB) error {
 		package_id VARCHAR(64) NOT NULL,
 		company_id VARCHAR(64) NOT NULL,
 		name VARCHAR(200) NOT NULL,
+		package_type VARCHAR(20) NOT NULL DEFAULT 'room_count',
 		room_count INT NOT NULL,
 		price_cents BIGINT NOT NULL,
 		source_id VARCHAR(64) NOT NULL,
@@ -78,8 +97,20 @@ func migrateProjectPackages(db *sql.DB) error {
 		CONSTRAINT fk_project_package_company FOREIGN KEY(company_id) REFERENCES companies(id),
 		CONSTRAINT fk_project_package_catalog FOREIGN KEY(seed_id,package_id) REFERENCES catalog_seed_packages(seed_id,package_id),
 		CONSTRAINT fk_project_package_ticket FOREIGN KEY(charged_ticket_id) REFERENCES project_tickets(id),
-		CHECK(room_count BETWEEN 2 AND 5 AND price_cents BETWEEN 0 AND 100000000000000)
+		CONSTRAINT ck_project_package_scope_price CHECK(((package_type='room_count' AND room_count BETWEEN 2 AND 5) OR (package_type='fixed_scope' AND room_count=0)) AND price_cents BETWEEN 0 AND 100000000000000)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin`); err != nil {
+		return err
+	}
+	var packageTypeColumnCount int
+	if err := db.QueryRow(`SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='project_packages' AND COLUMN_NAME='package_type'`).Scan(&packageTypeColumnCount); err != nil {
+		return err
+	}
+	if packageTypeColumnCount == 0 {
+		if _, err := db.Exec(`ALTER TABLE project_packages ADD COLUMN package_type VARCHAR(20) NOT NULL DEFAULT 'room_count' AFTER name`); err != nil {
+			return err
+		}
+	}
+	if err := migrateProjectPackageScopeCheck(db); err != nil {
 		return err
 	}
 	var columnCount int
@@ -91,8 +122,60 @@ func migrateProjectPackages(db *sql.DB) error {
 			return err
 		}
 	}
-	_, err := db.Exec("INSERT IGNORE INTO schema_migrations(version) VALUES(?)", projectPackageMigrationVersion)
+	if _, err := db.Exec("INSERT IGNORE INTO schema_migrations(version) VALUES(?)", projectPackageMigrationVersion); err != nil {
+		return err
+	}
+	_, err := db.Exec("INSERT IGNORE INTO schema_migrations(version) VALUES(?)", projectPackageScopeMigrationVersion)
 	return err
+}
+
+func migrateProjectPackageScopeCheck(db *sql.DB) error {
+	rows, err := db.Query(`SELECT tc.CONSTRAINT_NAME,cc.CHECK_CLAUSE
+		FROM information_schema.TABLE_CONSTRAINTS tc
+		JOIN information_schema.CHECK_CONSTRAINTS cc
+			ON cc.CONSTRAINT_SCHEMA=tc.CONSTRAINT_SCHEMA AND cc.CONSTRAINT_NAME=tc.CONSTRAINT_NAME
+		WHERE tc.CONSTRAINT_SCHEMA=DATABASE() AND tc.TABLE_NAME='project_packages' AND tc.CONSTRAINT_TYPE='CHECK'`)
+	if err != nil {
+		return err
+	}
+	legacyChecks := []string{}
+	newCheckExists := false
+	for rows.Next() {
+		var name, clause string
+		if err = rows.Scan(&name, &clause); err != nil {
+			rows.Close()
+			return err
+		}
+		lowerClause := strings.ToLower(clause)
+		if name == projectPackageScopeCheck {
+			newCheckExists = true
+		}
+		if strings.Contains(lowerClause, "room_count") && !strings.Contains(lowerClause, "package_type") {
+			legacyChecks = append(legacyChecks, name)
+		}
+	}
+	if err = rows.Err(); err != nil {
+		rows.Close()
+		return err
+	}
+	if err = rows.Close(); err != nil {
+		return err
+	}
+	for _, name := range legacyChecks {
+		if _, err = db.Exec("ALTER TABLE project_packages DROP CHECK `" + strings.ReplaceAll(name, "`", "``") + "`"); err != nil {
+			return err
+		}
+		if name == projectPackageScopeCheck {
+			newCheckExists = false
+		}
+	}
+	if !newCheckExists {
+		_, err = db.Exec(`ALTER TABLE project_packages ADD CONSTRAINT ck_project_package_scope_price CHECK(((package_type='room_count' AND room_count BETWEEN 2 AND 5) OR (package_type='fixed_scope' AND room_count=0)) AND price_cents BETWEEN 0 AND 100000000000000)`)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func readCatalogPackageCoverage(tx *sql.Tx, seedID, packageID, companyID string) ([]packageCoverageSnapshot, error) {
@@ -139,15 +222,18 @@ func readCatalogPackageCoverage(tx *sql.Tx, seedID, packageID, companyID string)
 
 func loadCatalogPackage(tx *sql.Tx, companyID, packageID string) (projectPackageSnapshot, error) {
 	var pkg projectPackageSnapshot
-	err := tx.QueryRow(`SELECT p.seed_id,p.package_id,p.company_id,p.name,p.room_count,p.price_cents,p.source_id,p.source_sheet,p.source_row
+	err := tx.QueryRow(`SELECT p.seed_id,p.package_id,p.company_id,p.name,p.package_type,p.room_count,p.price_cents,p.source_id,p.source_sheet,p.source_row
 		FROM catalog_seed_packages p JOIN catalog_seed_imports i ON i.seed_id=p.seed_id
 		WHERE p.company_id=? AND p.package_id=? AND p.classification='package'`, companyID, packageID).
-		Scan(&pkg.SeedID, &pkg.PackageID, &pkg.CompanyID, &pkg.Name, &pkg.RoomCount, &pkg.PriceCents, &pkg.SourceID, &pkg.SourceSheet, &pkg.SourceRow)
+		Scan(&pkg.SeedID, &pkg.PackageID, &pkg.CompanyID, &pkg.Name, &pkg.PackageType, &pkg.RoomCount, &pkg.PriceCents, &pkg.SourceID, &pkg.SourceSheet, &pkg.SourceRow)
 	if err == sql.ErrNoRows {
 		return pkg, fail(400, "套餐不存在或不属于所选公司，请刷新后重新选择")
 	}
 	if err != nil {
 		return pkg, err
+	}
+	if !validProjectPackageScope(pkg.PackageType, pkg.RoomCount) {
+		return pkg, fail(409, "套餐计价范围配置无效，请核对套餐类型和房数")
 	}
 	pkg.Coverage, err = readCatalogPackageCoverage(tx, pkg.SeedID, pkg.PackageID, pkg.CompanyID)
 	if err != nil {
@@ -166,21 +252,21 @@ func insertProjectPackage(tx *sql.Tx, projectID, companyID, packageID, actorID s
 	if err != nil {
 		return pkg, err
 	}
-	if _, err = tx.Exec(`INSERT INTO project_packages(project_id,seed_id,package_id,company_id,name,room_count,price_cents,source_id,source_sheet,source_row,coverage,created_by)
-		VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`, pkg.ProjectID, pkg.SeedID, pkg.PackageID, pkg.CompanyID, pkg.Name, pkg.RoomCount, pkg.PriceCents, pkg.SourceID, pkg.SourceSheet, pkg.SourceRow, string(coverageJSON), pkg.CreatedBy); err != nil {
+	if _, err = tx.Exec(`INSERT INTO project_packages(project_id,seed_id,package_id,company_id,name,package_type,room_count,price_cents,source_id,source_sheet,source_row,coverage,created_by)
+		VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`, pkg.ProjectID, pkg.SeedID, pkg.PackageID, pkg.CompanyID, pkg.Name, pkg.PackageType, pkg.RoomCount, pkg.PriceCents, pkg.SourceID, pkg.SourceSheet, pkg.SourceRow, string(coverageJSON), pkg.CreatedBy); err != nil {
 		return pkg, err
 	}
 	return pkg, nil
 }
 
 func readProjectPackage(tx *sql.Tx, projectID string, lock bool) (*projectPackageSnapshot, error) {
-	query := `SELECT project_id,seed_id,package_id,company_id,name,room_count,price_cents,source_id,source_sheet,source_row,coverage,COALESCE(charged_ticket_id,''),created_by FROM project_packages WHERE project_id=?`
+	query := `SELECT project_id,seed_id,package_id,company_id,name,package_type,room_count,price_cents,source_id,source_sheet,source_row,coverage,COALESCE(charged_ticket_id,''),created_by FROM project_packages WHERE project_id=?`
 	if lock {
 		query += " FOR UPDATE"
 	}
 	var pkg projectPackageSnapshot
 	var coverage []byte
-	err := tx.QueryRow(query, projectID).Scan(&pkg.ProjectID, &pkg.SeedID, &pkg.PackageID, &pkg.CompanyID, &pkg.Name, &pkg.RoomCount, &pkg.PriceCents, &pkg.SourceID, &pkg.SourceSheet, &pkg.SourceRow, &coverage, &pkg.ChargedTicket, &pkg.CreatedBy)
+	err := tx.QueryRow(query, projectID).Scan(&pkg.ProjectID, &pkg.SeedID, &pkg.PackageID, &pkg.CompanyID, &pkg.Name, &pkg.PackageType, &pkg.RoomCount, &pkg.PriceCents, &pkg.SourceID, &pkg.SourceSheet, &pkg.SourceRow, &coverage, &pkg.ChargedTicket, &pkg.CreatedBy)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -229,7 +315,7 @@ func attachProjectPackageCharge(tx *sql.Tx, u User, projectID, ticketID string) 
 		return fail(409, "套餐收费票据已变化，请刷新工地后重试")
 	}
 	return audit(tx, u, "挂接工地套餐收费", projectID, map[string]any{
-		"package_id": pkg.PackageID, "name": pkg.Name, "room_count": pkg.RoomCount,
+		"package_id": pkg.PackageID, "name": pkg.Name, "package_type": pkg.PackageType, "room_count": pkg.RoomCount,
 		"amount_cents": pkg.PriceCents, "ticket_id": ticketID,
 	})
 }
@@ -256,18 +342,18 @@ func readProjectPackageView(tx *sql.Tx, projectID string) (*projectPackageView, 
 		return nil, err
 	}
 	price := pkg.PriceCents
-	return &projectPackageView{ID: pkg.PackageID, Name: pkg.Name, RoomCount: pkg.RoomCount, Price: &price, Coverage: pkg.Coverage}, nil
+	return &projectPackageView{ID: pkg.PackageID, Name: pkg.Name, PackageType: pkg.PackageType, RoomCount: pkg.RoomCount, Price: &price, Coverage: pkg.Coverage}, nil
 }
 
 func readProjectPackageCharge(tx *sql.Tx, ticketID, projectID string) (*projectPackageChargeView, error) {
-	query := `SELECT package_id,name,room_count,price_cents FROM project_packages WHERE charged_ticket_id=?`
+	query := `SELECT package_id,name,package_type,room_count,price_cents FROM project_packages WHERE charged_ticket_id=?`
 	args := []any{ticketID}
 	if ticketID == "" {
-		query = `SELECT package_id,name,room_count,price_cents FROM project_packages WHERE project_id=? AND charged_ticket_id IS NOT NULL`
+		query = `SELECT package_id,name,package_type,room_count,price_cents FROM project_packages WHERE project_id=? AND charged_ticket_id IS NOT NULL`
 		args = []any{projectID}
 	}
 	var charge projectPackageChargeView
-	err := tx.QueryRow(query, args...).Scan(&charge.ID, &charge.Name, &charge.RoomCount, &charge.Amount)
+	err := tx.QueryRow(query, args...).Scan(&charge.ID, &charge.Name, &charge.PackageType, &charge.RoomCount, &charge.Amount)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -293,7 +379,7 @@ func (a *App) listCompanyPackages(w http.ResponseWriter, r *http.Request, u User
 		return err
 	}
 	defer tx.Rollback()
-	rows, err := tx.Query(`SELECT seed_id,package_id,name,room_count,price_cents FROM catalog_seed_packages WHERE company_id=? AND classification='package' ORDER BY room_count,package_id`, companyID)
+	rows, err := tx.Query(`SELECT seed_id,package_id,name,package_type,room_count,price_cents FROM catalog_seed_packages WHERE company_id=? AND classification='package' ORDER BY room_count,package_id`, companyID)
 	if err != nil {
 		return err
 	}
@@ -302,9 +388,13 @@ func (a *App) listCompanyPackages(w http.ResponseWriter, r *http.Request, u User
 	for rows.Next() {
 		var item companyPackageOption
 		var seedID string
-		if err = rows.Scan(&seedID, &item.ID, &item.Name, &item.RoomCount, &item.Price); err != nil {
+		if err = rows.Scan(&seedID, &item.ID, &item.Name, &item.PackageType, &item.RoomCount, &item.Price); err != nil {
 			rows.Close()
 			return err
+		}
+		if !validProjectPackageScope(item.PackageType, item.RoomCount) {
+			rows.Close()
+			return fail(409, "公司套餐计价范围配置无效，请刷新后联系管理员核对")
 		}
 		items = append(items, item)
 		seedIDs = append(seedIDs, seedID)

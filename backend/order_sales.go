@@ -18,6 +18,8 @@ type Sale struct {
 	InputUnit       string `json:"input_unit"`
 	Price           int64  `json:"price_cents"`
 	Total           int64  `json:"total_cents"`
+	CompanyProductPriceID string `json:"-"`
+	CompanyPriceFixed bool `json:"company_price_fixed,omitempty"`
 	ProductName     string `json:"product_name"`
 	Unit            string `json:"unit"`
 	PriceUnit       string `json:"price_unit"`
@@ -181,7 +183,7 @@ func exactOrderInput(input string, fallback int64, unit string, product stockPro
 }
 
 func readOrderSales(tx *sql.Tx, orderID string) ([]Sale, error) {
-	rows, err := tx.Query(`SELECT id,product_id,warehouse_id,qty_micro,qty_quantum,sale_qty_micro,input_qty,input_unit,price_cents,total_cents,product_name,unit,price_unit,sort_order,conversion_ratio,COALESCE(ticket_batch_id,'') FROM order_sales WHERE order_id=? ORDER BY sort_order,id`, orderID)
+	rows, err := tx.Query(`SELECT id,product_id,warehouse_id,qty_micro,qty_quantum,sale_qty_micro,input_qty,input_unit,price_cents,total_cents,product_name,unit,price_unit,sort_order,conversion_ratio,COALESCE(company_product_price_id,''),COALESCE(ticket_batch_id,'') FROM order_sales WHERE order_id=? ORDER BY sort_order,id`, orderID)
 	if err != nil {
 		return nil, err
 	}
@@ -189,9 +191,10 @@ func readOrderSales(tx *sql.Tx, orderID string) ([]Sale, error) {
 	sales := []Sale{}
 	for rows.Next() {
 		var s Sale
-		if err = rows.Scan(&s.ID, &s.Product, &s.Warehouse, &s.Qty, &s.QtyQuantum, &s.SaleQty, &s.InputQty, &s.InputUnit, &s.Price, &s.Total, &s.ProductName, &s.Unit, &s.PriceUnit, &s.SortOrder, &s.ConversionRatio, &s.ticketBatchID); err != nil {
+		if err = rows.Scan(&s.ID, &s.Product, &s.Warehouse, &s.Qty, &s.QtyQuantum, &s.SaleQty, &s.InputQty, &s.InputUnit, &s.Price, &s.Total, &s.ProductName, &s.Unit, &s.PriceUnit, &s.SortOrder, &s.ConversionRatio, &s.CompanyProductPriceID, &s.ticketBatchID); err != nil {
 			return nil, err
 		}
+		s.CompanyPriceFixed = s.CompanyProductPriceID != ""
 		sales = append(sales, s)
 	}
 	return sales, rows.Err()
@@ -221,6 +224,17 @@ func prepareOrderStock(tx *sql.Tx, u User, o *Order, oldMaterials []Material, ol
 	products, err := lockStockProducts(tx, productIDs)
 	if err != nil {
 		return nil, 0, err
+	}
+	companyPrices := map[string]map[string]companyProductPrice{}
+	if !o.Delete && len(o.Sales) > 0 {
+		saleProductIDs := make([]string, 0, len(o.Sales))
+		for _, sale := range o.Sales {
+			saleProductIDs = append(saleProductIDs, sale.Product)
+		}
+		companyPrices, err = loadCompanyProductPrices(tx, o.Company, saleProductIDs, true)
+		if err != nil {
+			return nil, 0, err
+		}
 	}
 	delta := map[string]int64{}
 	for _, m := range oldMaterials {
@@ -352,6 +366,13 @@ func prepareOrderStock(tx *sql.Tx, u User, o *Order, oldMaterials []Material, ol
 		if s.InputUnit == "aux" {
 			s.PriceUnit = aux
 		}
+		var oldSale *Sale
+		if old, ok := previous[s.ID]; ok {
+			oldSale = &old
+		}
+		if err = applyCompanyProductSalePrice(s, oldSale, companyPrices[s.Product]); err != nil {
+			return nil, 0, err
+		}
 		if old, ok := previous[s.ID]; ok {
 			s.ProductName, s.Unit = old.ProductName, old.Unit
 			if old.InputUnit == s.InputUnit {
@@ -385,7 +406,11 @@ func persistOrderSales(tx *sql.Tx, o Order) error {
 		if s.ticketBatchID != "" {
 			continue
 		}
-		if _, err := tx.Exec(`INSERT INTO order_sales(id,order_id,product_id,warehouse_id,qty_micro,qty_quantum,sale_qty_micro,price_cents,total_cents,product_name,unit,price_unit,input_unit,input_qty,sort_order,conversion_ratio) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, s.ID, o.ID, s.Product, s.Warehouse, s.Qty, s.QtyQuantum, s.SaleQty, s.Price, s.Total, s.ProductName, s.Unit, s.PriceUnit, s.InputUnit, s.InputQty, s.SortOrder, s.ConversionRatio); err != nil {
+		var priceID any
+		if s.CompanyProductPriceID != "" {
+			priceID = s.CompanyProductPriceID
+		}
+		if _, err := tx.Exec(`INSERT INTO order_sales(id,order_id,product_id,warehouse_id,qty_micro,qty_quantum,sale_qty_micro,price_cents,total_cents,product_name,unit,price_unit,input_unit,input_qty,sort_order,conversion_ratio,company_product_price_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, s.ID, o.ID, s.Product, s.Warehouse, s.Qty, s.QtyQuantum, s.SaleQty, s.Price, s.Total, s.ProductName, s.Unit, s.PriceUnit, s.InputUnit, s.InputQty, s.SortOrder, s.ConversionRatio, priceID); err != nil {
 			return err
 		}
 	}

@@ -45,7 +45,8 @@ export function useOrders(ctx: WorkflowContext, refreshProjects: (fresh?: boolea
     });
     const nextLineSortOrder = () => draft.value.lines.reduce((sort, line) => Math.max(sort, line.sort_order ?? -1), draft.value.lines.length - 1) + 1;
     function lineFrom(c: Partial<Craft>, temporary = false, subitem?: {id:string;name:string;wage_cents?:number|string|null}): OrderLine {
-        return createOrderLocation({ craft_id: temporary ? '' : c.id || '', category: c.category || '', name: temporary ? '' : c.name || '', spec: c.spec || '', subitem_id: subitem?.id || '', subitem_name: subitem?.name || '', mode: c.mode || '平方', ...(hasCustomerPrice(c.price_cents) ? { price_cents: Number(c.price_cents) } : temporary && can('customer_prices') ? { price_cents: 0 } : {}), wage_cents: effectiveCatalogWage(c, subitem), included_by_craft_id: '', use_included_price: false, temporary, editable: temporary ? can('orders_temporary') : c.editable === true }, nextLineSortOrder());
+        const wage = effectiveCatalogWage(c, subitem);
+        return createOrderLocation({ craft_id: temporary ? '' : c.id || '', category: c.category || '', name: temporary ? '' : c.name || '', spec: c.spec || '', subitem_id: subitem?.id || '', subitem_name: subitem?.name || '', mode: c.mode || '平方', ...(hasCustomerPrice(c.price_cents) ? { price_cents: Number(c.price_cents) } : temporary && can('customer_prices') ? { price_cents: 0 } : {}), ...(wage === undefined ? {} : { wage_cents: wage }), wage_configured: wage !== undefined, included_by_craft_id: '', use_included_price: false, temporary, editable: temporary ? can('orders_temporary') : c.editable === true }, nextLineSortOrder());
     }
     function addFixed() {
         const o = draft.value;

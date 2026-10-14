@@ -110,6 +110,7 @@ type ticketBatchItemView struct {
 	TotalCents            int64   `json:"total_cents"`
 	SourceProjectTicketID string  `json:"source_project_ticket_id"`
 	PackageID             string  `json:"package_id,omitempty"`
+	PackageType           string  `json:"package_type,omitempty"`
 	PackageRoomCount      int     `json:"package_room_count,omitempty"`
 }
 
@@ -736,7 +737,7 @@ func appendTicketPackageSnapshots(tx *sql.Tx, items []ticketBatchItemView) ([]ti
 		values = append(values, "(?,?)")
 		args = append(args, pair[0], pair[1])
 	}
-	query := `SELECT pp.project_id,pp.package_id,pp.name,pp.room_count,pp.price_cents,pp.charged_ticket_id
+	query := `SELECT pp.project_id,pp.package_id,pp.name,pp.package_type,pp.room_count,pp.price_cents,pp.charged_ticket_id
 		FROM project_packages pp WHERE (pp.project_id,pp.charged_ticket_id) IN (` + strings.Join(values, ",") + `)
 		AND NOT EXISTS(SELECT 1 FROM ticket_batch_items prior JOIN ticket_batches b ON b.id=prior.batch_id AND b.status='delivered'
 			WHERE prior.project_id=pp.project_id AND prior.source_project_ticket_id=pp.charged_ticket_id
@@ -748,9 +749,9 @@ func appendTicketPackageSnapshots(tx *sql.Tx, items []ticketBatchItemView) ([]ti
 	packages := []ticketBatchItemView{}
 	for rows.Next() {
 		var item ticketBatchItemView
-		var packageID, sourceTicket string
+		var packageID, packageType, sourceTicket string
 		var price int64
-		if err = rows.Scan(&item.ProjectID, &packageID, &item.ItemName, &item.PackageRoomCount, &price, &sourceTicket); err != nil {
+		if err = rows.Scan(&item.ProjectID, &packageID, &item.ItemName, &packageType, &item.PackageRoomCount, &price, &sourceTicket); err != nil {
 			rows.Close()
 			return nil, err
 		}
@@ -763,6 +764,7 @@ func appendTicketPackageSnapshots(tx *sql.Tx, items []ticketBatchItemView) ([]ti
 		item.PriceCents = &price
 		item.SourceProjectTicketID = sourceTicket
 		item.PackageID = packageID
+		item.PackageType = packageType
 		packages = append(packages, item)
 	}
 	if err = rows.Err(); err != nil {
