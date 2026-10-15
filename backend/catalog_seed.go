@@ -134,14 +134,14 @@ type catalogSeedProduct struct {
 }
 
 type catalogSeedPackage struct {
-	ID        string               `json:"id"`
-	CompanyID string               `json:"company_id"`
-	Name      string               `json:"name"`
-	PackageType string             `json:"package_type"`
-	RoomCount int                  `json:"room_count"`
-	Price     catalogSeedValue     `json:"price"`
-	Source    catalogSeedReference `json:"source"`
-	Note      string               `json:"note,omitempty"`
+	ID          string               `json:"id"`
+	CompanyID   string               `json:"company_id"`
+	Name        string               `json:"name"`
+	PackageType string               `json:"package_type,omitempty"`
+	RoomCount   int                  `json:"room_count"`
+	Price       catalogSeedValue     `json:"price"`
+	Source      catalogSeedReference `json:"source"`
+	Note        string               `json:"note,omitempty"`
 }
 
 const catalogSeedPackageTypeMigrationVersion = 458
@@ -701,7 +701,7 @@ func validateCatalogSeedPackages(manifest catalogSeedManifest, companyNames map[
 	packages := make(map[string]catalogSeedPackage, len(manifest.Packages))
 	for _, item := range manifest.Packages {
 		want, ok := approved[item.ID]
-		if !ok || !validCatalogSeedID(item.ID) || packages[item.ID].ID != "" || item.CompanyID != want.company || item.PackageType != "room_count" || item.RoomCount != want.room || item.Name != "墙固、地固普通工艺" || item.Price.Cents != want.cents || item.Price.Classification != "package" || item.Source.SourceID != "excel-prices" || item.Source.Sheet != want.sheet || item.Source.Row != want.row || item.Price.Source.SourceID != item.Source.SourceID || item.Price.Source.Sheet != item.Source.Sheet || item.Price.Source.Row != item.Source.Row || len([]rune(item.Note)) > 1000 {
+		if !ok || !validCatalogSeedID(item.ID) || packages[item.ID].ID != "" || item.CompanyID != want.company || item.PackageType != "" && item.PackageType != "room_count" || item.RoomCount != want.room || item.Name != "墙固、地固普通工艺" || item.Price.Cents != want.cents || item.Price.Classification != "package" || item.Source.SourceID != "excel-prices" || item.Source.Sheet != want.sheet || item.Source.Row != want.row || item.Price.Source.SourceID != item.Source.SourceID || item.Price.Source.Sheet != item.Source.Sheet || item.Price.Source.Row != item.Source.Row || len([]rune(item.Note)) > 1000 {
 			return fail(400, "套餐身份、来源或房型金额不符合原表")
 		}
 		if _, ok := companyNames[item.CompanyID]; !ok {
@@ -878,7 +878,7 @@ func importCatalogSeedData(parent context.Context, db *sql.DB, manifest catalogS
 		"companies": len(manifest.Companies), "crafts": len(manifest.Crafts), "company_crafts": len(manifest.CompanyCrafts),
 		"company_wage_overrides": len(manifest.CompanyWageOverrides), "products": len(manifest.Products),
 		"company_product_prices": len(manifest.CompanyProductPrices),
-		"packages": len(manifest.Packages), "package_coverage": len(manifest.PackageCoverage), "bonus_rules": len(manifest.BonusRules),
+		"packages":               len(manifest.Packages), "package_coverage": len(manifest.PackageCoverage), "bonus_rules": len(manifest.BonusRules),
 	})
 	if _, err = tx.ExecContext(ctx, "INSERT INTO catalog_seed_imports(seed_id,manifest_digest,sources,entry_counts) VALUES(?,?,?,?)", manifest.SeedID, digest, string(sourceJSON), string(countsJSON)); err != nil {
 		return err
@@ -1005,8 +1005,12 @@ func importCatalogSeedData(parent context.Context, db *sql.DB, manifest catalogS
 		}
 	}
 	for _, item := range manifest.Packages {
+		packageType := item.PackageType
+		if packageType == "" {
+			packageType = "room_count"
+		}
 		if _, err = tx.ExecContext(ctx, `INSERT INTO catalog_seed_packages(seed_id,package_id,company_id,name,package_type,room_count,price_cents,classification,source_id,source_sheet,source_row,note)
-			VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`, manifest.SeedID, item.ID, item.CompanyID, item.Name, item.PackageType, item.RoomCount, item.Price.Cents, item.Price.Classification, item.Source.SourceID, item.Source.Sheet, item.Source.Row, item.Note); err != nil {
+			VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`, manifest.SeedID, item.ID, item.CompanyID, item.Name, packageType, item.RoomCount, item.Price.Cents, item.Price.Classification, item.Source.SourceID, item.Source.Sheet, item.Source.Row, item.Note); err != nil {
 			return err
 		}
 		if err = insertCatalogSeedProvenance(ctx, tx, manifest.SeedID, manifest.Sources, "package", item.ID, "customer_price", item.Price.Classification, item.Price.Source, false, map[string]any{"company_id": item.CompanyID, "name": item.Name, "room_count": item.RoomCount, "price_cents": item.Price.Cents, "note": item.Note}); err != nil {
@@ -1073,16 +1077,7 @@ func requireCatalogSeedSchema(ctx context.Context, db *sql.DB) error {
 }
 
 func requireEmptyCatalogSeedTarget(ctx context.Context, tx *sql.Tx) error {
-	for _, table := range []string{
-		"users", "companies", "projects", "workers", "warehouses", "products", "product_unit_definitions", "crafts", "company_wage_overrides",
-		"catalog_seed_packages", "catalog_seed_package_coverage", "company_product_prices",
-		"orders", "order_lines", "order_line_wage_adjustments", "order_worker_wages", "wage_settlements", "order_materials", "order_sales",
-		"project_craft_slots", "project_combinations", "project_tickets", "project_packages", "project_ticket_items", "project_ticket_versions", "project_ticket_receipts",
-		"company_receipts", "company_receipt_versions", "customer_discounts", "customer_discount_versions", "ticket_batches", "ticket_batch_items", "ticket_batch_versions",
-		"stock_balances", "stock_documents", "stock_movements", "settlements", "payment_receipts", "attachment_files", "requests", "audit", "archive_runs", "backup_runs", "maintenance_jobs", "settings",
-		"payroll_adjustments", "payroll_deductions", "payroll_advances", "payroll_settlements", "payroll_settlement_sources", "payroll_payments", "payroll_history",
-		"expense_claims", "expense_advances", "expense_advance_allocations", "expense_payments", "expense_advance_returns", "expense_history",
-	} {
+	for _, table := range backupTables {
 		var count int
 		if err := tx.QueryRowContext(ctx, "SELECT COUNT(*) FROM "+table).Scan(&count); err != nil {
 			return err

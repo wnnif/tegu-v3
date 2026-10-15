@@ -66,6 +66,98 @@ type savedCompanyCraft struct {
 	companyWageOverride sql.NullInt64
 }
 
+type companyCraftTestOnlyPriceProvenance struct {
+	seedID, sourceID, sourceFile, sourceSheet, classification, detail string
+	sourceRow                                                         int
+	testOnly                                                          bool
+}
+
+func validateCompanyCraftTestOnlyPrice(u User, currentPrice int64, submittedPrice *catalogCents, explicitlySubmitted bool) error {
+	if !u.can("customer_prices") {
+		return fail(403, "重新启用测试占位收费需要客户价格权限")
+	}
+	if currentPrice != 100 {
+		return fail(409, "测试占位报价已发生变化，请先核对当前收费后再确认")
+	}
+	if !explicitlySubmitted || submittedPrice == nil || int64(*submittedPrice) == 100 {
+		return fail(400, "重新启用测试占位收费前，请明确填写并确认非1元新报价")
+	}
+	return nil
+}
+
+func lockCompanyCraftTestOnlyPriceProvenance(tx *sql.Tx, craftID string) (*companyCraftTestOnlyPriceProvenance, error) {
+	rows, err := tx.Query(`SELECT seed_id,classification,source_id,source_file,source_sheet,source_row,CAST(detail AS CHAR),test_only
+		FROM catalog_seed_provenance WHERE target_kind='company_craft' AND target_id=? AND component='customer_price' AND (test_only=1 OR classification='test_only')
+		ORDER BY seed_id FOR UPDATE`, craftID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var found *companyCraftTestOnlyPriceProvenance
+	for rows.Next() {
+		var provenance companyCraftTestOnlyPriceProvenance
+		if err := rows.Scan(&provenance.seedID, &provenance.classification, &provenance.sourceID, &provenance.sourceFile, &provenance.sourceSheet, &provenance.sourceRow, &provenance.detail, &provenance.testOnly); err != nil {
+			return nil, err
+		}
+		if found != nil || provenance.classification != "test_only" || !provenance.testOnly {
+			return nil, fail(409, "测试占位报价来源记录不唯一或不一致，请先核对工艺来源")
+		}
+		found = &provenance
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return found, nil
+}
+
+func manualCompanyCraftPriceProvenanceDetail(u User, price catalogCents, provenance companyCraftTestOnlyPriceProvenance) ([]byte, error) {
+	return json.Marshal(map[string]any{
+		"kind":                  "manual",
+		"actor_id":              u.ID,
+		"actor_name":            u.Name,
+		"confirmed_price_cents": int64(price),
+		"previous_seed": map[string]any{
+			"seed_id":        provenance.seedID,
+			"classification": provenance.classification,
+			"source_id":      provenance.sourceID,
+			"source_file":    provenance.sourceFile,
+			"source_sheet":   provenance.sourceSheet,
+			"source_row":     provenance.sourceRow,
+			"detail":         json.RawMessage(provenance.detail),
+		},
+	})
+}
+
+func confirmCompanyCraftTestOnlyPrice(tx *sql.Tx, u User, company string, item companyCraftInput, provenance companyCraftTestOnlyPriceProvenance) error {
+	if item.PriceCents == nil {
+		return fail(400, "请填写确认后的公司收费单价")
+	}
+	detail, err := manualCompanyCraftPriceProvenanceDetail(u, *item.PriceCents, provenance)
+	if err != nil {
+		return err
+	}
+	result, err := tx.Exec(`UPDATE catalog_seed_provenance SET classification='confirmed',source_id='manual',source_file='',source_sheet='人工确认报价',source_row=0,test_only=0,detail=?
+		WHERE seed_id=? AND target_kind='company_craft' AND target_id=? AND component='customer_price' AND classification='test_only' AND test_only=1`, string(detail), provenance.seedID, item.ID)
+	if err != nil {
+		return err
+	}
+	if changed, err := result.RowsAffected(); err != nil {
+		return err
+	} else if changed != 1 {
+		return fail(409, "测试占位报价来源已变化，请刷新后重新确认")
+	}
+	return audit(tx, u, "确认公司测试占位报价", item.ID, map[string]any{
+		"company_id":            company,
+		"source_id":             item.SourceID,
+		"previous_price_cents":  int64(100),
+		"price_cents":           int64(*item.PriceCents),
+		"seed_id":               provenance.seedID,
+		"previous_source_id":    provenance.sourceID,
+		"previous_source_sheet": provenance.sourceSheet,
+		"previous_source_row":   provenance.sourceRow,
+	})
+}
+
 type companyWageOverrideChange uint8
 
 const (
@@ -185,8 +277,10 @@ func saveCompanyCrafts(tx *sql.Tx, u User, company, ticketMode string, raw json.
 		return e
 	}
 	kept, bySource := map[string]bool{}, map[string]string{}
+	testOnlyPriceChanges := map[string]companyCraftTestOnlyPriceProvenance{}
 	for i := range items {
 		item := &items[i]
+		explicitPrice := item.PriceCents != nil
 		item.ID, item.SourceID = strings.TrimSpace(item.ID), strings.TrimSpace(item.SourceID)
 		item.IncludedByCraftID = strings.TrimSpace(item.IncludedByCraftID)
 		if item.TicketSlot == 0 {
@@ -206,6 +300,16 @@ func saveCompanyCrafts(tx *sql.Tx, u User, company, ticketMode string, raw json.
 			if previous.source != "" && item.SourceID != previous.source {
 				return fail(400, "已关联的固定工艺不能更换来源，请移除后重新选择")
 			}
+			provenance, err := lockCompanyCraftTestOnlyPriceProvenance(tx, item.ID)
+			if err != nil {
+				return err
+			}
+			if provenance != nil {
+				if err = validateCompanyCraftTestOnlyPrice(u, previous.price, item.PriceCents, explicitPrice); err != nil {
+					return err
+				}
+				testOnlyPriceChanges[item.ID] = *provenance
+			}
 			if e = protectCompanyCraftPrice(u, item, previous, true); e != nil {
 				return e
 			}
@@ -217,6 +321,18 @@ func saveCompanyCrafts(tx *sql.Tx, u User, company, ticketMode string, raw json.
 			// identity, historical references and previous hidden price.
 			oldID := oldBySource[item.SourceID]
 			previous, existed := old[oldID]
+			if existed {
+				provenance, err := lockCompanyCraftTestOnlyPriceProvenance(tx, oldID)
+				if err != nil {
+					return err
+				}
+				if provenance != nil {
+					if err = validateCompanyCraftTestOnlyPrice(u, previous.price, item.PriceCents, explicitPrice); err != nil {
+						return err
+					}
+					testOnlyPriceChanges[oldID] = *provenance
+				}
+			}
 			if e = protectCompanyCraftPrice(u, item, previous, existed); e != nil {
 				return e
 			}
@@ -286,6 +402,11 @@ func saveCompanyCrafts(tx *sql.Tx, u User, company, ticketMode string, raw json.
 		}
 		if e = persistCompanyCraftWageOverride(tx, u, company, item.SourceID, &item); e != nil {
 			return e
+		}
+		if provenance, ok := testOnlyPriceChanges[item.ID]; ok {
+			if e = confirmCompanyCraftTestOnlyPrice(tx, u, company, item, provenance); e != nil {
+				return e
+			}
 		}
 	}
 	for craftID := range old {

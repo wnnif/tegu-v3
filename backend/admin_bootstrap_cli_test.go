@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -30,6 +31,15 @@ func TestTeguInvalidCommandsFailClosed(t *testing.T) {
 		{"init-admin", "extra"}, {"version", "extra"}, {"serve", "extra"},
 		{"restore"}, {"import-crafts"}, {"import-products"}, {"restore", " "},
 		{"import-crafts", "file", "extra"}, {"import-products", "file", "extra"}, {"import-products", " "},
+		{"backfill-catalog-seed"}, {"backfill-catalog-seed", " "},
+		{"backfill-catalog-seed", "old-seed"}, {"backfill-catalog-seed", " ", "new-seed"}, {"backfill-catalog-seed", "old-seed", " "},
+		{"backfill-catalog-seed", "old-seed", "new-seed", "--apply"}, {"backfill-catalog-seed", "old-seed", "new-seed", "--confirm", "token"},
+		{"backfill-catalog-seed", "old-seed", "new-seed", "--dry-run", "--confirm", "token"},
+		{"backfill-catalog-seed", "old-seed", "new-seed", "--apply", "--dry-run", "--confirm", "token"},
+		{"backfill-catalog-seed", "old-seed", "new-seed", "--apply", "--confirm"},
+		{"backfill-catalog-seed", "old-seed", "new-seed", "--apply", "--confirm", " "},
+		{"backfill-catalog-seed", "old-seed", "new-seed", "--dry-run", "--dry-run"},
+		{"backfill-catalog-seed", "old-seed", "new-seed", "--apply", "--confirm", "synthetic-private-argument", "extra"},
 	} {
 		var out bytes.Buffer
 		err := runTegu(args, &out, func() (teguCommandActions, func(), error) {
@@ -57,6 +67,9 @@ func TestTeguCommandSideEffectBoundaries(t *testing.T) {
 		{"import", []string{"import-crafts", "synthetic-file"}, []string{"open", "migrate", "import:synthetic-file", "close"}},
 		{"import_products", []string{"import-products", "synthetic-file"}, []string{"open", "migrate", "products:synthetic-file", "close"}},
 		{"import_full_seed", []string{"import-catalog-seed", "synthetic-file"}, []string{"open", "migrate", "seed:synthetic-file", "close"}},
+		{"backfill_default_dry_run", []string{"backfill-catalog-seed", "old-seed", "new-seed"}, []string{"open", "plan:old-seed:new-seed", "close"}},
+		{"backfill_explicit_dry_run", []string{"backfill-catalog-seed", "old-seed", "new-seed", "--dry-run"}, []string{"open", "plan:old-seed:new-seed", "close"}},
+		{"backfill_apply", []string{"backfill-catalog-seed", "old-seed", "new-seed", "--apply", "--confirm", "synthetic-confirmation"}, []string{"open", "apply:old-seed:new-seed:synthetic-confirmation", "close"}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			var calls []string
@@ -69,17 +82,132 @@ func TestTeguCommandSideEffectBoundaries(t *testing.T) {
 						calls = append(calls, "admin")
 						return adminBootstrapCreated, nil
 					},
-					serve:        func() error { calls = append(calls, "serve"); return nil },
-					restore:      func(path string) error { calls = append(calls, "restore:"+path); return nil },
-					importCrafts: func(path string) error { calls = append(calls, "import:"+path); return nil },
+					serve:          func() error { calls = append(calls, "serve"); return nil },
+					restore:        func(path string) error { calls = append(calls, "restore:"+path); return nil },
+					importCrafts:   func(path string) error { calls = append(calls, "import:"+path); return nil },
 					importProducts: func(path string) error { calls = append(calls, "products:"+path); return nil },
-					importSeed: func(path string) error { calls = append(calls, "seed:"+path); return nil },
+					importSeed:     func(path string) error { calls = append(calls, "seed:"+path); return nil },
+					backfillSeedPlan: func(oldPath, newPath string) (catalogSeedBackfillSummary, error) {
+						calls = append(calls, "plan:"+oldPath+":"+newPath)
+						return catalogSeedBackfillSummary{Added: 1, ConfirmationToken: "synthetic-preview-token"}, nil
+					},
+					backfillSeedApply: func(oldPath, newPath, token string) (catalogSeedBackfillSummary, error) {
+						calls = append(calls, "apply:"+oldPath+":"+newPath+":"+token)
+						return catalogSeedBackfillSummary{Added: 1}, nil
+					},
 				}, func() { calls = append(calls, "close") }, nil
 			}
 			if err := runTegu(tc.args, &out, factory); err != nil || !reflect.DeepEqual(calls, tc.want) {
 				t.Fatalf("incorrect command boundary: calls=%v want=%v", calls, tc.want)
 			}
 		})
+	}
+}
+
+func TestTeguCatalogSeedBackfillOutputBoundaries(t *testing.T) {
+	clearInitialAdminPasswordEnv(t)
+	const previewToken = "synthetic-preview-token"
+	for _, tc := range []struct {
+		name      string
+		args      []string
+		wantToken bool
+		conflicts int
+	}{
+		{name: "default_dry_run", args: []string{"backfill-catalog-seed", "old-seed", "new-seed"}, wantToken: true},
+		{name: "apply_hides_token", args: []string{"backfill-catalog-seed", "old-seed", "new-seed", "--apply", "--confirm", "synthetic-confirmation"}},
+		{name: "conflicts_hide_token", args: []string{"backfill-catalog-seed", "old-seed", "new-seed"}, conflicts: 1},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var out bytes.Buffer
+			var calls []string
+			factory := func() (teguCommandActions, func(), error) {
+				calls = append(calls, "open")
+				return teguCommandActions{
+					initDB: func() error { calls = append(calls, "migrate"); return nil },
+					backfillSeedPlan: func(string, string) (catalogSeedBackfillSummary, error) {
+						calls = append(calls, "plan")
+						return catalogSeedBackfillSummary{Added: 3, Updated: 2, Skipped: 4, Conflicts: tc.conflicts, PlaceholdersDeactivated: 18, ConfirmationToken: previewToken}, nil
+					},
+					backfillSeedApply: func(string, string, string) (catalogSeedBackfillSummary, error) {
+						calls = append(calls, "apply")
+						return catalogSeedBackfillSummary{Added: 3, Updated: 2, Skipped: 4, PlaceholdersDeactivated: 18, ConfirmationToken: "must-not-be-printed"}, nil
+					},
+				}, func() { calls = append(calls, "close") }, nil
+			}
+			if err := runTegu(tc.args, &out, factory); err != nil {
+				t.Fatal("backfill command failed:", err)
+			}
+			output := out.String()
+			if strings.Contains(output, "must-not-be-printed") || strings.Contains(output, previewToken) != tc.wantToken {
+				t.Fatal("backfill output exposed a token in the wrong mode")
+			}
+			for _, expected := range []string{"新增：3", "更新：2", "跳过：4", "冲突：" + strconv.Itoa(tc.conflicts), "1元测试占位拟软停用：18"} {
+				if !strings.Contains(output, expected) {
+					t.Fatalf("summary omitted %q: %s", expected, output)
+				}
+			}
+			if contains(calls, "migrate") {
+				t.Fatal("backfill command unexpectedly initialized/migrated the database")
+			}
+			if tc.conflicts > 0 && !strings.Contains(output, "计划不可执行") {
+				t.Fatal("conflicted dry-run did not clearly refuse execution")
+			}
+		})
+	}
+}
+
+func TestTeguCatalogSeedBackfillFailuresCloseWithoutMigration(t *testing.T) {
+	clearInitialAdminPasswordEnv(t)
+	for _, tc := range []struct {
+		name     string
+		args     []string
+		planErr  error
+		applyErr error
+	}{
+		{name: "plan", args: []string{"backfill-catalog-seed", "old-seed", "new-seed"}, planErr: errors.New("synthetic-private-dsn")},
+		{name: "apply", args: []string{"backfill-catalog-seed", "old-seed", "new-seed", "--apply", "--confirm", "synthetic-token"}, applyErr: &mysql.MySQLError{Number: 1045, Message: "synthetic-private-dsn"}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var calls []string
+			var out bytes.Buffer
+			factory := func() (teguCommandActions, func(), error) {
+				calls = append(calls, "open")
+				return teguCommandActions{
+					initDB: func() error { calls = append(calls, "migrate"); return nil },
+					backfillSeedPlan: func(string, string) (catalogSeedBackfillSummary, error) {
+						calls = append(calls, "plan")
+						return catalogSeedBackfillSummary{}, tc.planErr
+					},
+					backfillSeedApply: func(string, string, string) (catalogSeedBackfillSummary, error) {
+						calls = append(calls, "apply")
+						return catalogSeedBackfillSummary{}, tc.applyErr
+					},
+				}, func() { calls = append(calls, "close") }, nil
+			}
+			err := runTegu(tc.args, &out, factory)
+			if err == nil || contains(calls, "migrate") || calls[len(calls)-1] != "close" || out.Len() != 0 || strings.Contains(err.Error(), "synthetic-private-dsn") {
+				t.Fatal("failed backfill leaked details, emitted success output, migrated, or skipped cleanup")
+			}
+		})
+	}
+}
+
+func TestTeguCatalogSeedBackfillApplyConflictIsNotReportedAsSuccess(t *testing.T) {
+	clearInitialAdminPasswordEnv(t)
+	var calls []string
+	var out bytes.Buffer
+	err := runTegu([]string{"backfill-catalog-seed", "old-seed", "new-seed", "--apply", "--confirm", "synthetic-token"}, &out, func() (teguCommandActions, func(), error) {
+		calls = append(calls, "open")
+		return teguCommandActions{
+			initDB: func() error { calls = append(calls, "migrate"); return nil },
+			backfillSeedApply: func(string, string, string) (catalogSeedBackfillSummary, error) {
+				calls = append(calls, "apply")
+				return catalogSeedBackfillSummary{Conflicts: 1}, nil
+			},
+		}, func() { calls = append(calls, "close") }, nil
+	})
+	if err == nil || !strings.Contains(err.Error(), "1 项冲突") || strings.Contains(out.String(), "回填完成") || contains(calls, "migrate") || calls[len(calls)-1] != "close" {
+		t.Fatal("conflicted apply was reported as successful, migrated, or skipped cleanup")
 	}
 }
 

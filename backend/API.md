@@ -180,6 +180,38 @@ ROUND(当前精确库存量 × 累计进货金额 ÷ 累计进货精确数量, 0
 
 V2正式构建ldflags为`-X main.Version=2.0 -X main.BuildCommit=<发布commit>`。公共包不包含实际目录/密码/旧哈希；私密SQL验证/失败恢复见独立本机恢复说明。
 
+## V3.0 V1非空数据库客户报价增量回填
+
+`tegu backfill-catalog-seed <旧V1-seed> <当前V1-seed>` 是独立CLI操作，仅支持已迁移到459的目标库。旧seed固定为提交`050d99248a577120592719c21c9f92c52d56bcab`，当前seed固定为`a29433349c6ab08cfebeffd687a638b4f61586fe`；两份规范化摘要都必须匹配授权版本。命令不会运行`init-db`或迁移。`import-catalog-seed`仍只接受空业务库，不能用它升级非空库。
+
+默认模式为只读dry-run，列出新增、更新、跳过、冲突，并在无冲突时返回绑定数据库身份、seed摘要及当前目录指纹的确认码。只有把该确认码与`--apply`一起提交才写入；目录自预览后变化会拒绝执行。冲突必须停止并先核对，不能清理数据库或重试全量导入。
+
+目标库完成备份与独立恢复验证、且单独获准正式回填后，在**同一 Compose 项目目录**使用其现有`.env`和`api`服务。以下命令只构建CLI镜像并运行一次性容器，不重启服务；`api`连接的仍是该Compose项目的数据库。旧seed从固定Git历史读取，新seed取自当前检出：
+
+```sh
+umask 077
+SEED_DIR="$(mktemp -d /tmp/tegu-v1-catalog-backfill.XXXXXX)"
+git show 050d99248a577120592719c21c9f92c52d56bcab:catalog/catalog-seed-v1.json > "$SEED_DIR/old.json"
+chmod 0644 "$SEED_DIR/old.json"
+install -m 0644 catalog/catalog-seed-v1.json "$SEED_DIR/new.json"
+chmod 0755 "$SEED_DIR"
+docker compose build api
+docker compose run --rm --no-deps -v "$SEED_DIR:/backfill:ro" api \
+  backfill-catalog-seed /backfill/old.json /backfill/new.json
+```
+
+确认dry-run无冲突且数量符合预期后，将该次输出的确认码原样代入下列命令。不要复用旧确认码；数据变化后须重新dry-run。正常旧V1基线预计新增126项、软停用18条精确匹配的1元测试占位、冲突0：
+
+```sh
+docker compose run --rm --no-deps -v "$SEED_DIR:/backfill:ro" api \
+  backfill-catalog-seed /backfill/old.json /backfill/new.json \
+  --apply --confirm '<本次dry-run返回的确认码>'
+```
+
+事务内写入28条公共工艺、94条公司收费身份、2种商品、2条公司商品售价、来源记录、独立回填账本和一条审计记录；只把18条旧1元项设为停用，保留其ID、历史订单引用和历史金额。原公司、原公共工艺、人工自建工艺、管理员/用户、已有报价与工资奖金、11档套餐、74条覆盖及施工记录不覆盖；未配置工资仍保持待配置。占位项来源、稳定ID、test-only标记、来源行、100分价格、启用状态、版本或其他目录字段任一不精确都会触发整批冲突。正常公司工艺保存也不能把1元占位重新启用；只有有客户价格权限的操作者明确提交不同报价后，系统才记录人工确认来源并允许启用。
+
+Apply成功后可重复运行dry-run核对`新增0、更新0、跳过126、冲突0`。若返回冲突、确认码过期或SQL失败，整批事务回滚；保留数据库现场与备份，停止并调查，不清库、不恢复覆盖、不运行首次导入器。服务器恢复副本上的真实MySQL验证和生产回填授权必须分别完成；本仓库推送或镜像构建不代表服务器已部署或已回填。
+
 ## 2026-10-10 阶段C：已保存施工单九列只读查看
 
 - 正常输入与已保存查看共用九列结构：施工人员、工艺、部位、单价、方量明细、方量小计、金额小计、备注、合计金额。`mode` 继续使用个、米、平方、立方、金额各自既有输入与后端计算；本阶段不改计量、工资或阶段B免收算法，不新增迁移。
