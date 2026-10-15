@@ -58,11 +58,38 @@ func migrateOrderWorkers(db *sql.DB) error {
 }
 
 func backfillWorkerWages(tx *sql.Tx) error {
-	if err := validateWorkerAccounts(tx); err != nil {
+	if err := validateWorkerAccountsForBackfill(tx); err != nil {
 		return err
 	}
 	_, err := tx.Exec(`INSERT INTO order_worker_wages(id,order_id,worker_id,worker_name,wage_cents,delivery_wage_cents,wage_paid,version,legacy)
 	 SELECT MD5(CONCAT('legacy-wage:',o.id)),o.id,o.worker_id,o.worker_name,o.wage_cents,o.delivery_wage_cents,o.wage_paid,o.version,1 FROM orders o
 	 WHERE NOT EXISTS(SELECT 1 FROM order_worker_wages w WHERE w.order_id=o.id)`)
 	return err
+}
+
+func validateWorkerAccountsForBackfill(tx *sql.Tx) error {
+	var wageColumns int
+	if err := tx.QueryRow(`SELECT COUNT(*) FROM information_schema.COLUMNS
+		WHERE TABLE_SCHEMA=DATABASE() AND (
+			(TABLE_NAME='order_lines' AND COLUMN_NAME IN ('wage_override_cents','wage_configured')) OR
+			(TABLE_NAME='order_worker_wages' AND COLUMN_NAME='wage_configured'))`).Scan(&wageColumns); err != nil {
+		return err
+	}
+	if wageColumns == 3 {
+		return validateWorkerAccounts(tx)
+	}
+
+	// Before migrations 443 and 457, those wage-state columns do not exist and
+	// no worker-wage rows can be validly present yet. Check only the invariants
+	// representable at this migration stage.
+	var invalid int
+	if err := tx.QueryRow(`SELECT COUNT(*) FROM orders o WHERE
+		EXISTS(SELECT 1 FROM order_worker_wages w FORCE INDEX(order_id) WHERE w.order_id=o.id) OR
+		EXISTS(SELECT 1 FROM order_lines l FORCE INDEX(order_id) WHERE l.order_id=o.id AND l.worker_id<>'' AND l.worker_id<>o.worker_id)`).Scan(&invalid); err != nil {
+		return err
+	}
+	if invalid > 0 {
+		return fail(422, "施工记录的分人工资归属不完整，请先核对恢复数据")
+	}
+	return nil
 }

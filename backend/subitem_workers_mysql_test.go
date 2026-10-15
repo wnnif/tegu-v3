@@ -424,6 +424,32 @@ func TestSubitemWorkersLegacyMigrationMySQL(t *testing.T) {
 	}
 }
 
+func TestFreshSchemaMigrationThrough459MySQL(t *testing.T) {
+	a, _ := maintenanceFaultDBWithoutSchema(t)
+	if err := initSchema(a.db); err != nil {
+		t.Fatal("initialize fresh schema", err)
+	}
+	maintenanceFaultCount(t, a.db, "SELECT COUNT(*) FROM schema_migrations WHERE version=434", 1)
+	maintenanceFaultCount(t, a.db, "SELECT COUNT(*) FROM schema_migrations WHERE version=459", 1)
+
+	var migrationCount int
+	if err := a.db.QueryRow("SELECT COUNT(*) FROM schema_migrations").Scan(&migrationCount); err != nil {
+		t.Fatal(err)
+	}
+	if err := initSchema(a.db); err != nil {
+		t.Fatal("repeat fresh-schema initialization", err)
+	}
+	var repeatedMigrationCount int
+	if err := a.db.QueryRow("SELECT COUNT(*) FROM schema_migrations").Scan(&repeatedMigrationCount); err != nil {
+		t.Fatal(err)
+	}
+	if repeatedMigrationCount != migrationCount {
+		t.Fatalf("repeated initialization changed migration count: before=%d after=%d", migrationCount, repeatedMigrationCount)
+	}
+	maintenanceFaultCount(t, a.db, "SELECT COUNT(*) FROM schema_migrations WHERE version=434", 1)
+	maintenanceFaultCount(t, a.db, "SELECT COUNT(*) FROM schema_migrations WHERE version=459", 1)
+}
+
 func TestSubitemWorkersLegacySnapshotMySQL(t *testing.T) {
 	a, _ := maintenanceFaultDB(t)
 	dir := t.TempDir()

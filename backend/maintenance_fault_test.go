@@ -75,6 +75,14 @@ func maintenanceFaultFiles(t *testing.T, dir string) map[string]string {
 }
 
 func maintenanceFaultDB(t *testing.T) (*App, mysql.Config) {
+	a, cfg := maintenanceFaultDBWithoutSchema(t)
+	if err := initSchema(a.db); err != nil {
+		t.Fatal(err)
+	}
+	return a, cfg
+}
+
+func maintenanceFaultDBWithoutSchema(t *testing.T) (*App, mysql.Config) {
 	t.Helper()
 	if os.Getenv("GO_MYSQL_TEST") != "1" {
 		t.Skip("set GO_MYSQL_TEST=1 on isolated MySQL")
@@ -104,9 +112,6 @@ func maintenanceFaultDB(t *testing.T) (*App, mysql.Config) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { db.Close() })
-	if err = initSchema(db); err != nil {
-		t.Fatal(err)
-	}
 	return &App{db: db}, cfg
 }
 

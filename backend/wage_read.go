@@ -106,7 +106,7 @@ const invalidWorkerAccountsSQL = `(
    OR EXISTS(SELECT 1 FROM order_worker_wages w FORCE INDEX(order_id) WHERE w.order_id=o.id AND (
     w.wage_cents<>(SELECT COALESCE(SUM(l.labor_cents),0) FROM order_lines l FORCE INDEX(order_id) WHERE l.order_id=o.id AND COALESCE(NULLIF(l.worker_id,''),o.worker_id)=w.worker_id)+IF(w.worker_id=o.worker_id,o.delivery_wage_cents,0)
     OR w.delivery_wage_cents<>IF(w.worker_id=o.worker_id,o.delivery_wage_cents,0)
-    OR w.wage_configured<>NOT EXISTS(SELECT 1 FROM order_lines l FORCE INDEX(order_id) WHERE l.order_id=o.id AND COALESCE(NULLIF(l.worker_id,''),o.worker_id)=w.worker_id AND l.wage_configured=0 AND l.wage_override_cents IS NULL)
+    OR w.wage_configured<>(NOT EXISTS(SELECT 1 FROM order_lines l FORCE INDEX(order_id) WHERE l.order_id=o.id AND COALESCE(NULLIF(l.worker_id,''),o.worker_id)=w.worker_id AND l.wage_configured=0 AND l.wage_override_cents IS NULL))
     OR (NOT EXISTS(SELECT 1 FROM order_lines l FORCE INDEX(order_id) WHERE l.order_id=o.id AND COALESCE(NULLIF(l.worker_id,''),o.worker_id)=w.worker_id)
      AND NOT(w.worker_id=o.worker_id AND (o.delivery_wage_cents>0 OR EXISTS(SELECT 1 FROM order_sales s WHERE s.order_id=o.id))))))
   ))
