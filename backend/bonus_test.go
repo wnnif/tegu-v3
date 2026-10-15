@@ -7,9 +7,9 @@ func TestAutomaticBonusRulesMatchOnlyApprovedIdentities(t *testing.T) {
 		category, craftID, name, subitemID, subitem, key string
 		rate                                             int64
 	}{
-		{"防水涂料", "craft-v3-waterproof-split-two-coats", "分开两遍防水工艺", "", "", "waterproof_split_two_coats", 50},
+		{"防水涂料", "craft-v3-waterproof-standard-two-coats", "正常两遍防水", "", "", "waterproof_split_two_coats", 50},
 		{"开工", "craft-v3-fine-wall-ground", "精开工·墙地固", "fine-wall", "墙", "fine_start_wall_ground_wall", 15},
-		{"防水涂料", "", "分开刷连二遍防水涂料", "", "", "waterproof_split_two_coats", 50},
+		{"防水涂料", "", "正常两遍防水", "", "", "waterproof_split_two_coats", 50},
 		{"开工", "", "精开工·墙地固", "", "墙", "fine_start_wall_ground_wall", 15},
 	}
 	for _, tc := range approved {
@@ -23,6 +23,7 @@ func TestAutomaticBonusRulesMatchOnlyApprovedIdentities(t *testing.T) {
 		temporary                                         bool
 	}{
 		{"丙纶", "", "普通丙纶", "", "", "平方", false},
+		{"防水涂料", "craft-v3-waterproof-split-two-coats", "分开两遍防水工艺", "", "", "平方", false},
 		{"开工", "craft-v3-fine-wall-ground", "精开工·墙地固", "fine-ceiling", "顶", "平方", false},
 		{"开工", "craft-v3-fine-wall-ground", "精开工·墙地固", "fine-floor", "地", "平方", false},
 		{"开工", "craft-v3-fine-slot-moisture", "精开工·线槽防潮加固", "fine-living-slots", "卧室客厅槽子＋门边框＋地角", "平方", false},

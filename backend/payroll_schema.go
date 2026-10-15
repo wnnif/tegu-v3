@@ -124,7 +124,7 @@ func migrateBonusPayrollMarker(db *sql.DB) error {
 			l.id,l.craft_id,l.category,l.name,COALESCE(l.subitem_id,''),COALESCE(l.subitem_name,''),l.mode,l.temporary,l.qty_micro,l.worker_id,l.worker_name
 			FROM orders o JOIN order_lines l ON l.order_id=o.id
 			WHERE o.status<>'已取消' AND l.mode='平方' AND l.temporary=0 AND l.qty_micro>0 AND l.worker_id<>''
-			AND ((l.category='防水涂料' AND (l.craft_id='craft-v3-waterproof-split-two-coats' OR l.name IN ('分开刷连二遍防水涂料','分开两遍防水工艺'))) OR
+			AND ((l.category='防水涂料' AND (l.craft_id='craft-v3-waterproof-standard-two-coats' OR l.name='正常两遍防水')) OR
 				(l.category='开工' AND (l.craft_id='craft-v3-fine-wall-ground' OR l.name='精开工·墙地固')))
 			AND (o.id>? OR (o.id=? AND l.id>?)) ORDER BY o.id,l.id LIMIT 500`, lastOrderID, lastOrderID, lastLineID)
 		if queryErr != nil {

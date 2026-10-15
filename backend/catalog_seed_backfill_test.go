@@ -18,6 +18,7 @@ import (
 )
 
 const catalogSeedBackfillPriorCommit = "050d99248a577120592719c21c9f92c52d56bcab"
+const catalogSeedBackfillTargetCommit = "a29433349c6ab08cfebeffd687a638b4f61586fe"
 
 func TestCatalogSeedBackfillSeedRevisionPair(t *testing.T) {
 	oldPath, newPath, inputs := catalogSeedBackfillTestSeedFiles(t)
@@ -358,13 +359,14 @@ func catalogSeedBackfillTestSeedFiles(t *testing.T) (string, string, catalogSeed
 	if err != nil {
 		t.Fatal("parse prior V1 seed:", err)
 	}
-	newPath, err := filepath.Abs(filepath.Join("..", "catalog", "catalog-seed-v1.json"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	newBytes, readErr := os.ReadFile(newPath)
+	newPath := filepath.Join(t.TempDir(), "catalog-seed-v1-a294333.json")
+	cmd = exec.Command("git", "-C", root, "show", catalogSeedBackfillTargetCommit+":catalog/catalog-seed-v1.json")
+	newBytes, readErr := cmd.Output()
 	if readErr != nil {
-		t.Fatal("read current V1 seed:", readErr)
+		t.Fatal("read supported historical V1 target seed:", readErr)
+	}
+	if err = os.WriteFile(newPath, newBytes, 0o600); err != nil {
+		t.Fatal("write supported historical V1 target seed:", err)
 	}
 	_, newDigest, err := parseCatalogSeed(newBytes)
 	if err != nil {

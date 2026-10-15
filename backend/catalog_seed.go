@@ -525,19 +525,33 @@ func validateCatalogSeedValue(value catalogSeedValue, component string, validate
 }
 
 func containsApprovedSeedBonus(rules []catalogSeedBonusRule) bool {
-	want := map[string]catalogSeedBonusRule{
-		"waterproof_split_two_coats":  {Key: "waterproof_split_two_coats", Category: "防水涂料", CraftName: "分开两遍防水工艺", Mode: "平方", RateCents: 50, Unit: "㎡", Source: catalogSeedReference{SourceID: "user-wage-rules", Sheet: "已确认工资规则", Row: 0}, TargetCraftID: "craft-v3-waterproof-split-two-coats"},
-		"fine_start_wall_ground_wall": {Key: "fine_start_wall_ground_wall", Category: "开工", CraftName: "精开工·墙地固", SubitemName: "墙", Mode: "平方", RateCents: 15, Unit: "㎡", Source: catalogSeedReference{SourceID: "excel-wages", Sheet: "开工工资", Row: 15}, TargetCraftID: "craft-v3-fine-wall-ground", TargetSubitemID: "fine-wall"},
+	fineWall := catalogSeedBonusRule{Key: "fine_start_wall_ground_wall", Category: "开工", CraftName: "精开工·墙地固", SubitemName: "墙", Mode: "平方", RateCents: 15, Unit: "㎡", Source: catalogSeedReference{SourceID: "excel-wages", Sheet: "开工工资", Row: 15}, TargetCraftID: "craft-v3-fine-wall-ground", TargetSubitemID: "fine-wall"}
+	legacyWaterproof := catalogSeedBonusRule{Key: "waterproof_split_two_coats", Category: "防水涂料", CraftName: "分开两遍防水工艺", Mode: "平方", RateCents: 50, Unit: "㎡", Source: catalogSeedReference{SourceID: "user-wage-rules", Sheet: "已确认工资规则", Row: 0}, TargetCraftID: "craft-v3-waterproof-split-two-coats"}
+	currentWaterproof := catalogSeedBonusRule{Key: "waterproof_split_two_coats", Category: "防水涂料", CraftName: "正常两遍防水", Mode: "平方", RateCents: 50, Unit: "㎡", Source: catalogSeedReference{SourceID: "user-wage-rules", Sheet: "本轮文字确认", Row: 0}, TargetCraftID: "craft-v3-waterproof-standard-two-coats"}
+	fineSeen, waterproofSeen := false, false
+	if len(rules) != 2 {
+		return false
 	}
-	seen := map[string]bool{}
 	for _, rule := range rules {
-		expected, ok := want[rule.Key]
-		if !ok || seen[rule.Key] || rule.Category != expected.Category || rule.CraftName != expected.CraftName || rule.SubitemName != expected.SubitemName || rule.Mode != expected.Mode || rule.RateCents != expected.RateCents || rule.Unit != expected.Unit || rule.Source.SourceID != expected.Source.SourceID || rule.Source.Sheet != expected.Source.Sheet || rule.Source.Row != expected.Source.Row || rule.TargetCraftID != expected.TargetCraftID || rule.TargetSubitemID != expected.TargetSubitemID || strings.TrimSpace(rule.OverrideReason) == "" {
+		matches := func(expected catalogSeedBonusRule) bool {
+			return rule.Category == expected.Category && rule.CraftName == expected.CraftName && rule.SubitemName == expected.SubitemName && rule.Mode == expected.Mode && rule.RateCents == expected.RateCents && rule.Unit == expected.Unit && rule.Source.SourceID == expected.Source.SourceID && rule.Source.Sheet == expected.Source.Sheet && rule.Source.Row == expected.Source.Row && rule.TargetCraftID == expected.TargetCraftID && rule.TargetSubitemID == expected.TargetSubitemID && strings.TrimSpace(rule.OverrideReason) != ""
+		}
+		switch rule.Key {
+		case "fine_start_wall_ground_wall":
+			if fineSeen || !matches(fineWall) {
+				return false
+			}
+			fineSeen = true
+		case "waterproof_split_two_coats":
+			if waterproofSeen || (!matches(legacyWaterproof) && !matches(currentWaterproof)) {
+				return false
+			}
+			waterproofSeen = true
+		default:
 			return false
 		}
-		seen[rule.Key] = true
 	}
-	return len(seen) == len(want)
+	return fineSeen && waterproofSeen
 }
 
 func companyNamesByID(companies []catalogSeedCompany) map[string]string {

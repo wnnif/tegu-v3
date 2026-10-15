@@ -55,7 +55,7 @@ func validCatalogSeedFixture() catalogSeedManifest {
 		Crafts: []catalogSeedCraft{
 			{ID: "craft-v3-fine-wall-ground", Category: "开工", Name: "精开工·墙地固", Mode: "平方", Active: &wall, Subitems: []catalogSeedSubitem{{ID: "fine-wall", Name: "墙", Wage: seedValue(50, "confirmed", "excel-wages", "开工工资", 15)}}, Source: seedRef("excel-wages", "开工工资", 15)},
 			{ID: "craft-polypropylene", Category: "丙纶", Name: "普通丙纶", Mode: "平方", Active: &poly, Subitems: []catalogSeedSubitem{}, Wage: seedValue(500, "confirmed", "excel-wages", "防水工资", 10), Source: seedRef("excel-wages", "防水工资", 10)},
-			{ID: "craft-v3-waterproof-split-two-coats", Category: "防水涂料", Name: "分开两遍防水工艺", Mode: "平方", Active: &waterproof, Subitems: []catalogSeedSubitem{}, Wage: seedValue(450, "confirmed", "excel-wages", "防水工资", 4), Source: seedRef("excel-wages", "防水工资", 4)},
+			{ID: "craft-v3-waterproof-standard-two-coats", Category: "防水涂料", Name: "正常两遍防水", Mode: "平方", Active: &waterproof, Subitems: []catalogSeedSubitem{}, Wage: seedValue(450, "confirmed", "user-wage-rules", "本轮文字确认", 0), Source: seedRef("user-wage-rules", "本轮文字确认", 0)},
 		},
 		CompanyCrafts: []catalogSeedCompanyCraft{
 			{ID: "company-poly-dongjian", CompanyID: "company-dongjian", CraftID: "craft-polypropylene", Price: *seedValue(100, "test_only", "excel-prices", "东箭缺价测试", 3), Source: seedRef("excel-prices", "东箭缺价测试", 3)},
@@ -74,7 +74,7 @@ func validCatalogSeedFixture() catalogSeedManifest {
 			Price: *seedValue(1500, "confirmed", "excel-prices", "一半设计", 20), Source: seedRef("excel-prices", "一半设计", 20), Note: "代购售价，不含工人工资",
 		}},
 		BonusRules: []catalogSeedBonusRule{
-			{Key: "waterproof_split_two_coats", Category: "防水涂料", CraftName: "分开两遍防水工艺", Mode: "平方", RateCents: 50, Unit: "㎡", OverrideReason: "按已确认工资规则", Source: seedRef("user-wage-rules", "已确认工资规则", 0), TargetCraftID: "craft-v3-waterproof-split-two-coats"},
+			{Key: "waterproof_split_two_coats", Category: "防水涂料", CraftName: "正常两遍防水", Mode: "平方", RateCents: 50, Unit: "㎡", OverrideReason: "按已确认工资规则", Source: seedRef("user-wage-rules", "本轮文字确认", 0), TargetCraftID: "craft-v3-waterproof-standard-two-coats"},
 			{Key: "fine_start_wall_ground_wall", Category: "开工", CraftName: "精开工·墙地固", SubitemName: "墙", Mode: "平方", RateCents: 15, Unit: "㎡", OverrideReason: "按已确认工资规则", Source: seedRef("excel-wages", "开工工资", 15), TargetCraftID: "craft-v3-fine-wall-ground", TargetSubitemID: "fine-wall"},
 		},
 	}
@@ -105,6 +105,16 @@ func TestParseCatalogSeedValidatesSourcesBonusRulesAndOverrides(t *testing.T) {
 	}
 	if digest == "" || len(manifest.Companies) != 2 || len(manifest.Crafts) != 3 || len(manifest.CompanyProductPrices) != 1 || len(manifest.BonusRules) != 2 {
 		t.Fatalf("解析后的基础资料不完整: digest=%q companies=%d crafts=%d company_product_prices=%d bonus=%d", digest, len(manifest.Companies), len(manifest.Crafts), len(manifest.CompanyProductPrices), len(manifest.BonusRules))
+	}
+
+	legacy := validCatalogSeedFixture()
+	legacy.BonusRules[0] = catalogSeedBonusRule{Key: "waterproof_split_two_coats", Category: "防水涂料", CraftName: "分开两遍防水工艺", Mode: "平方", RateCents: 50, Unit: "㎡", OverrideReason: "旧数据仍可读取", Source: seedRef("user-wage-rules", "已确认工资规则", 0), TargetCraftID: "craft-v3-waterproof-split-two-coats"}
+	legacyData, err := json.Marshal(legacy)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err = parseCatalogSeed(legacyData); err != nil {
+		t.Fatalf("parse legacy wage catalog: %v", err)
 	}
 }
 

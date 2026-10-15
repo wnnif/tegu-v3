@@ -1,6 +1,6 @@
 {
   "format": "tegu-catalog-seed-v1",
-  "seed_id": "tegu-v3-catalog-2026-10-14",
+  "seed_id": "tegu-v3-catalog-2026-10-16-wage-rules",
   "sources": [
     {
       "id": "excel-wages",
@@ -187,7 +187,7 @@
       "category": "丙纶",
       "name": "丙纶",
       "mode": "平方",
-      "spec": "原报价按平方米；外反、外围、包墙的范围待补。；；工资已按来源行确认。",
+      "spec": "原报价按平方米；外反、外围、包墙的范围待补。普通工价5元/㎡；特殊情况补贴按实际登记；年终奖金5%-15%按考核人工核定。",
       "active": true,
       "subitems": [
         {
@@ -247,10 +247,10 @@
         "cents": 500,
         "classification": "confirmed",
         "source": {
-          "source_id": "excel-wages",
-          "sheet": "防水工资",
-          "row": 10,
-          "note": "用户明确普通丙纶5元/㎡；百分比奖金不按本表自动计提"
+          "source_id": "user-wage-rules",
+          "sheet": "本轮文字确认",
+          "row": 0,
+          "note": "日常工价5元/㎡；特殊情况补贴单独按现场登记；5%-15%年终奖人工考核，不自动按面积计提"
         }
       },
       "source": {
@@ -1477,22 +1477,23 @@
       "category": "防水涂料",
       "name": "连二遍防水工艺",
       "mode": "平方",
-      "spec": "工价来源：工资表对应工作表及行。",
+      "spec": "连二遍防水工价3.5元/㎡。",
       "active": true,
       "subitems": [],
       "wage": {
         "cents": 350,
         "classification": "confirmed",
         "source": {
-          "source_id": "excel-wages",
-          "sheet": "防水工资",
-          "row": 3
+          "source_id": "user-wage-rules",
+          "sheet": "本轮文字确认",
+          "row": 0,
+          "note": "连二遍防水3.5元/㎡"
         }
       },
       "source": {
-        "source_id": "excel-wages",
-        "sheet": "防水工资",
-        "row": 3
+        "source_id": "user-wage-rules",
+        "sheet": "本轮文字确认",
+        "row": 0
       }
     },
     {
@@ -1500,22 +1501,14 @@
       "category": "防水涂料",
       "name": "分开两遍防水工艺",
       "mode": "平方",
-      "spec": "工价来源：工资表对应工作表及行。",
+      "spec": "旧目录中的分开两遍身份不单独设工资；新标准工资和年终奖金对应正常两遍防水。",
       "active": true,
       "subitems": [],
-      "wage": {
-        "cents": 450,
-        "classification": "confirmed",
-        "source": {
-          "source_id": "excel-wages",
-          "sheet": "防水工资",
-          "row": 4
-        }
-      },
+      "wage": null,
       "source": {
-        "source_id": "excel-wages",
-        "sheet": "防水工资",
-        "row": 4
+        "source_id": "user-wage-rules",
+        "sheet": "本轮文字确认",
+        "row": 0
       }
     },
     {
@@ -1530,17 +1523,17 @@
         "cents": 450,
         "classification": "confirmed",
         "source": {
-          "source_id": "excel-wages",
-          "sheet": "防水工资",
-          "row": 5,
-          "note": "按用户确认用词“刮齿”；Excel行5写作“挂齿”"
+          "source_id": "user-wage-rules",
+          "sheet": "本轮文字确认",
+          "row": 0,
+          "note": "刮齿防水4.5元/㎡"
         }
       },
       "source": {
-        "source_id": "excel-wages",
-        "sheet": "防水工资",
-        "row": 5,
-        "note": "按用户确认用词“刮齿”；Excel行5写作“挂齿”"
+        "source_id": "user-wage-rules",
+        "sheet": "本轮文字确认",
+        "row": 0,
+        "note": "用户本轮确认刮齿防水4.5元/㎡"
       }
     },
     {
@@ -1548,22 +1541,23 @@
       "category": "室外防水",
       "name": "室外三涂一布",
       "mode": "平方",
-      "spec": "工价来源：工资表对应工作表及行。",
+      "spec": "三涂一布工价10元/㎡；其他特殊施工按现场实际情况单独登记。",
       "active": true,
       "subitems": [],
       "wage": {
         "cents": 1000,
         "classification": "confirmed",
         "source": {
-          "source_id": "excel-wages",
-          "sheet": "防水工资",
-          "row": 6
+          "source_id": "user-wage-rules",
+          "sheet": "本轮文字确认",
+          "row": 0,
+          "note": "三涂一布10元/㎡"
         }
       },
       "source": {
-        "source_id": "excel-wages",
-        "sheet": "防水工资",
-        "row": 6
+        "source_id": "user-wage-rules",
+        "sheet": "本轮文字确认",
+        "row": 0
       }
     },
     {
@@ -1571,22 +1565,15 @@
       "category": "防水涂料",
       "name": "墙刚地柔工艺",
       "mode": "平方",
-      "spec": "工价来源：工资表对应工作表及行。",
+      "spec": "本轮工资标准未列此工艺；工资待确认，不沿用旧工价。",
       "active": true,
       "subitems": [],
-      "wage": {
-        "cents": 350,
-        "classification": "confirmed",
-        "source": {
-          "source_id": "excel-wages",
-          "sheet": "防水工资",
-          "row": 7
-        }
-      },
+      "wage": null,
       "source": {
-        "source_id": "excel-wages",
-        "sheet": "防水工资",
-        "row": 7
+        "source_id": "user-wage-rules",
+        "sheet": "本轮文字确认",
+        "row": 0,
+        "note": "本轮未给墙刚地柔工价；旧工价不沿用"
       }
     },
     {
@@ -1594,24 +1581,24 @@
       "category": "防水涂料",
       "name": "丙纶上拉毛",
       "mode": "平方",
-      "spec": "用户确认2.50元覆盖Excel旧值2.00元",
+      "spec": "丙纶上拉毛2.5元/㎡；双组份背胶或界面剂加水泥沙施工。",
       "active": true,
       "subitems": [],
       "wage": {
         "cents": 250,
         "classification": "confirmed",
         "source": {
-          "source_id": "excel-wages",
-          "sheet": "防水工资",
-          "row": 8,
-          "note": "用户确认2.50元覆盖Excel旧值2.00元"
+          "source_id": "user-wage-rules",
+          "sheet": "本轮文字确认",
+          "row": 0,
+          "note": "丙纶上拉毛2.5元/㎡；双组份背胶或界面剂加水泥沙"
         }
       },
       "source": {
         "source_id": "user-wage-rules",
-        "sheet": "已确认工资规则",
+        "sheet": "本轮文字确认",
         "row": 0,
-        "note": "覆盖excel-wages/防水工资/第8行的2.00元工资"
+        "note": "丙纶上拉毛工价及施工材料说明"
       }
     },
     {
@@ -1619,22 +1606,15 @@
       "category": "防水涂料",
       "name": "拉毛防水",
       "mode": "平方",
-      "spec": "工价来源：工资表对应工作表及行。",
+      "spec": "本轮工资标准未列此工艺；工资待确认，不沿用旧工价。",
       "active": true,
       "subitems": [],
-      "wage": {
-        "cents": 250,
-        "classification": "confirmed",
-        "source": {
-          "source_id": "excel-wages",
-          "sheet": "防水工资",
-          "row": 9
-        }
-      },
+      "wage": null,
       "source": {
-        "source_id": "excel-wages",
-        "sheet": "防水工资",
-        "row": 9
+        "source_id": "user-wage-rules",
+        "sheet": "本轮文字确认",
+        "row": 0,
+        "note": "本轮未给拉毛防水工价；旧工价不沿用"
       }
     },
     {
@@ -1642,24 +1622,24 @@
       "category": "室外防水",
       "name": "自粘卷材",
       "mode": "平方",
-      "spec": "用户确认仅针对家装露台防水",
+      "spec": "自粘卷材工价8元/㎡。",
       "active": true,
       "subitems": [],
       "wage": {
         "cents": 800,
         "classification": "confirmed",
         "source": {
-          "source_id": "excel-wages",
-          "sheet": "防水工资",
-          "row": 13,
-          "note": "用户确认仅针对家装露台防水"
+          "source_id": "user-wage-rules",
+          "sheet": "本轮文字确认",
+          "row": 0,
+          "note": "自粘卷材工价8元/㎡"
         }
       },
       "source": {
         "source_id": "user-wage-rules",
-        "sheet": "已确认工资规则",
+        "sheet": "本轮文字确认",
         "row": 0,
-        "note": "家装露台自粘卷材工资8.00元/㎡"
+        "note": "自粘卷材工价8元/㎡"
       }
     },
     {
@@ -1667,22 +1647,15 @@
       "category": "室外防水",
       "name": "SBS火烤卷材",
       "mode": "平方",
-      "spec": "工价来源：工资表对应工作表及行。",
+      "spec": "本轮工资标准未列此工艺；工资待确认，不沿用旧工价。",
       "active": true,
       "subitems": [],
-      "wage": {
-        "cents": 1000,
-        "classification": "confirmed",
-        "source": {
-          "source_id": "excel-wages",
-          "sheet": "防水工资",
-          "row": 14
-        }
-      },
+      "wage": null,
       "source": {
-        "source_id": "excel-wages",
-        "sheet": "防水工资",
-        "row": 14
+        "source_id": "user-wage-rules",
+        "sheet": "本轮文字确认",
+        "row": 0,
+        "note": "本轮未给SBS火烤卷材工价；旧工价不沿用"
       }
     },
     {
@@ -1928,9 +1901,19 @@
       "category": "防水涂料",
       "name": "正常两遍防水",
       "mode": "平方",
-      "spec": "正常两遍收费；若来源未声明含丙纶保护则不自动包含；工资待配置。",
+      "spec": "日常工资4.5元/㎡；正常施工面积另计0.5元/㎡年终奖金。客户收费是否含丙纶保护仍按公司报价配置。",
       "active": true,
       "subitems": [],
+      "wage": {
+        "cents": 450,
+        "classification": "confirmed",
+        "source": {
+          "source_id": "user-wage-rules",
+          "sheet": "本轮文字确认",
+          "row": 0,
+          "note": "正常两遍防水日常工资4.5元/㎡"
+        }
+      },
       "source": {"source_id": "excel-prices", "sheet": "予里设计", "row": 15}
     },
     {
@@ -4505,16 +4488,16 @@
         "classification": "confirmed",
         "source": {
           "source_id": "user-wage-rules",
-          "sheet": "已确认工资规则",
+          "sheet": "本轮文字确认",
           "row": 0,
-          "note": "普通丙纶特殊公司覆盖，适用于全部普通丙纶施工"
+          "note": "东箭普通丙纶工价5.5元/㎡"
         }
       },
       "source": {
         "source_id": "user-wage-rules",
-        "sheet": "已确认工资规则",
+        "sheet": "本轮文字确认",
         "row": 0,
-        "note": "适用于全部普通丙纶施工"
+        "note": "东箭普通丙纶工价5.5元/㎡"
       }
     },
     {
@@ -4525,16 +4508,16 @@
         "classification": "confirmed",
         "source": {
           "source_id": "user-wage-rules",
-          "sheet": "已确认工资规则",
+          "sheet": "本轮文字确认",
           "row": 0,
-          "note": "普通丙纶特殊公司覆盖，适用于全部普通丙纶施工"
+          "note": "宜仁普通丙纶工价5.5元/㎡"
         }
       },
       "source": {
         "source_id": "user-wage-rules",
-        "sheet": "已确认工资规则",
+        "sheet": "本轮文字确认",
         "row": 0,
-        "note": "适用于全部普通丙纶施工"
+        "note": "宜仁普通丙纶工价5.5元/㎡"
       }
     }
   ],
@@ -4560,26 +4543,18 @@
     {
       "key": "waterproof_split_two_coats",
       "category": "防水涂料",
-      "craft_name": "分开两遍防水工艺",
+      "craft_name": "正常两遍防水",
       "mode": "平方",
       "rate_cents": 50,
       "unit": "㎡",
-      "override_reason": "用户明确覆盖Excel旧0.10元/㎡为0.50元/㎡",
+      "override_reason": "用户本轮确认正常两遍防水另有0.5元/㎡年终奖金；与4.5元/㎡日常工资分账累计",
       "source": {
         "source_id": "user-wage-rules",
-        "sheet": "已确认工资规则",
+        "sheet": "本轮文字确认",
         "row": 0,
-        "note": "Excel旧值见防水工资第4行0.10元/㎡"
+        "note": "正常两遍防水年终奖金0.5元/㎡"
       },
-      "supersedes": [
-        {
-          "source_id": "excel-wages",
-          "sheet": "防水工资",
-          "row": 4,
-          "note": "旧值0.10元/㎡被本轮用户规则覆盖"
-        }
-      ],
-      "target_craft_id": "craft-v3-waterproof-split-two-coats"
+      "target_craft_id": "craft-v3-waterproof-standard-two-coats"
     }
   ],
   "products": [

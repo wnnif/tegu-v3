@@ -104,8 +104,8 @@ func automaticBonusRule(category, craftID, name, subitemID, subitemName, mode st
 	}
 	category = strings.TrimSpace(category)
 	name, subitemName = normalizeBonusCraftName(name), normalizeBonusCraftName(subitemName)
-	if category == "防水涂料" && (craftID == "craft-v3-waterproof-split-two-coats" || name == normalizeBonusCraftName("分开刷连二遍防水涂料") || name == normalizeBonusCraftName("分开两遍防水工艺")) {
-		return bonusRule{Key: "waterproof_split_two_coats", RateCents: 50, Reason: "正常分开两遍防水奖金，按实际施工面积计提"}, true
+	if category == "防水涂料" && (craftID == "craft-v3-waterproof-standard-two-coats" || name == normalizeBonusCraftName("正常两遍防水")) {
+		return bonusRule{Key: "waterproof_split_two_coats", RateCents: 50, Reason: "正常两遍防水年终奖金，按实际施工面积计提"}, true
 	}
 	if category == "开工" && ((craftID == "craft-v3-fine-wall-ground" && subitemID == "fine-wall") ||
 		(name == normalizeBonusCraftName("精开工·墙地固") && subitemName == normalizeBonusCraftName("墙"))) {
